@@ -69,12 +69,6 @@ var sio = io.listen(server);
 var players_pos = {};
 
 
-
-setInterval(function() {
-    console.log(players_pos);
-    sio.sockets.emit("onserverupdate", players_pos);
-}, 1);
-
 sio.sockets.on('connection', function (client) {
     
     //Generate a new UUID, looks something like
@@ -96,7 +90,7 @@ sio.sockets.on('connection', function (client) {
     //     //They send messages here, and we send them to the game_server to handle.
     client.on('message', function(player) {
         players_pos[client.userid] = {x: player.position.x, y : player.position.y};        
-         console.log(client.userid, player.position.x, player.position.y);
+         // console.log(client.userid, player.position.x, player.position.y);
         //game_server.onMessage(client, m);
         // console.log(players_pos);
 
@@ -113,3 +107,9 @@ sio.sockets.on('connection', function (client) {
     }); //client.on disconnect
  
 }); //sio.sockets.on connection
+
+
+setInterval(function() {
+    // console.log(players_pos);
+    sio.sockets.emit("onserverupdate", players_pos);
+}, 10);

@@ -1,9 +1,10 @@
 var
-    gameport        = process.env.PORT || 3000,
+    gameport        = process.env.PORT || 8080,
 
     io              = require('socket.io'),
     express         = require('express'),
     UUID            = require('node-uuid'),
+    p2              = require('p2'),
 
     verbose         = false,
     http            = require('http'),

@@ -1,3 +1,5 @@
+'use strict';
+
 var game;
 var id;
 var world;
@@ -9,7 +11,7 @@ var numberOfConnectedPlayer = 0;
 var text;
 var fpsText;
 
-var gameCore = function() {
+var gameClient = function() {
     // Main phaser instatiation
     this.game = new Phaser.Game(800, 600, Phaser.AUTO, "game", 
         { preload: this.preload.bind(this),
@@ -18,11 +20,12 @@ var gameCore = function() {
 
     game = this.game;
     numberOfConnectedPlayer = 1;
+    this.socket = null;
 }
 
-gameCore.prototype.preload = function() {
+gameClient.prototype.preload = function() {
     // Initialize socket.io connection
-    clientConnectToServer();
+    this.clientConnectToServer();
 
     // Enable phaser to run its steps even on an unfocused window
     game.stage.disableVisibilityChange = true;
@@ -35,9 +38,9 @@ gameCore.prototype.preload = function() {
     game.time.advancedTiming = true;
 }
 
-gameCore.prototype.create = function() {
+gameClient.prototype.create = function() {
     // New physics world
-    world = new World();
+    world = new gameCore();
 
     //  A simple background for our game
     game.add.sprite(0, 0, 'sky');
@@ -57,23 +60,59 @@ gameCore.prototype.create = function() {
 }
 
 
-gameCore.prototype.update = function() {
+gameClient.prototype.update = function() {
+    if (!connected) return;
+    
     //update FPS
     fpsText.setText("FPS: " + game.time.fps);
 
-    // Sends the current input to the physics simulation
-    world.updatePlayer(id, game.input.keyboard);
+    var keysPressed = this.handleInput(game.input.keyboard);
 
-    // Copies body positions to Phaser sprites
-    world.updatePhaser();
+    // Sends the current input to the physics simulation
+    player.update(keysPressed);
 
     // Runs p2 physics engine step
     world.physicsStep();
+
+    // Copies body positions to Phaser sprites
+    world.updatePhaser();
 }
 
-function clientConnectToServer() {
+gameClient.prototype.handleInput = function(keyboard) {
+    var keysPressed = {
+        Key_LEFT    : false,
+        Key_RIGHT   : false,
+        Key_UP      : false,
+        Key_DOWN    : false,
+    };
+
+    if (keyboard.isDown(Phaser.Keyboard.LEFT) ||
+        keyboard.isDown(Phaser.Keyboard.A)) {
+        keysPressed.Key_LEFT = true;
+    }
+    if (keyboard.isDown(Phaser.Keyboard.RIGHT) ||
+        keyboard.isDown(Phaser.Keyboard.D)) {
+        keysPressed.Key_RIGHT = true;
+    }
+
+    if (keyboard.isDown(Phaser.Keyboard.UP) ||
+        keyboard.isDown(Phaser.Keyboard.W)) {
+        keysPressed.Key_UP = true;
+    }
+
+    if (keyboard.isDown(Phaser.Keyboard.DOWN) || 
+        keyboard.isDown(Phaser.Keyboard.S)) {
+        keysPressed.Key_DOWN = true;
+    }
+
+    return keysPressed;
+}
+
+
+gameClient.prototype.clientConnectToServer = function(){
 	this.socket = io.connect();
 
+        var me = this;
         //When we connect, we are not 'connected' until we have a server id
         //and are placed in a game by the server. The server sends us a message for that.
         this.socket.on('connect', function(){
@@ -84,7 +123,7 @@ function clientConnectToServer() {
 
         //Sent each tick of the server simulation. This is our authoritive update
         this.socket.on('onserverupdate', function(data) {
-        	updatePlayers(data);
+        	me.updatePlayers(data);
         });
 
         //Handle when we connect to the server, showing state and storing id's.
@@ -96,9 +135,9 @@ function clientConnectToServer() {
             // This could be improved
             world.addPlayer(id);
             world.players[id].phaser = game.add.sprite(game.world.width/2.0, game.world.height/2.0, 'ball');
-            player = world.players[id].phaser;
-            player.scale.setTo(0.5, 0.5);
-            player.tint = 0x00a0bf;
+            player = world.players[id];
+            player.phaser.scale.setTo(0.5, 0.5);
+            player.phaser.tint = 0x00a0bf;
 
         	console.log("Connected!" + data.id);
         });
@@ -108,7 +147,7 @@ function clientConnectToServer() {
 };
 
 
-function updatePlayers(opponents_data) {
+gameClient.prototype.updatePlayers = function(opponents_data) {
 	//update old/new players
 	for (var key in opponents_data) {
 		if (key == id) continue;
@@ -139,13 +178,13 @@ function updatePlayers(opponents_data) {
     text.setText(numberOfConnectedPlayer + " Players Connected")
 }
 
-function clientUpdate() {
+gameClient.prototype.clientUpdate = function() {
 	if (connected) {
-		this.socket.emit('message', {position : {x : player.position.x, y : player.position.y}});
+		this.socket.emit('message', {position : {x : player.phaser.position.x, y : player.phaser.position.y}});
 	}
 };
 
-setInterval(clientUpdate, 30);
-
 //start game
-var game_instance = new gameCore();
+var game_instance = new gameClient();
+
+setInterval(game_instance.clientUpdate.bind(game_instance), 30);

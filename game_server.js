@@ -1,3 +1,5 @@
+'use strict';
+
 //helper
 Object.size = function(obj) {
     var size = 0, key;
@@ -9,11 +11,11 @@ Object.size = function(obj) {
 //
 
 
-//trying to generalize game_server for multiple rooms!
+//trying to generalize gameServer for multiple rooms!
 //Problem: have to create a namespace for sockets, so that i only
 //inform the players positions from the same room!
 // Maybe? http://socket.io/docs/rooms-and-namespaces/
-var game_server = function () {
+var gameServer = function () {
 	var MAX_ROOMS = 5;
 	var ROOM_LIMIT = 5;
 
@@ -23,14 +25,14 @@ var game_server = function () {
 	createRooms(MAX_ROOMS);
 }
 
-game_server.createRooms = function(max) {
+gameServer.createRooms = function(max) {
 	for (var i = 0; i < max; i++) {
 		rooms.push({});
 	}
 }
 
 
-game_server.connectNewPlayer = function(guid) {
+gameServer.connectNewPlayer = function(guid) {
 
 	for (var i = 0; i < rooms.length; i++) {
 		if (rooms[i].size() < ROOM_LIMIT) {
@@ -42,16 +44,16 @@ game_server.connectNewPlayer = function(guid) {
 }
 
 
-game_server.updatePlayerFromRoom = function(roomNumber, guid,  data) {
+gameServer.updatePlayerFromRoom = function(roomNumber, guid,  data) {
 	rooms[roomNumber][guid] = data;
 }
 
-game_server.disconnectPlayerFromRoom = function(roomNumber, guid) {
+gameServer.disconnectPlayerFromRoom = function(roomNumber, guid) {
 	delete rooms[roomNumber][guid];
 }
 
 
-game_server.serverUpdate = function(client) {
+gameServer.serverUpdate = function(client) {
 	for (var i = 0; i < rooms.length; i++) {
 
 	}

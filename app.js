@@ -1,6 +1,6 @@
-var
-    gameport        = process.env.PORT || 8080,
+'use strict';
 
+var
     io              = require('socket.io'),
     express         = require('express'),
     UUID            = require('node-uuid'),
@@ -9,6 +9,7 @@ var
     verbose         = false,
     http            = require('http'),
     app             = express(),
+    config          = require('./config.json'),
     server          = http.createServer(app);
 
 /* Express server set up. */
@@ -19,10 +20,10 @@ var
 //so keep this in mind - this is not a production script but a development teaching tool.
 
     //Tell the server to listen for incoming connections
-server.listen(gameport)
+server.listen(config.port)
 
     //Log something so we know that it succeeded.
-console.log('\t :: Express :: Listening on port ' + gameport );
+console.log('\t :: Express :: Listening on port ' + config.port);
 
     //By default, we forward the / path to index.html automatically.
 app.get( '/', function( req, res ){
@@ -45,7 +46,7 @@ app.get( '/*' , function( req, res, next ) {
         //Send the requesting client the file.
     res.sendFile( __dirname + '/' + file );
 
-}); //app.get *
+}); //app.get */
 
 
 /* Socket.IO server set up. */
@@ -113,4 +114,4 @@ sio.sockets.on('connection', function (client) {
 setInterval(function() {
     // console.log(players_pos);
     sio.sockets.emit("onserverupdate", players_pos);
-}, 10);
+}, 1);

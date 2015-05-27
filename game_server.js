@@ -1,60 +1,125 @@
 'use strict';
 
-//helper
-Object.size = function(obj) {
-    var size = 0, key;
-    for (key in obj) {
-        if (obj.hasOwnProperty(key)) size++;
-    }
-    return size;
-};
-//
+var
+    io              = require('socket.io'),
+    express         = require('express'),
+    UUID            = require('node-uuid'),
+    verbose         = false,
+    http            = require('http'),
+    app             = express(),
+    config          = require('./config.json'),
+    game_core       = require('./game_core.js'),
+    server          = http.createServer(app);
 
 
-//trying to generalize gameServer for multiple rooms!
-//Problem: have to create a namespace for sockets, so that i only
-//inform the players positions from the same room!
-// Maybe? http://socket.io/docs/rooms-and-namespaces/
-var gameServer = function () {
-	var MAX_ROOMS = 5;
-	var ROOM_LIMIT = 5;
-
-	var rooms = [];
-	var players_map = {};
-
-	createRooms(MAX_ROOMS);
-}
-
-gameServer.createRooms = function(max) {
-	for (var i = 0; i < max; i++) {
-		rooms.push({});
-	}
-}
+var gameCore = new game_core();
 
 
-gameServer.connectNewPlayer = function(guid) {
+/* Express server set up. */
 
-	for (var i = 0; i < rooms.length; i++) {
-		if (rooms[i].size() < ROOM_LIMIT) {
-			players_map[guid] = i;
-			return true;
-		}
-	}
-	return false;
-}
+//The express server handles passing our content to the browser,
+//As well as routing users where they need to go. This example is bare bones
+//and will serve any file the user requests from the root of your web server (where you launch the script from)
+//so keep this in mind - this is not a production script but a development teaching tool.
+
+    //Tell the server to listen for incoming connections
+server.listen(config.port)
+
+    //Log something so we know that it succeeded.
+console.log('\t :: Express :: Listening on port ' + config.port);
+
+    //By default, we forward the / path to index.html automatically.
+app.get( '/', function( req, res ){
+    console.log('trying to load %s', __dirname + '/index.html');
+    res.sendFile( '/index.html' , { root:__dirname });
+});
 
 
-gameServer.updatePlayerFromRoom = function(roomNumber, guid,  data) {
-	rooms[roomNumber][guid] = data;
-}
+    //This handler will listen for requests on /*, any file from the root of our server.
+    //See expressjs documentation for more info on routing.
 
-gameServer.disconnectPlayerFromRoom = function(roomNumber, guid) {
-	delete rooms[roomNumber][guid];
-}
+app.get( '/*' , function( req, res, next ) {
+
+        //This is the current file they have requested
+    var file = req.params[0];
+
+        //For debugging, we can track what files are requested.
+    if(verbose) console.log('\t :: Express :: file requested : ' + file);
+
+        //Send the requesting client the file.
+    res.sendFile( __dirname + '/' + file );
+
+}); //app.get */
 
 
-gameServer.serverUpdate = function(client) {
-	for (var i = 0; i < rooms.length; i++) {
+/* Socket.IO server set up. */
 
-	}
-}
+//Express and socket.io can work together to serve the socket.io client files for you.
+//This way, when the client requests '/socket.io/' files, socket.io determines what the client needs.
+    
+    //Create a socket.io instance using our express server
+var sio = io.listen(server);
+
+    //Enter the game server code. The game server handles
+    //client connections looking for a game, creating games,
+    //leaving games, joining games and ending games when they leave.
+    // game_server = require('./game.server.js');
+
+    //Socket.io will call this function when a client connects,
+    //So we can send that client looking for a game to play,
+    //as well as give that client a unique ID to use so we can
+    //maintain the list if players.
+
+
+sio.sockets.on('connection', function (client) {
+    
+    //Generate a new UUID, looks something like
+    //5b2ca132-64bd-4513-99da-90e838ca47d1
+    //and store this on their socket/connection
+
+    client.userid = UUID();
+    gameCore.addPlayer(client.userid);
+
+    //tell the player they connected, giving them their id
+    client.emit('onconnected', { id: client.userid } );
+
+    //Useful to know when someone connects
+    console.log('\t socket.io:: player ' + client.userid + ' connected');
+
+        //now we can find them a game to play with someone.
+        //if no game exists with someone waiting, they create one and wait.
+    // game_server.findGame(client);
+
+    //     //Now we want to handle some of the messages that clients will send.
+    //     //They send messages here, and we send them to the game_server to handle.
+    client.on('message', function(player) {
+        gameCore.players[client.userid].update(player.keys);
+        //console.log(player.keys);      
+         // console.log(client.userid, player.position.x, player.position.y);
+        //game_server.onMessage(client, m);
+        // console.log(players_pos);
+
+    }); //client.on message
+
+        //When this client disconnects, we want to tell the game server
+        //about that as well, so it can remove them from the game they are
+        //in, and make sure the other player knows that they left and so on.
+    client.on('disconnect', function () {
+        console.log("disconnect");
+        delete gameCore.players[client.userid];
+        //Useful to know when soomeone disconnects
+        console.log('\t socket.io:: client disconnected ' + client.userid);
+
+    }); //client.on disconnect
+ 
+}); //sio.sockets.on connection
+
+
+setInterval(function() {
+    var updateMessage = {};
+    for (var key in gameCore.players) {
+        updateMessage[key] = {x: gameCore.players[key].body.position[0], y: gameCore.players[key].body.position[1]};
+    }    
+    sio.sockets.emit("onserverupdate", updateMessage);
+    gameCore.physicsStep();
+}, 1000/60);

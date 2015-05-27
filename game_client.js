@@ -1,5 +1,7 @@
 'use strict';
 
+var gameCoreConstructor = require('./game_core.js');
+var gameCore;
 var game;
 var id;
 var world;
@@ -7,42 +9,35 @@ var player;
 var connecting = false;
 var connected = false;
 var socket;
-var numberOfConnectedPlayer = 0;
+var numberOfConnectedPlayers = 0;
 var text;
 var fpsText;
 
 var gameClient = function() {
-    // Main phaser instatiation
-    this.game = new Phaser.Game(800, 600, Phaser.AUTO, "game", 
+    game = new Phaser.Game(800, 600, Phaser.AUTO, "game", 
         { preload: this.preload.bind(this),
-          create: this.create.bind(this),
-          update: this.update.bind(this) });
-
-    game = this.game;
-    numberOfConnectedPlayer = 1;
-    this.socket = null;
+          create:  this.create.bind(this),
+          update:  this.update.bind(this) });
 }
 
 gameClient.prototype.preload = function() {
-    // Initialize socket.io connection
     this.clientConnectToServer();
 
     // Enable phaser to run its steps even on an unfocused window
     game.stage.disableVisibilityChange = true;
 
-    // Loads pictures
     game.load.image('ball', 'assets/ball.png');
     game.load.image('sky', 'assets/sky.png');
 
     // FPS of game
     game.time.advancedTiming = true;
+
+    numberOfConnectedPlayers = 1;
 }
 
 gameClient.prototype.create = function() {
-    // New physics world
-    world = new gameCore();
+    gameCore = new gameCoreConstructor();
 
-    //  A simple background for our game
     game.add.sprite(0, 0, 'sky');
 
     // Creating debug text
@@ -59,23 +54,24 @@ gameClient.prototype.create = function() {
     });
 }
 
-
 gameClient.prototype.update = function() {
+    // Only update physics if connected
     if (!connected) return;
     
-    //update FPS
     fpsText.setText("FPS: " + game.time.fps);
 
     var keysPressed = this.handleInput(game.input.keyboard);
 
+    socket.emit('message', {keys: keysPressed});
+
     // Sends the current input to the physics simulation
-    player.update(keysPressed);
+    //player.update(keysPressed);
 
     // Runs p2 physics engine step
-    world.physicsStep();
+    //world.physicsStep();
 
     // Copies body positions to Phaser sprites
-    world.updatePhaser();
+    //world.updatePhaser();
 }
 
 gameClient.prototype.handleInput = function(keyboard) {
@@ -85,7 +81,6 @@ gameClient.prototype.handleInput = function(keyboard) {
         Key_UP      : false,
         Key_DOWN    : false,
     };
-
     if (keyboard.isDown(Phaser.Keyboard.LEFT) ||
         keyboard.isDown(Phaser.Keyboard.A)) {
         keysPressed.Key_LEFT = true;
@@ -94,97 +89,86 @@ gameClient.prototype.handleInput = function(keyboard) {
         keyboard.isDown(Phaser.Keyboard.D)) {
         keysPressed.Key_RIGHT = true;
     }
-
     if (keyboard.isDown(Phaser.Keyboard.UP) ||
         keyboard.isDown(Phaser.Keyboard.W)) {
         keysPressed.Key_UP = true;
     }
-
     if (keyboard.isDown(Phaser.Keyboard.DOWN) || 
         keyboard.isDown(Phaser.Keyboard.S)) {
         keysPressed.Key_DOWN = true;
     }
-
     return keysPressed;
 }
 
-
 gameClient.prototype.clientConnectToServer = function(){
-	this.socket = io.connect();
+	socket = io.connect();
 
-        var me = this;
-        //When we connect, we are not 'connected' until we have a server id
-        //and are placed in a game by the server. The server sends us a message for that.
-        this.socket.on('connect', function(){
-        	console.log("Connecting!");
-        	connecting = true;
-            //this.players.self.state = 'connecting';
-        });
+    var thisGameClient = this;
 
-        //Sent each tick of the server simulation. This is our authoritive update
-        this.socket.on('onserverupdate', function(data) {
-        	me.updatePlayers(data);
-        });
+    socket.on('connect', function(){
+    	console.log("Connecting!");
+    	connecting = true;
+    });
 
-        //Handle when we connect to the server, showing state and storing id's.
-        this.socket.on('onconnected', function(data) {
-        	connected = true;
-        	id = data.id;
+    socket.on('onserverupdate', function(data) {
+    	thisGameClient.updatePlayers(data);
+    });
 
-            // We're adding the player here because it needs an id before adding it to the world
-            // This could be improved
-            world.addPlayer(id);
-            world.players[id].phaser = game.add.sprite(game.world.width/2.0, game.world.height/2.0, 'ball');
-            player = world.players[id];
-            player.phaser.scale.setTo(0.5, 0.5);
-            player.phaser.tint = 0x00a0bf;
+    socket.on('onconnected', function(data) {        
+        connecting = false;
+    	connected = true;
+    	id = data.id;
 
-        	console.log("Connected!" + data.id);
-        });
-            //On message from the server, we parse the commands and send it to the handlers
-        // this.socket.on('message', this.client_onnetmessage.bind(this));
+        // We're adding the player here because it needs an id before adding it to the client's game core
+        // This could be improved
+        gameCore.addPlayer(id);
+        gameCore.players[id].phaser = game.add.sprite(game.world.width/2.0, game.world.height/2.0, 'ball');
+        player = gameCore.players[id]; // Reference to our this client's player object on this game core
+        player.phaser.scale.setTo(0.5, 0.5);
+        player.phaser.tint = 0x00a0bf;
 
+    	console.log("Connected!" + data.id);
+    });
 };
 
 
-gameClient.prototype.updatePlayers = function(opponents_data) {
-	//update old/new players
-	for (var key in opponents_data) {
-		if (key == id) continue;
+gameClient.prototype.updatePlayers = function(players_data) {
+	for (var key in players_data) {
+		//if (key == id) continue;
 
-		if (key in world.players) {
-			world.players[key].body.position[0] = opponents_data[key].x;
-			world.players[key].body.position[1] = opponents_data[key].y;
+		if (key in gameCore.players) { // If player is already registered on this game core
+			gameCore.players[key].phaser.position.x = players_data[key].x;
+			gameCore.players[key].phaser.position.y = players_data[key].y;
 		}
 
-		else {
-            world.addPlayer(key);
-			world.players[key].phaser = game.add.sprite(opponents_data[key].x, opponents_data[key].y, 'ball');
-			world.players[key].phaser.scale.setTo(0.5, 0.5);
-            world.players[key].phaser.tint = 0xffa0bf; //change opponent color
-            numberOfConnectedPlayer++;
-		}
-	}
-
-	for (var key in world.players) {     
-		if (key !== id && !(key in opponents_data)) { // find a way to remove key !== id
-            console.log("key: " + key);
-			world.players[key].phaser.destroy();
-			delete world.players[key];
-            numberOfConnectedPlayer--;
+		else { // If we still don't know this player, add it to this game core
+            gameCore.addPlayer(key);
+			gameCore.players[key].phaser = game.add.sprite(players_data[key].x, players_data[key].y, 'ball');
+			gameCore.players[key].phaser.scale.setTo(0.5, 0.5);
+            gameCore.players[key].phaser.tint = 0xffa0bf; //change opponent color
+            numberOfConnectedPlayers++;
 		}
 	}
 
-    text.setText(numberOfConnectedPlayer + " Players Connected")
+	for (var key in gameCore.players) {     
+		if (key !== id && !(key in players_data)) { // find a way to remove key !== id
+            console.log("deleted key: " + key);
+			gameCore.players[key].phaser.destroy();
+			delete gameCore.players[key];
+            numberOfConnectedPlayers--;
+		}
+	}
+
+    text.setText(numberOfConnectedPlayers + " Players Connected")
 }
 
-gameClient.prototype.clientUpdate = function() {
-	if (connected) {
-		this.socket.emit('message', {position : {x : player.phaser.position.x, y : player.phaser.position.y}});
-	}
-};
+// gameClient.prototype.clientUpdate = function() {
+// 	if (connected) {
+// 		this.socket.emit('message', {position : {x : player.phaser.position.x, y : player.phaser.position.y}});
+// 	}
+// };
 
-//start game
+// Start game
 var game_instance = new gameClient();
 
-setInterval(game_instance.clientUpdate.bind(game_instance), 30);
+// setInterval(game_instance.clientUpdate.bind(game_instance), 30);

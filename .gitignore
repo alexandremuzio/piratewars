@@ -1,3 +1,6 @@
+# Browserify bundle file
+bundle.js
+
 # Logs
 logs
 *.log

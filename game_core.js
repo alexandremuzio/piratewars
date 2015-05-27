@@ -1,11 +1,6 @@
 'use strict';
 
-// Key = {
-//     UP : 0,
-//     RIGHT : 1,
-//     DOWN : 2,
-//     LEFT : 3
-// }
+var p2 = require('p2');
 
 // Player class including a phaser object (not used on the server) and
 // a body object (used by p2 physics engine)
@@ -17,26 +12,20 @@ function Player (uuid) {
         position: [100, 100]
     });
     this.body.addShape(new p2.Circle(this.radius));
+    this.body.damping = 0.95; // Velocity lost per time. Should be between 0 and 1
 
     var me = this;
     this.update = function(keysPressed) {
         if (keysPressed.Key_LEFT) {
-            //  Move to the left
             me.body.velocity[0] -= 10;
         }
-
         if (keysPressed.Key_RIGHT) {
-            //  Move to the right
             me.body.velocity[0] += 10;
         }
-
         if (keysPressed.Key_UP) {
-            //  Move up
             me.body.velocity[1] -= 10;
         }
-
         if (keysPressed.Key_DOWN) {
-            //  Move down
             me.body.velocity[1] += 10;
         }
     }
@@ -74,3 +63,5 @@ gameCore.prototype.updatePhaser = function() {
         }
     }
 }
+
+module.exports = gameCore;

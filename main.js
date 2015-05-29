@@ -1,2 +1,2 @@
-require('./game_client.js');
-require('./game_core.js');
+require('./client/game_client.js');
+require('./core/game_core.js');

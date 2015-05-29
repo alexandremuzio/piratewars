@@ -1,7 +1,18 @@
-# vikingwars
+Viking Wars
+========
 Realtime multiplayer game
 
-Getting started:
+## Installation
+
+To get start:
+```bash
 npm install
-npm install -g browserify
+sudo npm install -g browserify
+```
+
+## Usage
+
+To run the game:
+```bash
 ./run_server.sh
+```

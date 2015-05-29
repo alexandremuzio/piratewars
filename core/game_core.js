@@ -37,6 +37,9 @@ function gameCore() {
 	this.world = new p2.World({gravity:[0, 0]});
 	this.players = {};
 	this.step = 1/60;
+
+    this._dt = new Date().getTime();    //The local timer delta
+    this._dte = new Date().getTime();   //The local timer last frame time
 }
 
 // p2 engine physics step
@@ -62,6 +65,14 @@ gameCore.prototype.updatePhaser = function() {
             this.players[key].phaser.position.y = this.players[key].body.position[1];
         }
     }
+}
+
+gameCore.prototype.createTimer = function(){
+    setInterval(function(){
+        this._dt = new Date().getTime() - this._dte;
+        this._dte = new Date().getTime();
+        this.local_time += this._dt/1000.0;
+    }.bind(this), 4);
 }
 
 module.exports = gameCore;

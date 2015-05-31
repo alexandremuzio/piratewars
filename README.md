@@ -19,5 +19,6 @@ To run the game:
 
 To run the game on linux (use nodejs):
 ```bash
+chmod +x run_server_on_linux.sh
 ./run_server_on_linux.sh
 ```

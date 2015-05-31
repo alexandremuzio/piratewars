@@ -16,3 +16,8 @@ To run the game:
 ```bash
 ./run_server.sh
 ```
+
+To run the game on linux (use nodejs):
+```bash
+./run_server_on_linux.sh
+```

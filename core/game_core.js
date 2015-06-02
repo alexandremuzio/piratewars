@@ -14,21 +14,20 @@ function Player (uuid) {
     this.body.addShape(new p2.Circle(this.radius));
     this.body.damping = 0.95; // Velocity lost per time. Should be between 0 and 1
 
-    var me = this;
     this.update = function(keysPressed) {
         if (keysPressed.Key_LEFT) {
-            me.body.velocity[0] -= 10;
+            this.body.velocity[0] -= 10;
         }
         if (keysPressed.Key_RIGHT) {
-            me.body.velocity[0] += 10;
+            this.body.velocity[0] += 10;
         }
         if (keysPressed.Key_UP) {
-            me.body.velocity[1] -= 10;
+            this.body.velocity[1] -= 10;
         }
         if (keysPressed.Key_DOWN) {
-            me.body.velocity[1] += 10;
+            this.body.velocity[1] += 10;
         }
-    }
+    }.bind(this);
 }
 
 // This class that creates a world where you can simulate the physics on
@@ -38,8 +37,11 @@ function gameCore() {
 	this.players = {};
 	this.step = 1/60;
 
+    this.local_time = 0.016;
     this._dt = new Date().getTime();    //The local timer delta
     this._dte = new Date().getTime();   //The local timer last frame time
+
+    this.createTimer();
 }
 
 // p2 engine physics step
@@ -67,6 +69,7 @@ gameCore.prototype.updatePhaser = function() {
     }
 }
 
+//helper timer
 gameCore.prototype.createTimer = function(){
     setInterval(function(){
         this._dt = new Date().getTime() - this._dte;

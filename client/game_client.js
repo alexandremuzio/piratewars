@@ -1,23 +1,31 @@
 'use strict';
 
+//game
 var gameCoreConstructor = require('../core/game_core.js');
 var gameCore;
 var game;
-var id;
-var world;
 var player;
+var fpsText;
+var text;
+
+//network
 var connecting = false;
 var connected = false;
 var socket;
-var text;
-var fpsText;
+var id;
 var pastInputs = [];
+var serverUpdates = [];
+var inputSeq = 0;
+
 
 var gameClient = function() {
-    game = new Phaser.Game(800, 600, Phaser.AUTO, "game", 
+    game = new Phaser.Game(800, 450, Phaser.AUTO, "", 
         { preload: this.preload.bind(this),
           create:  this.create.bind(this),
-          update:  this.update.bind(this) });
+          update:  this.update.bind(this),
+          render:  this.render.bind(this) 
+        });
+
 
     this.numberOfConnectedPlayers = 0;
 }
@@ -26,9 +34,16 @@ var gameClient = function() {
 gameClient.prototype.preload = function() {
     this.clientConnectToServer();
 
+    game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+    game.scale.pageAlignHorizontally = true;
+    game.scale.pageAlignVertically = false;
+    game.scale.setMinMax(1024/2, 672/2, 1024*2, 672*2);
+
     // Enable phaser to run its steps even on an unfocused window
     game.stage.disableVisibilityChange = true;
 
+    game.load.tilemap('backgroundmap', 'assets/map.json', null, Phaser.Tilemap.TILED_JSON);
+    game.load.image('gameTiles', 'assets/watertile.png');
     game.load.image('ball', 'assets/ball.png');
     game.load.image('sky', 'assets/sky.png');
 
@@ -44,38 +59,72 @@ gameClient.prototype.create = function() {
     //start physics loop
     this.createPhysicsSimulation();
 
-    game.add.sprite(0, 0, 'sky');
+    game.world.setBounds(0, 0, 2000, 2000);
+
+    //game.add.sprite(0, 0, 'sky');
+    game.map = game.add.tilemap('backgroundmap');
+
+    game.map.addTilesetImage('watertile', 'gameTiles');
+
+    //create layer
+    game.backgroundlayer = game.map.createLayer('backgroundLayer');
+    game.blockedLayer = game.map.createLayer('islandLayer');
+
+    //game.map.setCollisionBetween(1, 100000, true, 'islandsLayer');
 
     // Creating debug text
-    text = game.add.text(game.world.centerX - 80, game.world.centerY/8, "0 Players Connected", {
+    text = game.add.text(0, 0, "0 Players Connected", {
         font: "20px Arial",
         fill: "#ff0044",
         align: "center"
     });
 
-    fpsText = game.add.text(game.world.width - 50, 5, "FPS: 0", {
+    text.fixedToCamera = true;
+    text.cameraOffset.setTo(310,100);
+
+    fpsText = game.add.text(0, 0, "FPS: 0", {
         font: "12px Arial",
         fill: "#000000",
         align: "center"
     });
+    fpsText.fixedToCamera = true;
+    fpsText.cameraOffset.setTo(750,10);
 }
 
 //update loop - runs at 60fps
 gameClient.prototype.update = function() {
-    // Only update physics if connected
+    // Only update if is connected
     if (!connected) return;
     
     fpsText.setText("FPS: " + game.time.fps);
 
     var keysPressed = this.handleInput(game.input.keyboard);
 
-    socket.emit('message', {time: new Date().getTime(), keys: keysPressed});
+    //send server last input
+    socket.emit('message', pastInputs[pastInputs.length - 1]);
+
+    //client prediction
+    //this.processNetUpdates();
 
     // console.log(keysPressed);
+    //TODO: Do not update directly
     // player.update(keysPressed);
 
     // Copies body positions to Phaser sprites
     // gameCore.updatePhaser();
+
+    // this.updatePhaser();
+}
+
+gameClient.prototype.render = function() {
+    game.debug.cameraInfo(game.camera, 32, 32);
+}
+
+gameClient.prototype.updatePhaser = function() {
+    // console.log(player.body.position);
+
+    // game.camera.x = player.phaser.position.x + 400;
+    // game.camera.y = player.phaser.position.y + 300;
 }
 
 gameClient.prototype.handleInput = function(keyboard) {
@@ -102,7 +151,15 @@ gameClient.prototype.handleInput = function(keyboard) {
         keysPressed.Key_DOWN = true;
     }
 
-    pastInputs.push({time: new Date().getTime(), keys: keysPressed});
+    inputSeq = inputSeq + 1;
+
+    //game snapshot
+    pastInputs.push({
+        seq : inputSeq,
+        time : gameCore.local_time,
+        keys : keysPressed
+    });
+
     return keysPressed;
 }
 
@@ -129,11 +186,17 @@ gameClient.prototype.clientConnectToServer = function(){
         gameCore.players[id].phaser = game.add.sprite(game.world.width/2.0, game.world.height/2.0, 'ball');
         player = gameCore.players[id]; // Reference to our this client's player object on this game core
         player.phaser.scale.setTo(0.5, 0.5);
-        player.phaser.tint = 0x00a0bf;
+        player.phaser.tint = 0xff6600;
+
+        //camera follows player
+        game.camera.follow(player.phaser);
 
         console.log("Connected!" + data.id);
     });
 };
+
+gameClient.prototype.ProcessNetUpdates = function() {
+}
 
 gameClient.prototype.onServerUpdateReceived = function(data) {
     //naive aproach - temporary

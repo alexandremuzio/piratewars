@@ -25,7 +25,7 @@ server.listen(config.port)
 console.log('\t :: Express :: Listening on port ' + config.port);
 
 app.get( '/', function( req, res ){
-    console.log('trying to load %s', __dirname + '/index.html');
+    console.log('trying to load %s', webRoot + '/index.html');
     res.sendFile( '/index.html' , { root: webRoot});
 });
 
@@ -88,7 +88,8 @@ setInterval(function() {
     //construct message that will be returned to client
     var updateMessage = {};
     for (var key in gameCore.players) {
-        updateMessage[key] = {x: gameCore.players[key].body.position[0], y: gameCore.players[key].body.position[1]};
+        // Change
+        updateMessage[key] = {x: gameCore.players[key].body.position[0], y: gameCore.players[key].body.position[1], angle: gameCore.players[key].body.angle};
     }    
     sio.sockets.emit("onserverupdate", updateMessage);
 }, 45);

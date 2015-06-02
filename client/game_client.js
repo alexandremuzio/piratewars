@@ -44,8 +44,10 @@ gameClient.prototype.preload = function() {
 
     game.load.tilemap('backgroundmap', 'assets/map.json', null, Phaser.Tilemap.TILED_JSON);
     game.load.image('gameTiles', 'assets/watertile.png');
-    game.load.image('ball', 'assets/ball.png');
-    game.load.image('sky', 'assets/sky.png');
+
+    game.load.image('boat_0', 'assets/boat_0.png');
+
+    //game.load.image('sky', 'assets/sky.png');
 
     // FPS of game
     game.time.advancedTiming = true;
@@ -98,10 +100,10 @@ gameClient.prototype.update = function() {
     
     fpsText.setText("FPS: " + game.time.fps);
 
-    var keysPressed = this.handleInput(game.input.keyboard);
+    var inputInfo = this.handleInput(game.input);
 
     //send server last input
-    socket.emit('message', pastInputs[pastInputs.length - 1]);
+    socket.emit('message', inputInfo);
 
     //client prediction
     //this.processNetUpdates();
@@ -109,6 +111,7 @@ gameClient.prototype.update = function() {
     // console.log(keysPressed);
     //TODO: Do not update directly
     // player.update(keysPressed);
+
 
     // Copies body positions to Phaser sprites
     // gameCore.updatePhaser();
@@ -127,28 +130,36 @@ gameClient.prototype.updatePhaser = function() {
     // game.camera.y = player.phaser.position.y + 300;
 }
 
-gameClient.prototype.handleInput = function(keyboard) {
-    var keysPressed = {
+gameClient.prototype.handleInput = function(input) {
+    var inputInfo = {
         Key_LEFT    : false,
         Key_RIGHT   : false,
         Key_UP      : false,
         Key_DOWN    : false,
+        Mouse_DOWN  : false,
+        Mouse_X     : 0,
+        Mouse_Y     : 0
     };
-    if (keyboard.isDown(Phaser.Keyboard.LEFT) ||
-        keyboard.isDown(Phaser.Keyboard.A)) {
-        keysPressed.Key_LEFT = true;
+    if (input.keyboard.isDown(Phaser.Keyboard.LEFT) ||
+        input.keyboard.isDown(Phaser.Keyboard.A)) {
+        inputInfo.Key_LEFT = true;
     }
-    if (keyboard.isDown(Phaser.Keyboard.RIGHT) ||
-        keyboard.isDown(Phaser.Keyboard.D)) {
-        keysPressed.Key_RIGHT = true;
+    if (input.keyboard.isDown(Phaser.Keyboard.RIGHT) ||
+        input.keyboard.isDown(Phaser.Keyboard.D)) {
+        inputInfo.Key_RIGHT = true;
     }
-    if (keyboard.isDown(Phaser.Keyboard.UP) ||
-        keyboard.isDown(Phaser.Keyboard.W)) {
-        keysPressed.Key_UP = true;
+    if (input.keyboard.isDown(Phaser.Keyboard.UP) ||
+        input.keyboard.isDown(Phaser.Keyboard.W)) {
+        inputInfo.Key_UP = true;
     }
-    if (keyboard.isDown(Phaser.Keyboard.DOWN) || 
-        keyboard.isDown(Phaser.Keyboard.S)) {
-        keysPressed.Key_DOWN = true;
+    if (input.keyboard.isDown(Phaser.Keyboard.DOWN) || 
+        input.keyboard.isDown(Phaser.Keyboard.S)) {
+        inputInfo.Key_DOWN = true;
+    }
+    if( input.mousePointer.isDown ){
+        inputInfo.Mouse_DOWN = true;
+        inputInfo.Mouse_X = input.mousePointer.x;
+        inputInfo.Mouse_Y = input.mousePointer.y;
     }
 
     inputSeq = inputSeq + 1;
@@ -157,10 +168,10 @@ gameClient.prototype.handleInput = function(keyboard) {
     pastInputs.push({
         seq : inputSeq,
         time : gameCore.local_time,
-        keys : keysPressed
+        keys : inputInfo
     });
 
-    return keysPressed;
+    return pastInputs[pastInputs.length - 1];
 }
 
 gameClient.prototype.clientConnectToServer = function(){
@@ -183,8 +194,9 @@ gameClient.prototype.clientConnectToServer = function(){
         // We're adding the player here because it needs an id before adding it to the client's game core
         // This could be improved
         gameCore.addPlayer(id);
-        gameCore.players[id].phaser = game.add.sprite(game.world.width/2.0, game.world.height/2.0, 'ball');
+        gameCore.players[id].phaser = game.add.sprite(game.world.width/2.0, game.world.height/2.0, 'boat_0');
         player = gameCore.players[id]; // Reference to our this client's player object on this game core
+        player.phaser.anchor.setTo(0.5, 0.5);
         player.phaser.scale.setTo(0.5, 0.5);
         player.phaser.tint = 0xff6600;
 
@@ -213,12 +225,14 @@ gameClient.prototype.updatePlayers = function(players_data) {
         if (key in gameCore.players) { // If player is already registered on this game core
             gameCore.players[key].phaser.position.x = players_data[key].x;
             gameCore.players[key].phaser.position.y = players_data[key].y;
+            gameCore.players[key].phaser.angle = players_data[key].angle;
         }
 
         else { // If we still don't know this player, add it to this game core
             gameCore.addPlayer(key);
-            gameCore.players[key].phaser = game.add.sprite(players_data[key].x, players_data[key].y, 'ball');
+            gameCore.players[key].phaser = game.add.sprite(players_data[key].x, players_data[key].y, 'boat_0');
             gameCore.players[key].phaser.scale.setTo(0.5, 0.5);
+            player.phaser.anchor.setTo(0.5, 0.5);
             gameCore.players[key].phaser.tint = 0xffa0bf; //change opponent color
             this.numberOfConnectedPlayers++;
         }
@@ -236,6 +250,11 @@ gameClient.prototype.updatePlayers = function(players_data) {
     text.setText(this.numberOfConnectedPlayers + " Players Connected")
 }
 
+gameClient.prototype.updatePhysics = function() {
+    // Runs p2 physics engine step
+    gameCore.physicsStep();
+};
+
 //start Physics loop that runs at 60fps
 gameClient.prototype.createPhysicsSimulation = function() {
     setInterval(function(){
@@ -244,11 +263,6 @@ gameClient.prototype.createPhysicsSimulation = function() {
         // this.updatePhysics();
     }.bind(this), 1000/60);
 }
-
-gameClient.prototype.updatePhysics = function() {
-    // Runs p2 physics engine step
-    gameCore.physicsStep();
-};
 
 // Start game
 var game_instance = new gameClient();

@@ -7,7 +7,7 @@ var
     http        = require('http'),
     path        = require('path'),
     app         = express(),
-    game_core   = require('../core/game_core.js'),
+    GameCore    = require('../core/game_core.js'),
     server      = http.createServer(app),
 
     config      = require('./config.json'),
@@ -45,7 +45,9 @@ app.get( '/*' , function( req, res, next ) {
 var sio = io.listen(server);
 
 //create server physics
-gameCore = new game_core();
+gameCore = new GameCore();
+
+var newBullets = [];
 
 sio.sockets.on('connection', function (client) {
     
@@ -58,9 +60,16 @@ sio.sockets.on('connection', function (client) {
 
     // game_server.findGame(client);
 
-    client.on('message', function(player) {
+    client.on('message', function(message) {
         //should only store the updates here
-        gameCore.players[client.userid].update(player.keys);
+        gameCore.players[client.userid].update(message.keys);
+        //New bullet was shoot
+        if (message.keys.Key_SPACEBAR) {
+            console.log("Got Bullet message!");
+            gameCore.addBullet(client.userid);
+            console.log("Finished adding bullet!");
+            newBullets.push(client.userid);
+        }
         //console.log(player.keys);      
          // console.log(client.userid, player.position.x, player.position.y);
         //game_server.onMessage(client, m);
@@ -69,7 +78,7 @@ sio.sockets.on('connection', function (client) {
     });
 
     client.on('disconnect', function () {
-        console.log("disconnect");
+        console.log("Player Disconnected");
         delete gameCore.players[client.userid];
         //Useful to know when someone disconnects
         console.log('\t socket.io:: client disconnected ' + client.userid);
@@ -86,11 +95,25 @@ setInterval(function() {
 //Server Update Loop
 setInterval(function() {
     //construct message that will be returned to client
-    var updateMessage = {};
+    var playerDataToSend = {};
     for (var key in gameCore.players) {
         // Change
-        updateMessage[key] = {x: gameCore.players[key].body.position[0], y: gameCore.players[key].body.position[1], angle: gameCore.players[key].body.angle};
-    }    
+        playerDataToSend[key] = {x: gameCore.players[key].body.position[0], y: gameCore.players[key].body.position[1], angle: gameCore.players[key].body.angle};
+    }
+
+    var updateMessage = {
+        player : playerDataToSend,
+        bullet : newBullets
+    };
+
+    // newBullets.length = 0;
+    // for (var key in newBullets) {
+    //     updateMessage.bullet[key]
+    // }
+    // console.log(updateMessage);
     sio.sockets.emit("onserverupdate", updateMessage);
+
+    //clear newBulletsArray
+    newBullets.length = 0;
 }, 45);
 

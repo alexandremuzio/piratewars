@@ -1,7 +1,7 @@
 'use strict';
 
 //game
-var gameCoreConstructor = require('../core/game_core.js');
+var GameCore = require('../core/game_core.js');
 var gameCore;
 var game;
 var player;
@@ -18,7 +18,7 @@ var serverUpdates = [];
 var inputSeq = 0;
 
 
-var gameClient = function() {
+function GameClient() {
     game = new Phaser.Game(800, 450, Phaser.AUTO, "", 
         { preload: this.preload.bind(this),
           create:  this.create.bind(this),
@@ -31,7 +31,7 @@ var gameClient = function() {
 }
 
 //Phaser Methods
-gameClient.prototype.preload = function() {
+GameClient.prototype.preload = function() {
     this.clientConnectToServer();
 
     game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
@@ -46,6 +46,7 @@ gameClient.prototype.preload = function() {
     game.load.image('gameTiles', 'assets/watertile.png');
 
     game.load.image('boat_0', 'assets/boat_0.png');
+    game.load.image('bullet', 'assets/bullet.png');
 
     //game.load.image('sky', 'assets/sky.png');
 
@@ -53,10 +54,10 @@ gameClient.prototype.preload = function() {
     game.time.advancedTiming = true;
 
     this.numberOfConnectedPlayers++;
-}
+};
 
-gameClient.prototype.create = function() {
-    gameCore = new gameCoreConstructor();
+GameClient.prototype.create = function() {
+    gameCore = new GameCore();
 
     //start physics loop
     this.createPhysicsSimulation();
@@ -91,10 +92,10 @@ gameClient.prototype.create = function() {
     });
     fpsText.fixedToCamera = true;
     fpsText.cameraOffset.setTo(750,10);
-}
+};
 
 //update loop - runs at 60fps
-gameClient.prototype.update = function() {
+GameClient.prototype.update = function() {
     // Only update if is connected
     if (!connected) return;
     
@@ -114,31 +115,33 @@ gameClient.prototype.update = function() {
 
 
     // Copies body positions to Phaser sprites
-    // gameCore.updatePhaser();
+    gameCore.updatePhaser();
 
     // this.updatePhaser();
-}
+};
 
-gameClient.prototype.render = function() {
+GameClient.prototype.render = function() {
+    //debugging purposes
     game.debug.cameraInfo(game.camera, 32, 32);
-}
+};
 
-gameClient.prototype.updatePhaser = function() {
+GameClient.prototype.updatePhaser = function() {
     // console.log(player.body.position);
 
     // game.camera.x = player.phaser.position.x + 400;
     // game.camera.y = player.phaser.position.y + 300;
-}
+};
 
-gameClient.prototype.handleInput = function(input) {
+GameClient.prototype.handleInput = function(input) {
     var inputInfo = {
-        Key_LEFT    : false,
-        Key_RIGHT   : false,
-        Key_UP      : false,
-        Key_DOWN    : false,
-        Mouse_DOWN  : false,
-        Mouse_X     : 0,
-        Mouse_Y     : 0
+        Key_LEFT        : false,
+        Key_RIGHT       : false,
+        Key_UP          : false,
+        Key_DOWN        : false,
+        Key_SPACEBAR    : false,
+        Mouse_DOWN      : false,
+        Mouse_X         : 0,
+        Mouse_Y         : 0
     };
     if (input.keyboard.isDown(Phaser.Keyboard.LEFT) ||
         input.keyboard.isDown(Phaser.Keyboard.A)) {
@@ -156,6 +159,9 @@ gameClient.prototype.handleInput = function(input) {
         input.keyboard.isDown(Phaser.Keyboard.S)) {
         inputInfo.Key_DOWN = true;
     }
+    if (input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
+        inputInfo.Key_SPACEBAR = true;
+    }
     if( input.mousePointer.isDown ){
         inputInfo.Mouse_DOWN = true;
         inputInfo.Mouse_X = input.mousePointer.x;
@@ -172,9 +178,9 @@ gameClient.prototype.handleInput = function(input) {
     });
 
     return pastInputs[pastInputs.length - 1];
-}
+};
 
-gameClient.prototype.clientConnectToServer = function(){
+GameClient.prototype.clientConnectToServer = function(){
     socket = io.connect();
 
     var thisGameClient = this;
@@ -196,29 +202,46 @@ gameClient.prototype.clientConnectToServer = function(){
         gameCore.addPlayer(id);
         gameCore.players[id].phaser = game.add.sprite(game.world.width/2.0, game.world.height/2.0, 'boat_0');
         player = gameCore.players[id]; // Reference to our this client's player object on this game core
-        player.phaser.anchor.setTo(0.5, 0.5);
+        player.phaser.anchor.setTo(0.5, 0.5); //center of sprite
         player.phaser.scale.setTo(0.5, 0.5);
         player.phaser.tint = 0xff6600;
 
         //camera follows player
         game.camera.follow(player.phaser);
 
-        console.log("Connected!" + data.id);
+        console.log("Player Connected!" + data.id);
     });
 };
 
-gameClient.prototype.ProcessNetUpdates = function() {
-}
+GameClient.prototype.ProcessNetUpdates = function() {
+};
 
-gameClient.prototype.onServerUpdateReceived = function(data) {
+GameClient.prototype.onServerUpdateReceived = function(data) {
     //naive aproach - temporary
-    this.updatePlayers(data);
+    // console.log(data);
+    this.updatePlayers(data.player);
+    //check if there is a new bullet created
+    if (data.bullet.length) {
+        for (var i = 0; i < data.bullet.length; i++) {
+            //get player responsible for sending the bullet
+            var uuid = data.bullet[i];
+
+            var newBullet = gameCore.addBullet(uuid);
+            // console.log(newBullet.body.x, newBullet.body.y);
+            newBullet.phaser = game.add.sprite(newBullet.body.position[0], newBullet.body.position[1], 'bullet');
+            newBullet.phaser.scale.setTo(0.25, 0.25);
+            newBullet.phaser.anchor.setTo(0.5, 0.5);
+        }
+
+    }
+    // this.updateBullets(data.bullets);
 
     //Store input -todo
-}
+};
 
 
-gameClient.prototype.updatePlayers = function(players_data) {
+//update players with server update
+GameClient.prototype.updatePlayers = function(players_data) {
     for (var key in players_data) {
         //if (key == id) continue;
 
@@ -226,6 +249,11 @@ gameClient.prototype.updatePlayers = function(players_data) {
             gameCore.players[key].phaser.position.x = players_data[key].x;
             gameCore.players[key].phaser.position.y = players_data[key].y;
             gameCore.players[key].phaser.angle = players_data[key].angle;
+
+            //p2 properties
+            gameCore.players[key].body.position[0] = players_data[key].x
+            gameCore.players[key].body.position[1] = players_data[key].y
+            gameCore.players[key].body.angle = players_data[key].angle;
         }
 
         else { // If we still don't know this player, add it to this game core
@@ -234,6 +262,11 @@ gameClient.prototype.updatePlayers = function(players_data) {
             gameCore.players[key].phaser.scale.setTo(0.5, 0.5);
             player.phaser.anchor.setTo(0.5, 0.5);
             gameCore.players[key].phaser.tint = 0xffa0bf; //change opponent color
+
+            //p2 properties
+            gameCore.players[key].body.position[0] = players_data[key].x
+            gameCore.players[key].body.position[1] = players_data[key].y
+            gameCore.players[key].body.angle = players_data[key].angle;
             this.numberOfConnectedPlayers++;
         }
     }
@@ -247,24 +280,25 @@ gameClient.prototype.updatePlayers = function(players_data) {
         }
     }
 
-    text.setText(this.numberOfConnectedPlayers + " Players Connected")
-}
+    text.setText(this.numberOfConnectedPlayers + " Players Connected");
+};
 
-gameClient.prototype.updatePhysics = function() {
+
+GameClient.prototype.updatePhysics = function() {
     // Runs p2 physics engine step
     gameCore.physicsStep();
 };
 
 //start Physics loop that runs at 60fps
-gameClient.prototype.createPhysicsSimulation = function() {
+GameClient.prototype.createPhysicsSimulation = function() {
     setInterval(function(){
         // this._pdt = (new Date().getTime() - this._pdte)/1000.0;
         // this._pdte = new Date().getTime();
         // this.updatePhysics();
     }.bind(this), 1000/60);
-}
+};
 
 // Start game
-var game_instance = new gameClient();
+var game_instance = new GameClient();
 
 // setInterval(game_instance.clientUpdate.bind(game_instance), 30);

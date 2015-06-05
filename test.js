@@ -18,6 +18,11 @@ var Player = require('./core/player.js')
 
 var p = new Player();
 
+setInterval( function() {
+	GameEngine.getInstance().gameStep();	
+}, 1000);
+
+
 // var e = new Entity();
 // var c = new GameComponent();
 // Entity.constructor();

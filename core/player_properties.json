@@ -1,7 +1,0 @@
-{
-	"move_mode" : "by_arrows",
-	"linear_force" : 1000,
-	"linear_damping" : 0.95,
-	"angular_force" : 100000,
-	"angular_damping" : 0.95
-}

@@ -1,4 +1,4 @@
 #!/bin/bash
 
-browserify main.js > bundle.js
+browserify test.js > bundle.js
 node server/game_server.js

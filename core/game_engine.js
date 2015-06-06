@@ -22,8 +22,8 @@ var GameEngine = (function () {
 			gameStep: function() {
 				for (var i in _entities) {
 					_entities[i].update();
-					console.log("i = " + i);
-					console.log(_entities[i].components.get("physics").body.position[0]);
+					// console.log("i = " + i);
+					// console.log(_entities[i].components.get("physics").body.position[0]);
 				}
 				_world.step(_stepLength);
 			},

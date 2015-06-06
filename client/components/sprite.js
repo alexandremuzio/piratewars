@@ -3,12 +3,10 @@
 var GameEngine = require('../../shared/game_engine.js');
 var GameComponent = require('../../shared/core/component.js');
 
-function SpriteComponent(game, spriteName) {
+function SpriteComponent(sprite) {
 	console.log("inside SpriteComponent constr");
 	this.key = "sprite";
-	this.game = game;
-	this.spriteName = spriteName;
-	this.sprite = null;
+	this.sprite = sprite;
 };
 
 ///
@@ -25,13 +23,6 @@ SpriteComponent.prototype.setAnchor = function(x, y) {
 }
 
 SpriteComponent.prototype.init = function() {
-	this.sprite = this.game.add.sprite(
-		this.owner.components.get("physics").body.position[0],
-		this.owner.components.get("physics").body.position[1],
-		this.spriteName);
-	this.sprite.anchor.setTo(0.5, 0.5); // Default anchor at the center
-    this.sprite.scale.setTo(0.5, 0.5);
-    this.sprite.tint = 0xff6600;
 }
 
 SpriteComponent.prototype.update = function() {

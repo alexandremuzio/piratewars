@@ -1,9 +1,8 @@
 'use strict'
 
 var GameEngine = require('./shared/game_engine.js');
-var Entity = require('./shared/core/entity.js');
+var EntityFactory = require('./client/core/entity_factory.js');
 var GameComponent = require('./shared/core/component.js');
-var ClientSelfPlayer = require('./client/components/self_player.js');
 var game;
 var fpsText;
 var text;
@@ -34,6 +33,7 @@ GameClient.prototype.preload = function() {
     game.load.image('gameTiles', 'assets/watertile.png');
 
     game.load.image('boat_0', 'assets/boat_0.png');
+
     game.load.image('bullet', 'assets/bullet.png');
 
     //game.load.image('sky', 'assets/sky.png');
@@ -81,7 +81,8 @@ GameClient.prototype.create = function() {
     fpsText.fixedToCamera = true;
     fpsText.cameraOffset.setTo(750,10);
 
-        selfPlayer = new ClientSelfPlayer(game);
+    var entityFactory = new EntityFactory(game);
+    selfPlayer = entityFactory.createLocalPlayer();
 };
 
 //update loop - runs at 60fps

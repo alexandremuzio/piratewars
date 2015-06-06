@@ -5,14 +5,13 @@ function GameComponent() {
 };
 
 GameComponent.prototype.init = function() {
-	console.log("inside init");
 };
 
 GameComponent.prototype.update = function() {
-	console.log("inside update");
 };
 
 GameComponent.prototype.key = 'component';
+
 GameComponent.prototype.owner = null;
 
 module.exports = GameComponent;

@@ -1,7 +1,7 @@
 'use strict'
 
-var GameEngine = require('./game_engine.js');
-var GameComponent = require('./game_component.js');
+var GameEngine = require('../../shared/game_engine.js');
+var GameComponent = require('../../shared/core/component.js');
 
 function SpriteComponent(game, spriteName) {
 	console.log("inside SpriteComponent constr");

@@ -1,10 +1,10 @@
 'use strict'
 
-var Entity = require('./entity.js');
-var Player = require('./player.js');
-var PlayerPhysicsComponent = require('./player_physics_component.js');
-var PlayerSpriteComponent = require('./player_sprite_component.js');
-var PhaserInputComponent = require('../client/input_component.js');
+var Entity = require('../../shared/core/entity.js');
+var Player = require('../../shared/components/player.js');
+var PlayerPhysicsComponent = require('../../shared/components/player_physics.js');
+var PlayerSpriteComponent = require('./player_sprite.js');
+var PhaserInputComponent = require('./input.js');
 
 function ClientSelfPlayer(game) {
 	console.log("clientSelfPlayer constr");

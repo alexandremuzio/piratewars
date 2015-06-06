@@ -1,8 +1,8 @@
 'use strict'
 
-var GameEngine = require('../core/game_engine.js');
-var GameComponent = require('../core/game_component.js');
-var InputComponent = require('../core/input_component.js');
+var GameEngine = require('../../shared/game_engine.js');
+var GameComponent = require('../../shared/core/component.js');
+var InputComponent = require('../../shared/components/input.js');
 
 function PhaserInputComponent(input) {
 	console.log("inside PhaserInputComp constr");

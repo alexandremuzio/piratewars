@@ -1,7 +1,7 @@
 'use strict'
 
-var GameEngine = require('./game_engine.js');
-var GameComponent = require('./game_component.js');
+var GameEngine = require('../game_engine.js');
+var GameComponent = require('../core/component.js');
 
 function PhysicsComponent(body) {
 	console.log("inside physicsComp constr");

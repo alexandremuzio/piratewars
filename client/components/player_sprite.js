@@ -1,6 +1,6 @@
 'use strict'
 
-var SpriteComponent = require('./sprite_component.js');
+var SpriteComponent = require('./sprite.js');
 
 function PlayerSpriteComponent(game) {
 	console.log("inside PlayerSpriteComp constr");

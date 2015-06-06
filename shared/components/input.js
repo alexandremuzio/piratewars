@@ -1,7 +1,7 @@
 'use strict'
 
-var GameEngine = require('./game_engine.js');
-var GameComponent = require('./game_component.js');
+var GameEngine = require('../game_engine.js');
+var GameComponent = require('../core/component.js');
 
 function InputComponent() {
 	console.log("inside InputComp constr");
@@ -28,10 +28,10 @@ InputComponent.prototype.processCommand = function(command) {
             case 'arrowDown':
                 break;
             case 'arrowLeft':
-                body.angularForce = -100000//player_properties.angular_force;
+                body.angularForce = -100//player_properties.angular_force;
                 break;
             case 'arrowRight':
-                body.angularForce = 100000 //player_properties.angular_force;
+                body.angularForce = 100 //player_properties.angular_force;
                 break;
             case 'space':
             	//shoot projectile

@@ -1,9 +1,9 @@
 'use strict'
 
-var GameEngine = require('./core/game_engine.js');
-var Entity = require('./core/entity.js');
-var GameComponent = require('./core/game_component.js');
-var ClientSelfPlayer = require('./core/client_self_player.js');
+var GameEngine = require('./shared/game_engine.js');
+var Entity = require('./shared/core/entity.js');
+var GameComponent = require('./shared/core/component.js');
+var ClientSelfPlayer = require('./client/components/self_player.js');
 var game;
 var fpsText;
 var text;

@@ -1,8 +1,7 @@
 'use strict'
 
-var Entity = require('./entity.js');
-var PlayerInputComponent = require('../client/input_component.js')
-var PlayerPhysicsComponent = require('./player_physics_component.js');
+var Entity = require('../core/entity.js');
+var PlayerPhysicsComponent = require('./player_physics.js');
 
 function Player() {
 	Entity.call(this);

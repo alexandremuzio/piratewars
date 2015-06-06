@@ -1,6 +1,6 @@
 'use strict'
 
-var PhysicsComponent = require('./physics_component.js');
+var PhysicsComponent = require('./physics.js');
 var p2 = require('p2');
 
 function PlayerPhysicsComponent() {

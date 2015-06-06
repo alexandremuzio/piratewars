@@ -1,6 +1,6 @@
 'use strict'
 
-var GameComponent = require('./game_component.js');
+var GameComponent = require('./core/component.js');
 var p2 = require('p2');
 
 // Singleton class

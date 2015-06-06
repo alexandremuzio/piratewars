@@ -1,9 +1,9 @@
 'use strict'
 
-var GameComponent = require('./game_component.js');
-var GameEngine = require('./game_engine.js');
+var GameComponent = require('./component.js');
+var GameEngine = require('../game_engine.js');
 var ComponentManager = require('./component_manager.js');
-var Transform = require('./transform.js');
+var Transform = require('../components/transform.js');
 
 function Entity() {
 	console.log("inside entity constr");

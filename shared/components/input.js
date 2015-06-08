@@ -22,16 +22,18 @@ InputComponent.prototype.processCommand = function(command) {
 			case 'arrowUp':
                 body.force[0] = 500*Math.cos(body.angle*Math.PI/180);
                 body.force[1] = 500*Math.sin(body.angle*Math.PI/180);
-//				body.force[0] = player_properties.linear_force*Math.cos(this.body.angle*Math.PI/180);
-//	        	body.force[1] = player_properties.linear_force*Math.sin(this.body.angle*Math.PI/180);
                 break;
             case 'arrowDown':
                 break;
             case 'arrowLeft':
-                body.angularForce = -100//player_properties.angular_force;
+                // if (body.velocity[0] > 5 || body.velocity[1] > 5) {
+                    body.angularForce = -100//player_properties.angular_force;
+                // }
                 break;
             case 'arrowRight':
-                body.angularForce = 100 //player_properties.angular_force;
+                // if (body.velocity[0] > 5 || body.velocity[1] > 5) {
+                    body.angularForce = 100//player_properties.angular_force;
+                // }
                 break;
             case 'space':
             	//shoot projectile

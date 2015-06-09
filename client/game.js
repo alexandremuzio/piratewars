@@ -4,7 +4,7 @@ var _ = require('underscore');
 var GameEngine = require('../shared/game_engine.js');
 var EntityFactory = require('./core/entity_factory.js');
 var GameComponent = require('../shared/core/component.js');
-var SnapshotManager = require('./core/snapshot_manager.js');
+var SnapshotManager = require('../shared/core/snapshot_manager.js');
 
 
 function Game(socket) {
@@ -61,7 +61,7 @@ Game.prototype.applySyncFromServer = function() {
             if (!GameEngine().getInstance().entities[key]) {
                 this.entityFactory.createRemotePlayer(key);
             }
-            GameEngine().getInstance().entities[key].sync(lastSnapshot[key]);
+            GameEngine().getInstance().entities[key].sync(lastSnapshot.players[key]);
         }
     }
 
@@ -124,7 +124,7 @@ Game.prototype.onPlayerCreate = function(data) {
 
 Game.prototype.sendInputToServer = function() {
     ////////////////////////// Change position to input //////////////////////////
-    this.socket.emit('sync', { selfPlayer.transform });
+    this.socket.emit('sync.input', { selfPlayer.transform });
 }
 
 Game.prototype.setPhaserPreferences = function() {    

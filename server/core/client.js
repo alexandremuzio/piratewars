@@ -22,7 +22,7 @@ Client.prototype.onReady = function() {
 }
 
 Client.prototype.createPlayer = function() {
-	var entity = EntityFactory.createPlayer();
+	var entity = EntityFactory.createPlayer(_socket);
 	this._room.push(this._player);
 
 	this._socket.emit('player.create', entity);
@@ -34,12 +34,7 @@ Client.prototype.applySyncFromClient = function(transform) {
 }
 
 Client.prototype.syncGame = function(snapshot) {
-	
-	///////////////////////// EMIT SHOULDN'T BE HERE /////////////////////////
-	// This function should just return a transform so the room
-	// can emit just one message with all the transforms
-
-	this._socket.emit('sync.game', snapshot);////////////////
+	this._socket.emit('sync.game', snapshot);
 }
 
 module.exports = Client;

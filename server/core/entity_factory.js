@@ -1,15 +1,15 @@
 'use strict'
 
 var UUID = require('node-uuid');
-var Entity = require('../../shared/core/entity.js');
-var Player = require('../../shared/components/player.js');
-
+var Entity = require('../../shared/core/entity');
+var PlayerComponent = require('../../shared/components/player');
+var NetworkComponent = require('../../shared/components/network');
 
 //singleton
 function EntityFactory() {
 }
 
-EntityFactory.prototype.createPlayer = function() {
+EntityFactory.prototype.createPlayer = function(socket) {
 	var id = UUID();
 	var entity = new Entity(id);
 
@@ -27,8 +27,9 @@ EntityFactory.prototype.createPlayer = function() {
 	// entity.components.add(new PhysicsComponent(body));
 	// entity.components.add(new SpriteComponent(sprite));
 	// entity.components.add(new PhaserInputComponent(this.game.input));
-	entity.components.add(new SyncComponent());
+	// entity.components.add(new SyncComponent());
 	entity.components.add(new PlayerComponent());
+	entity.components.add(new NetworkComponent(socket));
 
 	return entity;
 }

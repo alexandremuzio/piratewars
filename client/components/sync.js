@@ -3,10 +3,9 @@
 var GameEngine = require('../../shared/game_engine.js');
 var GameComponent = require('../../shared/core/component.js');
 
-function SyncComponent(socket) {
+function SyncComponent() {
 	console.log("inside SyncComponent constr");
-	this.key = "network";
-	this._socket = socket;
+	this.key = "sync";
 };
 
 ///
@@ -14,12 +13,16 @@ SyncComponent.prototype = Object.create(GameComponent.prototype);
 SyncComponent.prototype.constructor = SyncComponent;
 ///
 
+SyncComponent.prototype.update = function() {
+}
+
 SyncComponent.prototype.init = function() {
-	this.owner.on('sync', this.onSyncronization.bind(this));
+	this.owner.on('entity.sync', this.onSyncronization.bind(this));
 }
 
 SyncComponent.prototype.onSyncronization = function(transform) {
-	this.owner.transform = transform;
+	 // console.log(transform.velocity);
+	this.owner.components.get('physics').setTransform(transform);
 }
 
 module.exports = SyncComponent;

@@ -6,10 +6,9 @@ var PlayerComponent = require('../../shared/components/player');
 var NetworkComponent = require('../../shared/components/network');
 
 //singleton
-function EntityFactory() {
-}
+var EntityFactory = {createPlayer: null};
 
-EntityFactory.prototype.createPlayer = function(socket) {
+EntityFactory.createPlayer = function(socket) {
 	var id = UUID();
 	var entity = new Entity(id);
 

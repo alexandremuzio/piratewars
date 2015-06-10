@@ -7,18 +7,11 @@ var Transform = require('../components/transform.js');
 function Entity(id) {
 	console.log("inside entity constr");
 	GameEngine.getInstance().addEntity(this, id);
+    this.id = id;
 	this.transform = new Transform();
 	this.components = new ComponentManager(this);
-
 	this._eventHandlers = {};
 };
-
-///
-Entity.prototype = Object.create(Node.prototype);
-Entity.prototype.constructor = Entity;
-///
-
-// Entity.prototype.components = new ComponentManager(this);
 
 /**
  * @override
@@ -38,10 +31,10 @@ Entity.prototype.on = function(event, handler) {
 }
 
 Entity.prototype.trigger = function(event) {
-    // var params = Array.prototype.slice.call(arguments, 1);
+    var params = Array.prototype.slice.call(arguments, 1);
     if (this._eventHandlers[event]) {
         for (var i = 0; i < this._eventHandlers[event].length; i++) {
-            // this._eventHandlers[event][i].apply(this, params);
+            this._eventHandlers[event][i].apply(this, params);
         }
     }
 }

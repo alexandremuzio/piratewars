@@ -8,7 +8,7 @@ function PhaserInputComponent(input) {
 	console.log("inside PhaserInputComp constr");
 	this.key = "input";
 	this._input = input;
-	this._sequence = 0;
+	this._sequence = 0;    
 
     // this._cursorKeys = this._input.keyboard.createCursorKeys();
     // this._attackKey = this._input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
@@ -22,6 +22,7 @@ PhaserInputComponent.prototype.constructor = PhaserInputComponent;
 PhaserInputComponent.prototype.init = function() {
 	this._cursorKeys = this._input.keyboard.createCursorKeys();
     this._attackKey = this._input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+    this._socket = this.owner.components.get('network').socket;
 }
 
 /**
@@ -53,7 +54,10 @@ PhaserInputComponent.prototype.captureInput = function() {
     }
 
     this._sequence++;
-    this.processCommand(command);
+    this.processCommand(command);    
+    var transform = this.owner.components.get("physics").getTransform();
+    this._socket.emit('sync', transform);
+    // console.log(transform.position);
 }
 
 module.exports = PhaserInputComponent;

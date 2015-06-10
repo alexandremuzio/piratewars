@@ -8,7 +8,7 @@ var SnapshotManager = require('../shared/core/snapshot_manager.js');
 
 
 function Game(socket) {
-    this.game = new Phaser.Game(800, 450, Phaser.AUTO, "", 
+    this.game = new Phaser.Game(800, 450, Phaser.CANVAS, "", 
         { preload: this.preload.bind(this),
           create:  this.create.bind(this),
           update:  this.update.bind(this),
@@ -17,9 +17,8 @@ function Game(socket) {
     this.snapshotManager = new SnapshotManager();
     this.snapshot = null;
     this.socket = socket;
-    this.id = id;
     this.numberOfConnectedPlayers = 1;
-    this.entityFactory = new entityFactory(this.game);
+    this.entityFactory = new EntityFactory(this.game, this.socket);
     this.selfPlayer;
 }
 
@@ -36,14 +35,16 @@ Game.prototype.create = function() {
     this.createTexts();
     this.createInitialEntities(); 
     this.assignNetworkCallbacks();
-    GameEngine.getInstance();
+    GameEngine.getInstance(); //??
+    this.socket.emit('player.ready');
 };
 
 //update loop - runs at 60fps
 Game.prototype.update = function() {
+    // console.log(GameEngine.getInstance().entities);
     this.applySyncFromServer();
     GameEngine.getInstance().gameStep();
-    this.sendInputToServer();
+    // this.sendInputToServer(); Doing this inside the sync component
 };
 
 Game.prototype.render = function() {
@@ -55,19 +56,27 @@ Game.prototype.render = function() {
 //////////////////////////////////////
 Game.prototype.applySyncFromServer = function() {
 
-    var lastSnapshot = snapshotManager.getLast();
+    var lastSnapshot = this.snapshotManager.getLast();
     if (lastSnapshot) {
         for (var key in lastSnapshot.players) {
-            if (!GameEngine().getInstance().entities[key]) {
-                this.entityFactory.createRemotePlayer(key);
+            console.log("for var key in snapshot");
+            if (!GameEngine.getInstance().entities[key]) {
+                console.log("creating remote player");
+                this.entityFactory.createRemotePlayer({ id: key });
             }
-            GameEngine().getInstance().entities[key].sync(lastSnapshot.players[key]);
+            GameEngine.getInstance().entities[key].sync(lastSnapshot.players[key]);
         }
     }
 
-    // Try to use underscore:
-    // _.each(GameEngine.getInstance().entities, function(entity) {
-    //     entity.sync(data);
+    // if (!lastSnapshot) return;
+    // _.each(lastSnapshot.players, function(entity) {
+    //     var playerToSync = GameEngine.getInstance().entities[entity.id];
+    //     if (!playerToSync) {
+    //         console.log("creating remote player");
+    //         playerToSync = this.entityFactory.createRemotePlayer({ id: key });
+    //     }
+    //     playerToSync.sync(entity);
+    //     // GameEngine.getInstance().entities[entity.id].sync(entity);
     // });
 }
 
@@ -114,17 +123,13 @@ Game.prototype.loadAssets = function() {
 }
 
 Game.prototype.onGameSync = function(snapshot) {
-    snapshotManager.add(snapshot);
+    this.snapshotManager.add(snapshot);
 }
 
 Game.prototype.onPlayerCreate = function(data) {    
-    this.selfPlayer = this.entityFactory.createLocalPlayer(data.id);
+    console.log("Creating a new player!!");
+    this.selfPlayer = this.entityFactory.createLocalPlayer({ id: data.id });
     this.game.camera.follow(this.selfPlayer.components.get("sprite").sprite);
-}
-
-Game.prototype.sendInputToServer = function() {
-    ////////////////////////// Change position to input //////////////////////////
-    this.socket.emit('sync.input', { selfPlayer.transform });
 }
 
 Game.prototype.setPhaserPreferences = function() {    
@@ -140,7 +145,7 @@ Game.prototype.setPhaserPreferences = function() {
     this.game.time.advancedTiming = true;
 }
 
-Game.prototype.updateTexts = function {
+Game.prototype.updateTexts = function() {
     // Debugging purposes
     this.game.debug.cameraInfo(this.game.camera, 32, 32);
     this.fpsText.setText("FPS: " + this.game.time.fps);

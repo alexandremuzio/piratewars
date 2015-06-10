@@ -8,3 +8,6 @@ tmp
 vendor/*
 lib/*
 bundle.js
+
+.git
+.gitignore

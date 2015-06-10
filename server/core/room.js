@@ -1,6 +1,6 @@
 'use strict'
 
-_ = require('underscore');
+var _ = require('underscore');
 var Client = require('./client.js');
 var SnapshotManager = require('../../shared/core/snapshot_manager');
 
@@ -13,7 +13,7 @@ function Room(socket) {
 }
 
 Room.prototype.init = function() {
-	this._socket.on('connect', this.onConnection.bind(this));
+	this._socket.sockets.on('connect', this.onConnection.bind(this));
 
     // start the game loop for this room with the configured tick rate
     setInterval(this.gameLoop.bind(this), 1000 / 60);
@@ -21,9 +21,8 @@ Room.prototype.init = function() {
 
 Room.prototype.onConnection = function(socket) {
 	console.log("onconection");
-	var client = new Client(socket);
+	var client = new Client(socket, this);
 	client.init();
-	this.clients.push(client);
 }
 
 Room.prototype.onClientIncomingSync = function(transform) {
@@ -31,17 +30,26 @@ Room.prototype.onClientIncomingSync = function(transform) {
 }
 
 Room.prototype.gameLoop = function() {
+
+
 	this.snapshots.add(this.entities);
+	var clientSnapshot = {};
+	clientSnapshot.players = {};
 
-	this.syncClients(this.entities.getLast(););
+	_.each(this.entities, function(entity) {
+		clientSnapshot.players[entity.id] = entity.transform;
+	});
+
+	// console.log(clientSnapshot);
+	this.syncClients(clientSnapshot);
 }
 
-Room.prototype.syncClients = function() {
-	// iterate over all clients blabla ///////////
-	_.each(clients, function(client)) {
-		client.syncGame(); //send snapshot here
-	}
+Room.prototype.syncClients = function(snapshot) {
+	var i = 0;
+	_.each(this.clients, function(client) {
+			console.log("Looping %d", i++);
+			client.syncGame(snapshot); //send snapshot here
+	});
 }
-
 
 module.exports = Room;

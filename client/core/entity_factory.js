@@ -7,6 +7,7 @@ var PhaserInputComponent = require('../components/input.js');
 var SyncComponent = require('../components/sync.js');
 var PlayerComponent = require('../../shared/components/player.js');
 var GameEngine = require('../../shared/game_engine.js');
+var NetworkComponent = require('../../shared/components/network.js');
 
 ///////////////////// Send these to a data file /////////////////////////////
 var playerSpriteSize = 0.2;
@@ -14,11 +15,13 @@ var playerDamping = 0.95;
 var playerAngularDamping = 0.95;
 var playerMass = 1;
 
-function EntityFactory(game) {
+function EntityFactory(game, socket) {
 	this.game = game;
+	this.socket = socket;
 }
 
 EntityFactory.prototype.createLocalPlayer = function(data) {
+	console.log("inside entity factory createLocalPlayer")
 	var entity = new Entity(data.id);
 
 	var sprite = this.game.add.sprite(100, 100, 'boat_0');
@@ -37,10 +40,12 @@ EntityFactory.prototype.createLocalPlayer = function(data) {
     body.angle = 0;
 	GameEngine.getInstance().world.addBody(body);
 
+
+	entity.components.add(new NetworkComponent(this.socket));
+	entity.components.add(new SyncComponent());
+	entity.components.add(new PhaserInputComponent(this.game.input));
 	entity.components.add(new PhysicsComponent(body));
 	entity.components.add(new SpriteComponent(sprite));
-	entity.components.add(new PhaserInputComponent(this.game.input));
-	entity.components.add(new SyncComponent());
 	entity.components.add(new PlayerComponent());
 
 	return entity;
@@ -63,8 +68,10 @@ EntityFactory.prototype.createRemotePlayer = function(data) {
     body.damping = playerDamping;
     body.angularDamping = playerAngularDamping;
     body.angle = 0;
-	GameEngine.getInstance().world.addBody(body);
+	// GameEngine.getInstance().world.addBody(body);
 
+
+	entity.components.add(new NetworkComponent(this.socket));
 	entity.components.add(new PhysicsComponent(body));
 	entity.components.add(new SpriteComponent(sprite));
 	entity.components.add(new SyncComponent());

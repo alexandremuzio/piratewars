@@ -9,7 +9,9 @@ SnapshotManager.prototype.add = function(snapshot) {
 };
 
 SnapshotManager.prototype.getLast = function(key) {
-	return this._snapshots.pop();
+	var lastSnapshot = this._snapshots.pop();
+	this._snapshots = [];
+	return lastSnapshot;
 };
 
 module.exports = SnapshotManager;

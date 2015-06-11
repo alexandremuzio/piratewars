@@ -5,7 +5,7 @@ var PhysicsComponent = require('../../shared/components/physics.js');
 var SpriteComponent = require('../components/sprite.js');
 var PhaserInputComponent = require('../components/input.js');
 var SyncComponent = require('../components/sync.js');
-var PlayerComponent = require('../../shared/components/player.js');
+var PlayerControllerComponent = require('../../shared/components/player_controller.js');
 var GameEngine = require('../../shared/game_engine.js');
 var NetworkComponent = require('../../shared/components/network.js');
 
@@ -46,7 +46,7 @@ EntityFactory.prototype.createLocalPlayer = function(data) {
 	entity.components.add(new PhaserInputComponent(this.game.input));
 	entity.components.add(new PhysicsComponent(body));
 	entity.components.add(new SpriteComponent(sprite));
-	entity.components.add(new PlayerComponent());
+	entity.components.add(new PlayerControllerComponent());
 
 	return entity;
 }
@@ -75,7 +75,7 @@ EntityFactory.prototype.createRemotePlayer = function(data) {
 	entity.components.add(new PhysicsComponent(body));
 	entity.components.add(new SpriteComponent(sprite));
 	entity.components.add(new SyncComponent());
-	entity.components.add(new PlayerComponent());
+	entity.components.add(new PlayerControllerComponent());
 
 	return entity;
 }

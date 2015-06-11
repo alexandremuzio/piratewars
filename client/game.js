@@ -35,7 +35,8 @@ Game.prototype.create = function() {
     this.createTexts();
     this.createInitialEntities(); 
     this.assignNetworkCallbacks();
-    GameEngine.getInstance(); //??
+    GameEngine.getInstance(); //??    
+    // setInterval(this.debugUpdate.bind(this), 1000);
     this.socket.emit('player.ready');
 };
 
@@ -44,8 +45,25 @@ Game.prototype.update = function() {
     // console.log(GameEngine.getInstance().entities);
     this.applySyncFromServer();
     GameEngine.getInstance().gameStep();
+
+    // NOOOOO!!! REMOVE THIS IF, PLEASE!!!
+    if (this.selfPlayer) {
+        this.socket.emit('sync', this.selfPlayer.components.get('physics').getTransform());
+    }
     // this.sendInputToServer(); Doing this inside the sync component
 };
+
+// Game.prototype.debugUpdate = function() {
+//     // console.log(GameEngine.getInstance().entities);
+//     console.log("STARTING UPDATE LOOP");
+//     this.applySyncFromServer();
+//     console.log("STARTING GAME STEP")
+//     GameEngine.getInstance().gameStep();
+//     console.log("SENDING POSITION TO SERVER");
+//     this.socket.emit('sync', this.selfPlayer.components.get('physics').getTransform);
+//     console.log("ENDING UPDATE LOOP");
+//     // this.sendInputToServer(); Doing this inside the input component
+// };
 
 Game.prototype.render = function() {
     this.updateTexts();
@@ -55,13 +73,15 @@ Game.prototype.render = function() {
 // Functions in alphabetical order: //
 //////////////////////////////////////
 Game.prototype.applySyncFromServer = function() {
-
+    // console.log("Starting applySyncFromServer");
     var lastSnapshot = this.snapshotManager.getLast();
+    // console.log(lastSnapshot);
     if (lastSnapshot) {
+        // console.log("snapshot true");
         for (var key in lastSnapshot.players) {
-            console.log("for var key in snapshot");
+            // console.log("for var key in snapshot", key);
             if (!GameEngine.getInstance().entities[key]) {
-                console.log("creating remote player");
+                // console.log("creating remote player");
                 this.entityFactory.createRemotePlayer({ id: key });
             }
             GameEngine.getInstance().entities[key].sync(lastSnapshot.players[key]);
@@ -150,6 +170,7 @@ Game.prototype.updateTexts = function() {
     this.game.debug.cameraInfo(this.game.camera, 32, 32);
     this.fpsText.setText("FPS: " + this.game.time.fps);
 }
+
 
 
 

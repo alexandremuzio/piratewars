@@ -16,7 +16,7 @@ PhysicsComponent.prototype.constructor = PhysicsComponent;
 ///
 
 PhysicsComponent.prototype.update = function() {
-	console.log(this.body.velocity);
+	//console.log(this.body.velocity);
 }
 
 PhysicsComponent.prototype.getTransform = function() {

@@ -16,7 +16,7 @@ Room.prototype.init = function() {
 	this._socket.sockets.on('connect', this.onConnection.bind(this));
 
     // start the game loop for this room with the configured tick rate
-    setInterval(this.gameLoop.bind(this), 1000 / 60);
+    setInterval(this.gameLoop.bind(this), 1000/60);
 }
 
 Room.prototype.onConnection = function(socket) {
@@ -47,7 +47,8 @@ Room.prototype.gameLoop = function() {
 Room.prototype.syncClients = function(snapshot) {
 	var i = 0;
 	_.each(this.clients, function(client) {
-			console.log("Looping %d", i++);
+			// console.log("syncing client", client._id, "snapshot=");
+			// console.log(snapshot);
 			client.syncGame(snapshot); //send snapshot here
 	});
 }

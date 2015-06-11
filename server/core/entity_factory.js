@@ -1,9 +1,9 @@
 'use strict'
 
 var UUID = require('node-uuid');
-var Entity = require('../../shared/core/entity');
-var PlayerComponent = require('../../shared/components/player');
-var NetworkComponent = require('../../shared/components/network');
+var Entity = require('../../shared/core/entity.js');
+var PlayerControllerComponent = require('../../shared/components/player_controller.js');
+var NetworkComponent = require('../../shared/components/network.js');
 
 //singleton
 var EntityFactory = {createPlayer: null};
@@ -27,7 +27,7 @@ EntityFactory.createPlayer = function(socket) {
 	// entity.components.add(new SpriteComponent(sprite));
 	// entity.components.add(new PhaserInputComponent(this.game.input));
 	// entity.components.add(new SyncComponent());
-	entity.components.add(new PlayerComponent());
+	entity.components.add(new PlayerControllerComponent());
 	entity.components.add(new NetworkComponent(socket));
 
 	return entity;

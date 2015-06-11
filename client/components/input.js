@@ -55,9 +55,8 @@ PhaserInputComponent.prototype.captureInput = function() {
 
     this._sequence++;
     this.processCommand(command);    
-    var transform = this.owner.components.get("physics").getTransform();
-    this._socket.emit('sync', transform);
-    // console.log(transform.position);
+    // var transform = this.owner.components.get("physics").getTransform();
+    // console.log("sending self transform to server", transform);
 }
 
 module.exports = PhaserInputComponent;

@@ -21,7 +21,7 @@ SyncComponent.prototype.init = function() {
 }
 
 SyncComponent.prototype.onSyncronization = function(transform) {
-	 // console.log(transform.velocity);
+	// console.log("syncronizing self player with position: ", transform.position);
 	this.owner.components.get('physics').setTransform(transform);
 }
 

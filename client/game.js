@@ -35,7 +35,7 @@ Game.prototype.create = function() {
     this.createTexts();
     this.createInitialEntities(); 
     this.assignNetworkCallbacks();
-    GameEngine.getInstance(); //??    
+    GameEngine.getInstance(); // Initialize GameEngine
     // setInterval(this.debugUpdate.bind(this), 1000);
     this.socket.emit('player.ready');
 };
@@ -50,20 +50,7 @@ Game.prototype.update = function() {
     if (this.selfPlayer) {
         this.socket.emit('sync', this.selfPlayer.components.get('physics').getTransform());
     }
-    // this.sendInputToServer(); Doing this inside the sync component
 };
-
-// Game.prototype.debugUpdate = function() {
-//     // console.log(GameEngine.getInstance().entities);
-//     console.log("STARTING UPDATE LOOP");
-//     this.applySyncFromServer();
-//     console.log("STARTING GAME STEP")
-//     GameEngine.getInstance().gameStep();
-//     console.log("SENDING POSITION TO SERVER");
-//     this.socket.emit('sync', this.selfPlayer.components.get('physics').getTransform);
-//     console.log("ENDING UPDATE LOOP");
-//     // this.sendInputToServer(); Doing this inside the input component
-// };
 
 Game.prototype.render = function() {
     this.updateTexts();
@@ -87,17 +74,6 @@ Game.prototype.applySyncFromServer = function() {
             GameEngine.getInstance().entities[key].sync(lastSnapshot.players[key]);
         }
     }
-
-    // if (!lastSnapshot) return;
-    // _.each(lastSnapshot.players, function(entity) {
-    //     var playerToSync = GameEngine.getInstance().entities[entity.id];
-    //     if (!playerToSync) {
-    //         console.log("creating remote player");
-    //         playerToSync = this.entityFactory.createRemotePlayer({ id: key });
-    //     }
-    //     playerToSync.sync(entity);
-    //     // GameEngine.getInstance().entities[entity.id].sync(entity);
-    // });
 }
 
 Game.prototype.assignAssets = function() {  
@@ -170,8 +146,5 @@ Game.prototype.updateTexts = function() {
     this.game.debug.cameraInfo(this.game.camera, 32, 32);
     this.fpsText.setText("FPS: " + this.game.time.fps);
 }
-
-
-
 
 module.exports = Game;

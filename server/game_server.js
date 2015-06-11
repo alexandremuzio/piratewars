@@ -10,7 +10,6 @@ function GameServer(socket) {
 
 GameServer.prototype.init = function() {
 	var room = new Room(this._socket);
-	// this.rooms.push(new Room(room));  MUDEI AQUI, MUZIO!!!
 	this.rooms.push(room);
 	room.init();
 }

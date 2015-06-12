@@ -36,19 +36,21 @@ Game.prototype.create = function() {
     this.createInitialEntities(); 
     this.assignNetworkCallbacks();
     GameEngine.getInstance(); // Initialize GameEngine
-    // setInterval(this.debugUpdate.bind(this), 1000);
+    // setInterval(this.debugUpdate.bind(this), 3000);
     this.socket.emit('player.ready');
 };
 
 //update loop - runs at 60fps
 Game.prototype.update = function() {
-    // console.log(GameEngine.getInstance().entities);
-    this.applySyncFromServer();
-    GameEngine.getInstance().gameStep();
-
-    // NOOOOO!!! REMOVE THIS IF, PLEASE!!!
+    /////////////////// NOOOOO!!! FIND A WAY TO REMOVE THIS IF, PLEASE!!!
     if (this.selfPlayer) {
-        this.socket.emit('sync', this.selfPlayer.components.get('physics').getTransform());
+        // console.log("");
+        // console.log("x1= ", this.selfPlayer.components.get('physics').getTransform().position.x);
+        this.applySyncFromServer();
+        // console.log("x2= ", this.selfPlayer.components.get('physics').getTransform().position.x);
+        GameEngine.getInstance().gameStep();
+        // console.log("x3= ", this.selfPlayer.components.get('physics').getTransform().position.x);
+        this.socket.emit('client.sync', this.selfPlayer.components.get('physics').getTransform());
     }
 };
 
@@ -110,6 +112,25 @@ Game.prototype.createTexts = function() {
     this.fpsText.fixedToCamera = true;
     this.fpsText.cameraOffset.setTo(750,10);
 }
+
+Game.prototype.debugUpdate = function() {    
+    /////////////////// NOOOOO!!! FIND A WAY TO REMOVE THIS IF, PLEASE!!!
+    if (this.selfPlayer) {
+        console.log("");
+        console.log("STARTING applySyncFromServer");
+        console.log("x=", this.selfPlayer.components.get('physics').getTransform().position.x);
+        this.applySyncFromServer();
+        console.log("x=", this.selfPlayer.components.get('physics').getTransform().position.x);
+        console.log("ENDING applySyncFromServer");
+        console.log("STARTING gameStep");
+        GameEngine.getInstance().gameStep();
+        console.log("x=", this.selfPlayer.components.get('physics').getTransform().position.x);
+        console.log("ENDING gameStep");
+        console.log("STARTING emit");
+        this.socket.emit('client.sync', this.selfPlayer.components.get('physics').getTransform());
+        console.log("ENDING emit");
+    }
+};
 
 Game.prototype.loadAssets = function() {
     this.game.load.tilemap('backgroundmap', 'assets/map.json', null, Phaser.Tilemap.TILED_JSON);

@@ -7,7 +7,6 @@ function NetworkComponent(socket) {
 	this.socket = socket;
 };
 
-
 ///
 NetworkComponent.prototype = Object.create(ComponentBase.prototype);
 NetworkComponent.prototype.constructor = NetworkComponent;

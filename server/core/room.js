@@ -3,19 +3,16 @@
 var _ = require('underscore');
 var Client = require('./client.js');
 var SnapshotManager = require('../../shared/core/snapshot_manager');
+var GameEngine = require('../../shared/game_engine.js');
 
 function Room(socket) {
-	this.entities = [];
 	this.clients = [];
 	this.snapshots = new SnapshotManager();
-
 	this._socket = socket;
 }
 
 Room.prototype.init = function() {
 	this._socket.sockets.on('connect', this.onConnection.bind(this));
-
-    // start the game loop for this room with the configured tick rate
     setInterval(this.gameLoop.bind(this), 1000/60);
 }
 
@@ -25,31 +22,42 @@ Room.prototype.onConnection = function(socket) {
 	client.init();
 }
 
-Room.prototype.onClientIncomingSync = function(transform) {
-	
-}
+Room.prototype.onClientIncomingSync = function(transform) {}
 
 Room.prototype.gameLoop = function() {
+	// console.log("");
+    // console.log("STARTING applySyncFromClient");
+	this.applySyncFromClients();
+    // console.log("ENDING applySyncFromclient");
 
+    // console.log("STARTING gameStep");
+    GameEngine.getInstance().gameStep();
+    // console.log("ENDING gameStep");
 
-	this.snapshots.add(this.entities);
+    // console.log("STARTING emit");
+	this.sendSyncToClients();
+	// console.log("ENDING emit");
+	// console.log("");
+}
+
+Room.prototype.applySyncFromClients = function() {
+	_.each(this.clients, function(client) {
+		client.applySyncFromClient();
+	});
+}
+
+Room.prototype.sendSyncToClients = function() {
 	var clientSnapshot = {};
 	clientSnapshot.players = {};
-
-	_.each(this.entities, function(entity) {
-		clientSnapshot.players[entity.id] = entity.transform;
+	_.each(GameEngine.getInstance().entities, function(entity) {
+		clientSnapshot.players[entity.id] = entity.components.get('physics').getTransform();
 	});
-
-	// console.log(clientSnapshot);
 	this.syncClients(clientSnapshot);
 }
 
 Room.prototype.syncClients = function(snapshot) {
-	var i = 0;
 	_.each(this.clients, function(client) {
-			// console.log("syncing client", client._id, "snapshot=");
-			// console.log(snapshot);
-			client.syncGame(snapshot); //send snapshot here
+			client.syncGame(snapshot);
 	});
 }
 

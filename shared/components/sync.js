@@ -13,8 +13,7 @@ SyncComponent.prototype = Object.create(GameComponent.prototype);
 SyncComponent.prototype.constructor = SyncComponent;
 ///
 
-SyncComponent.prototype.update = function() {
-}
+SyncComponent.prototype.update = function() {}
 
 SyncComponent.prototype.init = function() {
 	this.owner.on('entity.sync', this.onSyncronization.bind(this));

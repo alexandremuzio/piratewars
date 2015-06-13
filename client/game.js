@@ -3,9 +3,9 @@
 var _ = require('underscore');
 var GameEngine = require('../shared/game_engine.js');
 var EntityFactory = require('./core/entity_factory.js');
+var EntityCreator = require('./core/entity_creator.js');
 var GameComponent = require('../shared/core/component.js');
 var SnapshotManager = require('../shared/core/snapshot_manager.js');
-
 
 function Game(socket) {
     this.game = new Phaser.Game(800, 450, Phaser.CANVAS, "", 
@@ -22,7 +22,9 @@ function Game(socket) {
 
     var data = { game:      this.game,
                  socket:    this.socket };
+
     EntityFactory.init(data);
+    EntityCreator.init(data);
 }
 
 //Phaser Methods
@@ -73,7 +75,7 @@ Game.prototype.applySyncFromServer = function() {
             // console.log("for var key in snapshot", key);
             if (!GameEngine.getInstance().entities[key]) {
                 // console.log("creating remote player");
-                this.entityFactory.createRemotePlayer({ id: key });
+                EntityFactory.createRemotePlayer({ id: key });
             }
             GameEngine.getInstance().entities[key].sync(lastSnapshot.players[key]);
         }
@@ -147,7 +149,7 @@ Game.prototype.onGameSync = function(snapshot) {
 
 Game.prototype.onPlayerCreate = function(data) {    
     console.log("Creating a new player!");
-    this.selfPlayer = this.entityFactory.createLocalPlayer({ id: data.id });
+    this.selfPlayer = EntityFactory.createLocalPlayer({ id: data.id });
     this.game.camera.follow(this.selfPlayer.components.get("sprite").sprite);
 }
 

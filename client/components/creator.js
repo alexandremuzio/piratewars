@@ -1,12 +1,12 @@
 'use strict'
 
 var BaseComponent = require('../../shared/core/component.js');
-var EntityFactory = require('../core/entity_factory.js');
+var EntityCreator= require('../core/entity_creator.js');
 
 function CreatorComponent() {
 	console.log("inside CreatorComponent constr");
 	this.key = "creator";
-	console.log("EntityFactory= ", EntityFactory);
+	// console.log("EntityFactory= ", EntityFactory);
 }
 
 ///
@@ -16,8 +16,8 @@ CreatorComponent.prototype.constructor = CreatorComponent;
 
 CreatorComponent.prototype.createBullet = function() {	
     console.log("CreatorComponent createBullet");
-    var player = this.owner.components.get("player");
-    var bullet = EntityFactory.createBullet(player);
+    var bullet = EntityCreator.createBullet(this.owner);
+    // console.log(bullet);
     return bullet;
 }
 

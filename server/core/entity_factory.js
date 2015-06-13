@@ -3,6 +3,9 @@
 var UUID = require('node-uuid');
 var p2 = require('p2');
 var Entity = require('../../shared/core/entity.js');
+var CooldownComponent = require('../../shared/components/cooldown');
+var CreatorComponent = require('../components/creator');
+var CanonComponent = require('../../shared/components/canon');
 var PlayerControllerComponent = require('../../shared/components/player_controller.js');
 var NetworkComponent = require('../../shared/components/network.js');
 var ServerInputComponent = require('../components/input.js');
@@ -33,10 +36,13 @@ EntityFactory.createPlayer = function(data) {
     body.angle = 0;
 	GameEngine.getInstance().world.addBody(body);
 
+	entity.components.add(new CooldownComponent());
 	entity.components.add(new NetworkComponent(data.socket));
 	entity.components.add(new PhysicsComponent(body));
 	entity.components.add(new ServerInputComponent(data.snapshots));
 	entity.components.add(new PlayerControllerComponent());
+	entity.components.add(new CanonComponent(entity));
+	entity.components.add(new CreatorComponent());
 
 	return entity;
 }

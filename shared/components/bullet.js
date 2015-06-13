@@ -29,7 +29,7 @@ BulletComponent.prototype.update = function() {
 
 	if (this.currentAliveTime >= this.bulletSurvivalTime) {
 		//delete bullet some way
-		console.log("Bullet should be deleted now!");
+		// console.log("Bullet should be deleted now!");
 	}
 };
 

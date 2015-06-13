@@ -96,4 +96,3 @@ var EntityFactory = {
 };
 
 module.exports = EntityFactory;
->>>>>>> Watch your head. Projectiles being fired

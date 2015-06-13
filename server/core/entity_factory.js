@@ -6,7 +6,7 @@ var Entity = require('../../shared/core/entity.js');
 var PlayerControllerComponent = require('../../shared/components/player_controller.js');
 var NetworkComponent = require('../../shared/components/network.js');
 var SyncComponent = require('../../shared/components/sync.js');
-var InputComponent = require('../components/input.js');
+var ServerInputComponent = require('../components/input.js');
 var PhysicsComponent = require('../../shared/components/physics.js');
 var GameEngine = require('../../shared/game_engine.js');
 
@@ -34,11 +34,9 @@ EntityFactory.createPlayer = function(data) {
     body.angle = 0;
 	GameEngine.getInstance().world.addBody(body);
 
-
 	entity.components.add(new NetworkComponent(data.socket));
 	entity.components.add(new PhysicsComponent(body));
-	entity.components.add(new InputComponent(data.snapshots));
-	entity.components.add(new SyncComponent());
+	entity.components.add(new ServerInputComponent(data.snapshots));
 	entity.components.add(new PlayerControllerComponent());
 
 	return entity;

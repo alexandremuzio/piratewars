@@ -15,9 +15,10 @@ var playerDamping = 0.95;
 var playerAngularDamping = 0.95;
 var playerMass = 1;
 
-function EntityFactory(game, socket) {
-	this.game = game;
-	this.socket = socket;
+function EntityFactory(data) {
+	this.game = data.game;
+	this.socket = data.socket;
+	this.snapshots = data.snapshots; // Could this be used on another entity?
 }
 
 EntityFactory.prototype.createLocalPlayer = function(data) {
@@ -42,8 +43,8 @@ EntityFactory.prototype.createLocalPlayer = function(data) {
 
 
 	entity.components.add(new NetworkComponent(this.socket));
-	entity.components.add(new SyncComponent());
-	entity.components.add(new PhaserInputComponent(this.game.input));
+	entity.components.add(new SyncComponent(this.snapshots));
+	entity.components.add(new PhaserInputComponent(this.game.input, this.snapshots));
 	entity.components.add(new PhysicsComponent(body));
 	entity.components.add(new SpriteComponent(sprite));
 	entity.components.add(new PlayerControllerComponent());

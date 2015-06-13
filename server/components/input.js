@@ -1,26 +1,27 @@
 'use strict'
 
-var BaseComponent = require('../../shared/components/input');
+var InputComponent = require('../../shared/components/input.js');
 
-function InputComponent(snapshots) {
+function ServerInputComponent(snapshots) {
 	console.log("inside serverInputComponent constr");
+	this.key = "input";
 	this._snapshots = snapshots;
-	console.log(snapshots);
-};
-
-///
-InputComponent.prototype = Object.create(BaseComponent.prototype);
-InputComponent.prototype.constructor = InputComponent;
-///
-
-InputComponent.prototype.init = function() {
-	var socket = this.owner.components.get('network').socket;
-    socket.on('client.sync', this.onInput.bind(this));
-};
-
-InputComponent.prototype.onInput = function(transform) {
-	/////////change transform to list of inputs
-	this._snapshots.add(transform);
 }
 
-module.exports = InputComponent;
+///
+ServerInputComponent.prototype = Object.create(InputComponent.prototype);
+ServerInputComponent.prototype.constructor = ServerInputComponent;
+///
+
+ServerInputComponent.prototype.update = function() {
+	// console.log("input update!!!!");
+	var lastSnapshot = this._snapshots.getLast();
+	// console.log(lastSnapshot);
+	if (lastSnapshot) {
+		this._snapshots.clear();
+		// console.log("Applying!");
+		this.processCommand(lastSnapshot);
+	}
+}
+
+module.exports = ServerInputComponent;

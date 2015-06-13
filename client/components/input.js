@@ -1,14 +1,12 @@
 'use strict'
 
-var GameEngine = require('../../shared/game_engine.js');
-var GameComponent = require('../../shared/core/component.js');
 var InputComponent = require('../../shared/components/input.js');
 
-function PhaserInputComponent(input) {
+function PhaserInputComponent(input, snapshots) {
 	console.log("inside PhaserInputComp constr");
 	this.key = "input";
 	this._input = input;
-	this._sequence = 0;    
+    this._snapshots = snapshots;
 
     // this._cursorKeys = this._input.keyboard.createCursorKeys();
     // this._attackKey = this._input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
@@ -22,14 +20,13 @@ PhaserInputComponent.prototype.constructor = PhaserInputComponent;
 PhaserInputComponent.prototype.init = function() {
 	this._cursorKeys = this._input.keyboard.createCursorKeys();
     this._attackKey = this._input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-    this._socket = this.owner.components.get('network').socket;
 }
 
 /**
  * @override
  */
 PhaserInputComponent.prototype.update = function() {
-	// console.log("input component update!");
+	//console.log("input");
 	this.captureInput();
 }
 
@@ -53,8 +50,10 @@ PhaserInputComponent.prototype.captureInput = function() {
         command.push('space');
     }
 
-    this._sequence++;
-    this.processCommand(command);    
+    if (command.length > 0) {
+        this.processCommand(command);
+        this._snapshots.add(command);
+    }
 }
 
 module.exports = PhaserInputComponent;

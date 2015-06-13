@@ -24,7 +24,7 @@ Client.prototype.init = function() {
 Client.prototype.onReady = function() {
 	console.log("client onReady");
 	this._player = this.createPlayer();
-	// this._socket.on('sync', this.queueSyncFromClient.bind(this));
+	this._socket.on('client.sync', this.queueSyncFromClient.bind(this));
 	this._room.clients.push(this);
 }
 
@@ -39,20 +39,8 @@ Client.prototype.createPlayer = function() {
 	return entity;
 }
 
-// Client.prototype.queueSyncFromClient = function(transform) {
-// 	this._snapshots.add(transform);
-// }
-
-Client.prototype.applySyncFromClient = function() {
-	// console.log("");
-	// console.log("x1= ", this._player.components.get('physics').getTransform().position.x);
-	var lastSnapshot = this._snapshots.getLast();
-	if (lastSnapshot) {
-		this._snapshots.clear();
-		// console.log("setting transform with pos x= ", lastSnapshot.position.x);
-		this._player.components.get('physics').setTransform(lastSnapshot);
-	// console.log("x2= ", this._player.components.get('physics').getTransform().position.x);
-	}
+Client.prototype.queueSyncFromClient = function(transform) {
+	this._snapshots.add(transform);
 }
 
 Client.prototype.syncGame = function(snapshot) {

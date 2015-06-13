@@ -14,12 +14,16 @@ function Game(socket) {
           update:  this.update.bind(this),
           render:  this.render.bind(this) 
         });
-    this.snapshotManager = new SnapshotManager();
+    this.OutSnapshotManager = new SnapshotManager();
+    this.InSnapshotManager = new SnapshotManager();
     this.snapshot = null;
     this.socket = socket;
+    this.selfPlayer = null;
     this.numberOfConnectedPlayers = 1;
-    this.entityFactory = new EntityFactory(this.game, this.socket);
-    this.selfPlayer;
+    var data = { game:      this.game,
+                 socket:    this.socket,
+                 snapshots: this.OutSnapshotManager };
+    this.entityFactory = new EntityFactory(data);
 }
 
 //Phaser Methods
@@ -42,16 +46,14 @@ Game.prototype.create = function() {
 
 //update loop - runs at 60fps
 Game.prototype.update = function() {
-    /////////////////// NOOOOO!!! FIND A WAY TO REMOVE THIS IF, PLEASE!!!
-    if (this.selfPlayer) {
+    // if (this.selfPlayer) {
         // console.log("");
         // console.log("x1= ", this.selfPlayer.components.get('physics').getTransform().position.x);
         this.applySyncFromServer();
         // console.log("x2= ", this.selfPlayer.components.get('physics').getTransform().position.x);
         GameEngine.getInstance().gameStep();
         // console.log("x3= ", this.selfPlayer.components.get('physics').getTransform().position.x);
-        this.socket.emit('client.sync', this.selfPlayer.components.get('physics').getTransform());
-    }
+    // }
 };
 
 Game.prototype.render = function() {
@@ -63,10 +65,10 @@ Game.prototype.render = function() {
 //////////////////////////////////////
 Game.prototype.applySyncFromServer = function() {
     // console.log("Starting applySyncFromServer");
-    var lastSnapshot = this.snapshotManager.getLast();
+    var lastSnapshot = this.InSnapshotManager.getLast();
     // console.log(lastSnapshot);
     if (lastSnapshot) {
-        this.snapshotManager.clear();
+        this.InSnapshotManager.clear();
         // console.log("snapshot true");
         for (var key in lastSnapshot.players) {
             // console.log("for var key in snapshot", key);
@@ -141,7 +143,7 @@ Game.prototype.loadAssets = function() {
 }
 
 Game.prototype.onGameSync = function(snapshot) {
-    this.snapshotManager.add(snapshot);
+    this.InSnapshotManager.add(snapshot);
 }
 
 Game.prototype.onPlayerCreate = function(data) {    

@@ -27,7 +27,7 @@ Room.prototype.onClientIncomingSync = function(transform) {}
 Room.prototype.gameLoop = function() {
 	// console.log("");
     // console.log("STARTING applySyncFromClient");
-	this.applySyncFromClients();
+	// this.applySyncFromClients(); // Now done inside input component
     // console.log("ENDING applySyncFromclient");
 
     // console.log("STARTING gameStep");
@@ -40,11 +40,11 @@ Room.prototype.gameLoop = function() {
 	// console.log("");
 }
 
-Room.prototype.applySyncFromClients = function() {
-	_.each(this.clients, function(client) {
-		client.applySyncFromClient();
-	});
-}
+// Room.prototype.applySyncFromClients = function() {
+// 	_.each(this.clients, function(client) {
+// 		client.applySyncFromClient();
+// 	});
+// }
 
 Room.prototype.sendSyncToClients = function() {
 	var clientSnapshot = {};

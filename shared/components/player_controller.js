@@ -3,6 +3,7 @@
 var GameComponent = require('../core/component.js');
 
 function Player() {
+	this.key = "player";
 };
 
 ///
@@ -13,7 +14,7 @@ Player.prototype.constructor = Player;
 /**
  * @override
  */
-// Player.prototype.update = function() {
-// }
+Player.prototype.update = function() {}
+
 
 module.exports = Player;

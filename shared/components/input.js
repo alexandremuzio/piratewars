@@ -35,10 +35,19 @@ InputComponent.prototype.processCommand = function(command) {
                     body.angularForce = 100//player_properties.angular_force;
                 // }
                 break;
-            case 'space':
+            case 'q':
             	//shoot projectile
-                var creator = this.owner.components.get("creator");
-                creator.createBullet();
+                if (this.owner.components.get("cooldown").activate()) {
+                    var creator = this.owner.components.get("creator");
+                    creator.createBullet("left");
+                }
+                break;
+            case 'e':
+                //shoot projectile
+                if (this.owner.components.get("cooldown").activate()) {
+                    var creator = this.owner.components.get("creator");
+                    creator.createBullet("right");
+                }
                 break;
             default:
                 break;

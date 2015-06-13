@@ -17,7 +17,7 @@ var EntityCreator = {
 		this.game = data.game;
 	},
 
-	createBullet : function(player) {
+	createBullet : function(player, side) {
 		console.log("createBullet");
 		var bulletId = UUID();
 		var entity = new Entity(bulletId);
@@ -27,7 +27,9 @@ var EntityCreator = {
 		//bullet properties
 		var x =playerBody.position[0];
 		var y = playerBody.position[1];
-		var angle = playerBody.angle - 90;
+		var angle;
+		if (side == "left")  angle = playerBody.angle - 90;
+		else angle = playerBody.angle + 90;
 
 		var sprite = this.game.add.sprite(x, y, 'bullet');
 		sprite.anchor.setTo(0.5, 0.5); // Default anchor at the center
@@ -37,8 +39,8 @@ var EntityCreator = {
 	            name: "bullet",
 	            mass: bulletMass,
 	            position: [x, y],
-	            velocity: [bulletVelocity *  Math.cos(angle *  Math.PI/ 180.0),
-	            		   bulletVelocity *  Math.sin(angle *  Math.PI/ 180.0)]
+	            velocity: [playerBody.velocity[0] + bulletVelocity *  Math.cos(angle *  Math.PI/ 180.0),
+	            		   playerBody.velocity[1] + bulletVelocity *  Math.sin(angle *  Math.PI/ 180.0)]
 	    });
 		body.addShape(new p2.Circle(this.radius));
 		body.angle = angle;

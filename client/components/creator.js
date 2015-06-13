@@ -14,9 +14,9 @@ CreatorComponent.prototype = Object.create(BaseComponent.prototype);
 CreatorComponent.prototype.constructor = CreatorComponent;
 ///
 
-CreatorComponent.prototype.createBullet = function() {	
-    console.log("CreatorComponent createBullet");
-    var bullet = EntityCreator.createBullet(this.owner);
+CreatorComponent.prototype.createBullet = function(side) {
+	console.log("CreatorComponent createBullet");
+    var bullet = EntityCreator.createBullet(this.owner,side);
     // console.log(bullet);
     return bullet;
 }

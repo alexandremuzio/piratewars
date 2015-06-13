@@ -4,6 +4,7 @@
 var UUID = require('node-uuid');
 var GameEngine = require('../../shared/game_engine.js');
 var BulletComponent = require('../../shared/components/bullet.js');
+var CooldownComponent = require('../../shared/components/cooldown.js');
 var CreatorComponent = require('../components/creator.js');
 var Entity = require('../../shared/core/entity.js');
 var NetworkComponent = require('../../shared/components/network.js');
@@ -46,7 +47,7 @@ var EntityFactory = {
 	    body.angle = 0;
 		GameEngine.getInstance().world.addBody(body);
 
-
+		entity.components.add(new CooldownComponent());
 		entity.components.add(new NetworkComponent(this.socket));
 		entity.components.add(new SyncComponent());
 		entity.components.add(new PhaserInputComponent(this.game.input));

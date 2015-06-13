@@ -18,8 +18,11 @@ PhaserInputComponent.prototype.constructor = PhaserInputComponent;
 
 PhaserInputComponent.prototype.init = function() {
 	this._cursorKeys = this._input.keyboard.createCursorKeys();
-    this._attackKey = this._input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+    this._leftAttackKey = this._input.keyboard.addKey(Phaser.Keyboard.Q);
+    this._rightAttackKey = this._input.keyboard.addKey(Phaser.Keyboard.E);
+    
     this._snapshots = this.owner.components.get('outSync').snapshots;
+    this._socket = this.owner.components.get('network').socket;
 }
 
 /**
@@ -45,9 +48,12 @@ PhaserInputComponent.prototype.captureInput = function() {
         command.push('arrowRight');
     }
 
-    // check if the attack key is pressed
-    if (this._attackKey.isDown) {
-        command.push('space');
+    // check if the attack keys are pressed
+    if (this._leftAttackKey.isDown) {
+        command.push('q');
+    }
+    if (this._rightAttackKey.isDown) {
+        command.push('e');
     }
 
     if (command.length > 0) {

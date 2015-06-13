@@ -4,6 +4,8 @@ var GameComponent = require('../core/component.js');
 
 function Player() {
 	this.key = "player";
+
+	this.playerHeath = 100;
 };
 
 ///

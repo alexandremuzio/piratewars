@@ -16,14 +16,13 @@ CanonComponent.prototype.constructor = CanonComponent;
 CanonComponent.prototype.update = function() {
 	var body = this.owner.components.get("physics").body;
 	var rectangle = body.shapes[0];
-	console.log(rectangle);
 
 	var leftAngle = body.angle - 90;
 	var rightAngle = body.angle + 90;
 
 	var leftVector = MathUtils.vector(rectangle.height/1.5, leftAngle);
 	var rightVector = MathUtils.vector(rectangle.height/1.5, rightAngle);
-	var paraVector = MathUtils.vector(rectangle.width/3,body.angle);
+	var paraVector = MathUtils.vector(rectangle.width/4,body.angle);
 
 	//update canon positions
 	this.leftCanons = [

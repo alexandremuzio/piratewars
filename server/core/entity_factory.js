@@ -15,7 +15,7 @@ var playerDamping = 0.95;
 var playerAngularDamping = 0.95;
 var playerMass = 1;
 
-//singleton
+//static class
 var EntityFactory = {createPlayer: null};
 
 EntityFactory.createPlayer = function(data) {

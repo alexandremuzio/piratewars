@@ -1,7 +1,8 @@
 'use strict'
 
-var GameEngine = require('../game_engine.js');
-var GameComponent = require('../core/component.js');
+var GameEngine = require('../game_engine');
+var GameComponent = require('../core/component');
+var EntityFactory = require('../../client/core/entity_factory');
 
 function InputComponent() {
 	console.log("inside InputComp constr");
@@ -37,6 +38,10 @@ InputComponent.prototype.processCommand = function(command) {
                 break;
             case 'space':
             	//shoot projectile
+                var creator = this.owner.components.get("creator");
+                console.log(EntityFactory);
+                creator.createBullet();
+                break;
             default:
                 break;
 		}

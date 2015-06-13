@@ -19,9 +19,16 @@ function Game(socket) {
     this.socket = socket;
     this.selfPlayer = null;
     this.numberOfConnectedPlayers = 1;
+<<<<<<< HEAD
     var data = { game:      this.game,
                  socket:    this.socket };
     this.entityFactory = new EntityFactory(data);
+=======
+    // this.entityFactory = new EntityFactory(this.game, this.socket);
+    EntityFactory.init(this.game, this.socket);
+    console.log(EntityFactory);
+    this.selfPlayer;
+>>>>>>> Initial bullets logic (Not working correctly)
 }
 
 //Phaser Methods
@@ -72,7 +79,7 @@ Game.prototype.applySyncFromServer = function() {
             // console.log("for var key in snapshot", key);
             if (!GameEngine.getInstance().entities[key]) {
                 // console.log("creating remote player");
-                this.entityFactory.createRemotePlayer({ id: key });
+                EntityFactory.createRemotePlayer({ id: key });
             }
             GameEngine.getInstance().entities[key].sync(lastSnapshot.players[key]);
         }
@@ -146,7 +153,7 @@ Game.prototype.onGameSync = function(snapshot) {
 
 Game.prototype.onPlayerCreate = function(data) {    
     console.log("Creating a new player!!");
-    this.selfPlayer = this.entityFactory.createLocalPlayer({ id: data.id });
+    this.selfPlayer = EntityFactory.createLocalPlayer({ id: data.id });
     this.game.camera.follow(this.selfPlayer.components.get("sprite").sprite);
 }
 

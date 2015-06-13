@@ -1,9 +1,9 @@
 'use strict'
 
+var GameComponent = require('../core/component.js');
 
 function Bullet() {
 	
-
 }
 
 ///

@@ -1,7 +1,9 @@
 'use strict'
 
-var GameEngine = require('../../shared/game_engine.js');
+module.exports = EntityFactory;
 
+var UUID = require('node-uuid');
+var GameEngine = require('../../shared/game_engine.js');
 var BulletComponent = require('../../shared/components/bullet.js');
 var CreatorComponent = require('../components/creator.js');
 var Entity = require('../../shared/core/entity.js');
@@ -31,7 +33,7 @@ EntityFactory.init = function(data) {
 	this.socket= data.socket;
 };
 
-EntityFactory.createLocalPlayer = function(data) {
+EntityFactory.prototype.createLocalPlayer = function(data) {
 	console.log("inside entity factory createLocalPlayer")
 	var entity = new Entity(data.id);
 
@@ -62,7 +64,7 @@ EntityFactory.createLocalPlayer = function(data) {
 	return entity;
 }
 
-EntityFactory.createRemotePlayer = function(data) {
+EntityFactory.prototype.createRemotePlayer = function(data) {
 	console.log("inside entity factory createRemotePlayer");
 	
 	var entity = new Entity(data.id);
@@ -94,7 +96,7 @@ EntityFactory.createRemotePlayer = function(data) {
 	return entity;
 }
 
-EntityFactory.createBullet = function(player) {
+EntityFactory.prototype.createBullet = function(player) {
 	console.log("createBullet");
 	var bulletId = UUID();
 	var entity = new Entity(bulletId);
@@ -124,5 +126,3 @@ EntityFactory.createBullet = function(player) {
 
 	return entity;
 }
-
-module.exports = EntityFactory;

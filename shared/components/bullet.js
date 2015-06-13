@@ -2,11 +2,13 @@
 
 var GameComponent = require('../core/component.js');
 
-function Bullet() {
+function BulletComponent() {
 	
 }
 
 ///
-Bullet.prototype = Object.create(GameComponent.prototype);
-Bullet.prototype.constructor = Bullet;
+BulletComponent.prototype = Object.create(GameComponent.prototype);
+BulletComponent.prototype.constructor = BulletComponent;
 ///
+
+module.exports = BulletComponent;

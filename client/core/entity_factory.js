@@ -4,6 +4,7 @@
 var UUID = require('node-uuid');
 var GameEngine = require('../../shared/game_engine.js');
 var BulletComponent = require('../../shared/components/bullet.js');
+var CanonComponent = require('../../shared/components/canon.js');
 var CooldownComponent = require('../../shared/components/cooldown.js');
 var CreatorComponent = require('../components/creator.js');
 var Entity = require('../../shared/core/entity.js');
@@ -41,7 +42,7 @@ var EntityFactory = {
 	            mass: playerMass,
 	            position: [100, 100]
 	        });
-	    body.addShape(new p2.Circle(this.radius));
+	    body.addShape(new p2.Rectangle(sprite.width, sprite.height));
 	    body.damping = playerDamping;
 	    body.angularDamping = playerAngularDamping;
 	    body.angle = 0;
@@ -54,6 +55,7 @@ var EntityFactory = {
 		entity.components.add(new PhysicsComponent(body));
 		entity.components.add(new SpriteComponent(sprite));
 		entity.components.add(new PlayerControllerComponent());
+		entity.components.add(new CanonComponent(entity));
 		entity.components.add(new CreatorComponent());
 
 		return entity;
@@ -86,6 +88,7 @@ var EntityFactory = {
 		entity.components.add(new SpriteComponent(sprite));
 		entity.components.add(new SyncComponent());
 		entity.components.add(new PlayerControllerComponent());
+		entity.components.add(new CanonComponent(entity));
 		entity.components.add(new CreatorComponent());
 
 		return entity;

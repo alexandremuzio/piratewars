@@ -27,26 +27,28 @@ InputComponent.prototype.processCommand = function(command) {
                 break;
             case 'arrowLeft':
                 // if (body.velocity[0] > 5 || body.velocity[1] > 5) {
-                    body.angularForce = -100//player_properties.angular_force;
+                    // body.angularForce = -100
+                    body.angle -= 3;//player_properties.angular_force;
                 // }
                 break;
             case 'arrowRight':
                 // if (body.velocity[0] > 5 || body.velocity[1] > 5) {
-                    body.angularForce = 100//player_properties.angular_force;
+                    //body.angularForce = +100
+                    body.angle += 3//player_properties.angular_force;
                 // }
                 break;
             case 'q':
             	//shoot projectile
                 if (this.owner.components.get("cooldown").activate()) {
-                    var creator = this.owner.components.get("creator");
-                    creator.createBullet("left");
+                    var canons = this.owner.components.get("canon");
+                    canons.shootLeftCanons();
                 }
                 break;
             case 'e':
                 //shoot projectile
                 if (this.owner.components.get("cooldown").activate()) {
-                    var creator = this.owner.components.get("creator");
-                    creator.createBullet("right");
+                    var canons = this.owner.components.get("canon");
+                    canons.shootRightCanons();
                 }
                 break;
             default:

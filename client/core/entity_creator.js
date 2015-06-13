@@ -17,7 +17,7 @@ var EntityCreator = {
 		this.game = data.game;
 	},
 
-	createBullet : function(player, side) {
+	createBullet : function(player, canonPosition, side) {
 		console.log("createBullet");
 		var bulletId = UUID();
 		var entity = new Entity(bulletId);
@@ -25,8 +25,10 @@ var EntityCreator = {
 		//CHANGE TO GET FROM TRANSFORM//////////
 		var playerBody = player.components.get("physics").body;
 		//bullet properties
-		var x =playerBody.position[0];
-		var y = playerBody.position[1];
+		var x = canonPosition.x;
+		var y = canonPosition.y;
+		console.log(x, y);
+		console.log(playerBody)
 		var angle;
 		if (side == "left")  angle = playerBody.angle - 90;
 		else angle = playerBody.angle + 90;
@@ -39,8 +41,8 @@ var EntityCreator = {
 	            name: "bullet",
 	            mass: bulletMass,
 	            position: [x, y],
-	            velocity: [playerBody.velocity[0] + bulletVelocity *  Math.cos(angle *  Math.PI/ 180.0),
-	            		   playerBody.velocity[1] + bulletVelocity *  Math.sin(angle *  Math.PI/ 180.0)]
+	            velocity: [bulletVelocity *  Math.cos(angle *  Math.PI/ 180.0),
+	            		   bulletVelocity *  Math.sin(angle *  Math.PI/ 180.0)]
 	    });
 		body.addShape(new p2.Circle(this.radius));
 		body.angle = angle;

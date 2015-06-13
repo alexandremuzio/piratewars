@@ -66,6 +66,7 @@ Game.prototype.applySyncFromServer = function() {
     var lastSnapshot = this.snapshotManager.getLast();
     // console.log(lastSnapshot);
     if (lastSnapshot) {
+        this.snapshotManager.clear();
         // console.log("snapshot true");
         for (var key in lastSnapshot.players) {
             // console.log("for var key in snapshot", key);

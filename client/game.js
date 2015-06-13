@@ -14,15 +14,13 @@ function Game(socket) {
           update:  this.update.bind(this),
           render:  this.render.bind(this) 
         });
-    this.OutSnapshotManager = new SnapshotManager();
-    this.InSnapshotManager = new SnapshotManager();
+    this.outSnapshotManager = new SnapshotManager();
     this.snapshot = null;
     this.socket = socket;
     this.selfPlayer = null;
     this.numberOfConnectedPlayers = 1;
     var data = { game:      this.game,
-                 socket:    this.socket,
-                 snapshots: this.OutSnapshotManager };
+                 socket:    this.socket };
     this.entityFactory = new EntityFactory(data);
 }
 
@@ -65,10 +63,10 @@ Game.prototype.render = function() {
 //////////////////////////////////////
 Game.prototype.applySyncFromServer = function() {
     // console.log("Starting applySyncFromServer");
-    var lastSnapshot = this.InSnapshotManager.getLast();
+    var lastSnapshot = this.outSnapshotManager.getLast();
     // console.log(lastSnapshot);
     if (lastSnapshot) {
-        this.InSnapshotManager.clear();
+        this.outSnapshotManager.clear();
         // console.log("snapshot true");
         for (var key in lastSnapshot.players) {
             // console.log("for var key in snapshot", key);
@@ -89,8 +87,8 @@ Game.prototype.assignAssets = function() {
 }
 
 Game.prototype.assignNetworkCallbacks = function() {    
-    this.socket.on('game.sync', this.onGameSync.bind(this));
     this.socket.on('player.create', this.onPlayerCreate.bind(this));
+    this.socket.on('game.sync', this.onGameSync.bind(this));
 }
 
 Game.prototype.createInitialEntities = function() {
@@ -143,7 +141,7 @@ Game.prototype.loadAssets = function() {
 }
 
 Game.prototype.onGameSync = function(snapshot) {
-    this.InSnapshotManager.add(snapshot);
+    this.outSnapshotManager.add(snapshot);
 }
 
 Game.prototype.onPlayerCreate = function(data) {    

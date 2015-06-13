@@ -5,7 +5,6 @@ var p2 = require('p2');
 var Entity = require('../../shared/core/entity.js');
 var PlayerControllerComponent = require('../../shared/components/player_controller.js');
 var NetworkComponent = require('../../shared/components/network.js');
-var SyncComponent = require('../../shared/components/sync.js');
 var ServerInputComponent = require('../components/input.js');
 var PhysicsComponent = require('../../shared/components/physics.js');
 var GameEngine = require('../../shared/game_engine.js');

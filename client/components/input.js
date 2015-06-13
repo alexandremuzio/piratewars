@@ -2,11 +2,10 @@
 
 var InputComponent = require('../../shared/components/input.js');
 
-function PhaserInputComponent(input, snapshots) {
+function PhaserInputComponent(input) {
 	console.log("inside PhaserInputComp constr");
 	this.key = "input";
 	this._input = input;
-    this._snapshots = snapshots;
 
     // this._cursorKeys = this._input.keyboard.createCursorKeys();
     // this._attackKey = this._input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
@@ -20,6 +19,7 @@ PhaserInputComponent.prototype.constructor = PhaserInputComponent;
 PhaserInputComponent.prototype.init = function() {
 	this._cursorKeys = this._input.keyboard.createCursorKeys();
     this._attackKey = this._input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+    this._snapshots = this.owner.components.get('outSync').snapshots;
 }
 
 /**

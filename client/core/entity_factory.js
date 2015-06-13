@@ -4,7 +4,7 @@ var Entity = require('../../shared/core/entity.js');
 var PhysicsComponent = require('../../shared/components/physics.js');
 var SpriteComponent = require('../components/sprite.js');
 var PhaserInputComponent = require('../components/input.js');
-var SyncComponent = require('../../shared/components/sync.js');
+var SyncComponent = require('../components/sync.js');
 var PlayerControllerComponent = require('../../shared/components/player_controller.js');
 var GameEngine = require('../../shared/game_engine.js');
 var NetworkComponent = require('../../shared/components/network.js');
@@ -18,7 +18,6 @@ var playerMass = 1;
 function EntityFactory(data) {
 	this.game = data.game;
 	this.socket = data.socket;
-	this.snapshots = data.snapshots; // Could this be used on another entity?
 }
 
 EntityFactory.prototype.createLocalPlayer = function(data) {
@@ -41,10 +40,9 @@ EntityFactory.prototype.createLocalPlayer = function(data) {
     body.angle = 0;
 	GameEngine.getInstance().world.addBody(body);
 
-
 	entity.components.add(new NetworkComponent(this.socket));
-	entity.components.add(new SyncComponent(this.snapshots));
-	entity.components.add(new PhaserInputComponent(this.game.input, this.snapshots));
+	entity.components.add(new SyncComponent());
+	entity.components.add(new PhaserInputComponent(this.game.input));
 	entity.components.add(new PhysicsComponent(body));
 	entity.components.add(new SpriteComponent(sprite));
 	entity.components.add(new PlayerControllerComponent());

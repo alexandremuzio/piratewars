@@ -4,9 +4,10 @@ var GameEngine = require('../game_engine.js');
 var ComponentManager = require('./component_manager.js');
 var Transform = require('../components/transform.js');
 
-function Entity(id) {
+function Entity(id, key) {
 	// console.log("inside entity constr");
 	GameEngine.getInstance().addEntity(this, id);
+    this.key = key;
     this.id = id;
 	this.transform = new Transform();
 	this.components = new ComponentManager(this);

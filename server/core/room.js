@@ -49,8 +49,15 @@ Room.prototype.gameLoop = function() {
 Room.prototype.sendSyncToClients = function() {
 	var clientSnapshot = {};
 	clientSnapshot.players = {};
+	clientSnapshot.bullets = {};
 	_.each(GameEngine.getInstance().entities, function(entity) {
-		clientSnapshot.players[entity.id] = entity.components.get('physics').getTransform();
+		if (entity.key === 'player') {
+			clientSnapshot.players[entity.id] = entity.components.get('physics').getTransform();
+		}
+		else if (entity.key === 'bullet' && entity.components.get('bullet').sent === false) {
+			entity.components.get('bullet').sent = true;
+			clientSnapshot.bullets[entity.id] = entity.components.get('physics').getTransform();
+		}
 	});
 	this.syncClients(clientSnapshot);
 }

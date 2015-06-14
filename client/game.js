@@ -67,7 +67,7 @@ Game.prototype.render = function() {
 Game.prototype.applySyncFromServer = function() {
     // console.log("Starting applySyncFromServer");
     var lastSnapshot = this.outSnapshotManager.getLast();
-    // console.log(lastSnapshot);
+    console.log(lastSnapshot);
     if (lastSnapshot) {
         this.outSnapshotManager.clear();
         // console.log("snapshot true");
@@ -78,6 +78,9 @@ Game.prototype.applySyncFromServer = function() {
                 EntityFactory.createRemotePlayer({ id: key });
             }
             GameEngine.getInstance().entities[key].sync(lastSnapshot.players[key]);
+        }
+        for (var key in lastSnapshot.bullets) {
+            EntityCreator.createRemoteBullet(lastSnapshot.bullets[key]);
         }
     }
 }

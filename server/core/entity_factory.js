@@ -27,7 +27,7 @@ var BULLET = Math.pow(2,1);
 var EntityFactory = {
 	createPlayer : function(data) {
 		var id = UUID();
-		var entity = new Entity(id);
+		var entity = new Entity(id, 'player');
 
 		var body = new p2.Body({
 	            name: "player",

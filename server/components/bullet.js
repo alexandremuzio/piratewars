@@ -8,6 +8,7 @@ var bulletDamage = 30;
 
 function BulletComponent() {
 	BaseComponent.apply(this);
+	this.sent = false;
 }
 
 ///

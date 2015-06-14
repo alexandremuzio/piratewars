@@ -64,6 +64,41 @@ var EntityCreator = {
 		entity.components.add(new BulletComponent(player.id));
 		// console.log("End of entity");
 		return entity;
+	},
+
+	createRemoteBullet : function(transform) {
+		// console.log("createBullet");
+		var bulletId = UUID();
+		var entity = new Entity(bulletId);
+
+		var sprite = this.game.add.sprite(transform.x, transform.y, 'bullet');
+		sprite.anchor.setTo(0.5, 0.5); // Default anchor at the center
+		sprite.scale.setTo(bulletSpriteScale);
+
+		var body = new p2.Body({
+	            name: "bullet",
+	            type: p2.Body.KINEMATIC,
+	            /*mass : bulletMass,*/
+	            position: [transform.position.x,
+	            		   transform.position.y],
+	            velocity: [transform.velocity.x,
+	            		   transform.velocity.y],
+	            angle: transform.angle
+	    });
+	    body.entity = entity;
+	    
+	    var shape = new p2.Circle(1); //////set radius!!
+		shape.collisionGroup = BULLET;
+		shape.collisionMask = PLAYER;
+	    body.addShape(shape);
+
+		GameEngine.getInstance().world.addBody(body);
+
+		entity.components.add(new PhysicsComponent(body));
+		entity.components.add(new SpriteComponent(sprite));
+		entity.components.add(new BulletComponent());
+		// console.log("End of entity");
+		return entity;
 	}
 };
 

@@ -24,7 +24,7 @@ var EntityCreator = {
 	createBullet : function(player, cannonPosition, side) {
 		// console.log("createBullet");
 		var bulletId = UUID();
-		var entity = new Entity(bulletId);
+		var entity = new Entity(bulletId, 'bullet');
 
 		//CHANGE TO GET FROM TRANSFORM//////////
 		var playerBody = player.components.get("physics").body;

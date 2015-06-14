@@ -20,7 +20,8 @@ var playerSpriteSize = 0.2;
 var playerDamping = 0.95;
 var playerAngularDamping = 0.95;
 var playerMass = 1;
-
+var PLAYER = Math.pow(2,0);
+var BULLET = Math.pow(2,1);
 
 var EntityFactory = {
 	init : function (data) {
@@ -42,7 +43,10 @@ var EntityFactory = {
 	            mass: playerMass,
 	            position: [100, 100]
 	        });
-	    body.addShape(new p2.Rectangle(sprite.width, sprite.height));
+		var shape = new p2.Rectangle(sprite.width, sprite.height);
+		shape.collisionGroup = PLAYER;
+		shape.collisionMask = PLAYER;
+	    body.addShape(shape);
 	    body.damping = playerDamping;
 	    body.angularDamping = playerAngularDamping;
 	    body.angle = 0;
@@ -76,7 +80,10 @@ var EntityFactory = {
 	            mass: playerMass,
 	            position: [100, 100]
 	        });
-	    body.addShape(new p2.Circle(this.radius));
+		var shape = new p2.Rectangle(sprite.width, sprite.height);
+		shape.collisionGroup = PLAYER;
+		shape.collisionMask = BULLET | PLAYER;
+	    body.addShape(shape);
 	    body.damping = playerDamping;
 	    body.angularDamping = playerAngularDamping;
 	    body.angle = 0;

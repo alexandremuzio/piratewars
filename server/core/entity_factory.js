@@ -18,6 +18,10 @@ var playerDamping = 0.95;
 var playerAngularDamping = 0.95;
 var playerMass = 1;
 
+//collision groups
+var PLAYER = Math.pow(2,0);
+var BULLET = Math.pow(2,1);
+
 //static class
 var EntityFactory = {createPlayer: null};
 
@@ -30,7 +34,10 @@ EntityFactory.createPlayer = function(data) {
             mass: playerMass,
             position: [100, 100]
         });
-    body.addShape(new p2.Circle(this.radius));
+    var shape = new p2.Circle(this.radius); ////change this to rectangle!
+    shape.collisionGroup = PLAYER;
+	shape.collisionMask = PLAYER;
+	body.addShape(shape);
     body.damping = playerDamping;
     body.angularDamping = playerAngularDamping;
     body.angle = 0;

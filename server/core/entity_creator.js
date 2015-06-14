@@ -12,6 +12,10 @@ var bulletVelocity = 100;
 var bulletSpriteScale = 0.2;
 var bulletMass = 0.2;
 
+//collision groups
+var PLAYER = Math.pow(2,0);
+var BULLET = Math.pow(2,1);
+
 var EntityCreator = {
 	init : function (game) {
 		this.game = game;
@@ -38,7 +42,9 @@ var EntityCreator = {
 	            velocity: [bulletVelocity *  Math.cos(angle *  Math.PI/ 180.0),
 	            		   bulletVelocity *  Math.sin(angle *  Math.PI/ 180.0)]
 	    });
-		body.addShape(new p2.Circle(this.radius));
+		var shape = new p2.Circle(1); //////set radius!!
+		shape.collisionGroup = BULLET;
+		shape.collisionMask = PLAYER;
 		body.angle = angle;
 		GameEngine.getInstance().world.addBody(body);
 

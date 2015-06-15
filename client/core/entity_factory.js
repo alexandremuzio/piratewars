@@ -17,12 +17,10 @@ var HealthBarComponent = require('../components/health_bar.js');
 var TextComponent = require('../components/text.js');
 var FollowComponent = require('../components/follow.js');
 
+var physics_settings = require('../../shared/settings/boats/default_boat/physics.json');
 ///////////////////// Send these to a data file /////////////////////////////
 var playerSpriteSize = 0.2;
 var textSize = 0.2;
-var playerDamping = 0;
-var playerAngularDamping = 0;
-var playerMass = 1;
 var healthBarSpriteSize = 0.2;
 
 //collision groups
@@ -54,7 +52,7 @@ var EntityFactory = {
 
 		var body = new p2.Body({
 	            name: "player",
-	            mass: playerMass,
+	            mass: physics_settings.mass,
 	            position: [100, 100]
 	        });
 		body.entity = entity;
@@ -63,8 +61,8 @@ var EntityFactory = {
 		shape.collisionGroup = PLAYER;
 		shape.collisionMask = BULLET | PLAYER;
 	    body.addShape(shape);
-	    body.damping = playerDamping;
-	    body.angularDamping = playerAngularDamping;
+	    body.damping = physics_settings.linear_damping;
+    	body.angularDamping = physics_settings.angular_damping
 	    body.angle = 0;
 		GameEngine.getInstance().world.addBody(body);
 
@@ -94,7 +92,7 @@ var EntityFactory = {
 	    sprite.tint = 0xff0066;
 		var body = new p2.Body({
 	            name: "player",
-	            mass: playerMass,
+	            mass: physics_settings.mass,
 	            position: [100, 100]
 	        });
 		body.entity = entity;
@@ -103,8 +101,8 @@ var EntityFactory = {
 		shape.collisionGroup = PLAYER;
 		shape.collisionMask = BULLET | PLAYER;
 	    body.addShape(shape);
-	    body.damping = playerDamping;
-	    body.angularDamping = playerAngularDamping;
+	    body.damping = physics_settings.linear_damping;
+    	body.angularDamping = physics_settings.angular_damping
 	    body.angle = 0;
 		GameEngine.getInstance().world.addBody(body);
 

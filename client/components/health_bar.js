@@ -28,7 +28,6 @@ HealthBarComponent.prototype.update = function() {
 		///////////////
 		this.percentege -= 0.05;
 		if(this.percentege < 0) this.percentege = 1.0;
-		console.log(this.percentege);
 		this.tick = 0;
 		//////////////
 

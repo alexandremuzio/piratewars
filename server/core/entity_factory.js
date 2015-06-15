@@ -12,11 +12,9 @@ var ServerInputComponent = require('../components/input.js');
 var PhysicsComponent = require('../../shared/components/physics.js');
 var GameEngine = require('../../shared/game_engine.js');
 
+var physics_settings = require('../../shared/settings/boats/default_boat/physics.json');
 ///////////////////// Send these to a data file /////////////////////////////
 var playerSpriteSize = 0.2;
-var playerDamping = 0;
-var playerAngularDamping = 0;
-var playerMass = 1;
 
 //collision groups
 var PLAYER = Math.pow(2,0);
@@ -31,7 +29,7 @@ var EntityFactory = {
 
 		var body = new p2.Body({
 	            name: "player",
-	            mass: playerMass,
+	            mass: physics_settings.mass,
 	            position: [100, 100]
 	        });
 		body.entity = entity;
@@ -41,8 +39,8 @@ var EntityFactory = {
 		shape.collisionMask = BULLET | PLAYER;
 		body.addShape(shape);
 		
-	    body.damping = playerDamping;
-	    body.angularDamping = playerAngularDamping;
+	    body.damping = physics_settings.linear_damping;
+	    body.angularDamping = physics_settings.angular_damping;
 	    body.angle = 0;
 		GameEngine.getInstance().world.addBody(body);
 

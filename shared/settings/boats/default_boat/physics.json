@@ -1,0 +1,12 @@
+{
+	"mass":1,
+	"linear_force": 300,
+	"linear_damping": 0.85,
+	"angular_force": 300,
+	"angular_damping": 0.95,
+	"min_velocity_to_curve": 10,
+	"max_velocity_to_reverse": 20,
+	"reverse_gear": true,
+	"curve_in_reverse_gear": true,
+	"curve_radius": 80
+}

@@ -8,9 +8,6 @@ var physics_settings = require('../settings/boats/default_boat/physics.json');
 function InputComponent() {
 	// console.log("inside InputComp constr");
 	this.key = "input";
-    this.maxVelocity = 60;
-    this.velocityStep = 1;
-    this.angleStep = 0.7;
     this._followingTrajectory = false;
     this._body;
     this._clickedPoint;
@@ -37,27 +34,26 @@ InputComponent.prototype.constructor = InputComponent;
 ///
 
 InputComponent.prototype.processCommand = function(command) {
-    console.log('***')
 // 	var body = this.owner.components.get("physics").body;
 //     // console.log(body);
 //     var velocity = Math.sqrt(Math.pow(body.velocity[0], 2) + Math.pow(body.velocity[1], 2));
 // 	for (var i in command) {
 // 		switch (command[i]) {
 // 			case 'arrowUp':
-//                 velocity += this.velocityStep;
+//                 velocity += physics_settings.velocity_step;
 //                 break;
 //             case 'arrowDown':
-//                 velocity -= this.velocityStep;
+//                 velocity -= physics_settings.velocity_step;
 //                 break;
 //             case 'arrowLeft':
-//                 body.angle -= this.angleStep;
+//                 body.angle -= physics_settings.angle_step;
 //                 // if (body.velocity[0] > 5 || body.velocity[1] > 5) {
 //                     // body.angularForce = -100
 //                     //player_properties.angular_force;
 //                 // }
 //                 break;
 //             case 'arrowRight':
-//                 body.angle += this.angleStep;
+//                 body.angle += physics_settings.angle_step;
 //                 // if (body.velocity[0] > 5 || body.velocity[1] > 5) {
 //                     //body.angularForce = +100
 //                     //player_properties.angular_force;
@@ -82,10 +78,11 @@ InputComponent.prototype.processCommand = function(command) {
 // 		}
 // 	}
 //     if (velocity < 0)                { velocity = 0; }
-//     if (velocity > this.maxVelocity) { velocity = this.maxVelocity; }
+//     if (velocity > physics_settings.max_velocity) { velocity = physics_settings.max_velocity; }
 //     body.velocity[0] = velocity*Math.cos(body.angle*Math.PI/180);
 //     body.velocity[1] = velocity*Math.sin(body.angle*Math.PI/180);
-    console.log('processCommand called');
+
+    this.updateAttack(command);
 
 	if( this._body == null )
         this._body = this.owner.components.get("physics").body;
@@ -108,6 +105,37 @@ InputComponent.prototype.processCommand = function(command) {
     if( this._followingTrajectory ){
         this.followTrajectoryUpdate();
     }
+
+    this.correctVelocity();
+};
+
+InputComponent.prototype.correctVelocity = function() {
+    var velocityVector = {
+        "x": this._body.velocity[0],
+        "y": this._body.velocity[1]
+    };
+
+    var velocity = this.module(velocityVector);
+    if (velocity < physics_settings.min_velocity) { velocity = physics_settings.min_velocity; }
+    if (velocity > physics_settings.max_velocity) { velocity = physics_settings.max_velocity; }
+
+    this._body.velocity[0] = velocity*Math.cos(this._body.angle*Math.PI/180);
+    this._body.velocity[1] = velocity*Math.sin(this._body.angle*Math.PI/180);
+};
+
+InputComponent.prototype.updateAttack = function(command) {
+    if( command.qKey  ){
+        if (this.owner.components.get("cooldown").activate()) {
+            var cannons = this.owner.components.get("cannon");
+            cannons.shootLeftCannons();
+        }
+    }
+    if( command.eKey ){
+        if (this.owner.components.get("cooldown").activate()) {
+            var cannons = this.owner.components.get("cannon");
+            cannons.shootRightCannons();
+        }
+    }
 };
 
 InputComponent.prototype.hasArrowCommand = function(command) {
@@ -124,32 +152,42 @@ InputComponent.prototype.arrowCommandUpdate = function(command) {
         "x": this._body.velocity[0],
         "y": this._body.velocity[1]
     };
-    var velocityModule = this.module(velocityVector);
+    var velocity = this.module(velocityVector);
     var velAngle = this.getAngleFromVector(velocityVector);
 
     if( Math.abs(this.getDeltaAngleFromAngles( velAngle, this._body.angle)) > 90 ) // Reverse gear on
-        velocityModule *= -1;
+        velocity *= -1;
 
     var curveOn = false;
-    if( velocityModule > physics_settings.min_velocity_to_curve )
+    if( velocity > physics_settings.min_velocity_to_curve )
         curveOn = true;
-    else if( velocityModule < -physics_settings.min_velocity_to_curve && physics_settings.curve_in_reverse_gear )
+    else if( velocity < -physics_settings.min_velocity_to_curve && physics_settings.curve_in_reverse_gear )
         curveOn = true;
 
+    if (command.arrowUp) {
+        // this._body.force[0] = physics_settings.linear_force*Math.cos(this._body.angle*Math.PI/180);
+        // this._body.force[1] = physics_settings.linear_force*Math.sin(this._body.angle*Math.PI/180);
+        velocity += physics_settings.velocity_step; 
+    }
+    if(command.arrowDown){
+        // this._body.force[0] = -physics_settings.linear_force*Math.cos(this._body.angle*Math.PI/180);
+        // this._body.force[1] = -physics_settings.linear_force*Math.sin(this._body.angle*Math.PI/180);
+        velocity -= physics_settings.velocity_step; 
+    }
+    
+    this.correctVelocity();
+
     if (command.arrowLeft && curveOn) {
-        this._body.angularForce = -physics_settings.angular_force;
+        // Temp
+        this._body.angle += -(physics_settings.angle_step + velocity*physics_settings.turn_ratio);
     }
     if (command.arrowRight && curveOn) {
-        this._body.angularForce = physics_settings.angular_force;
+        // Temp
+        this._body.angle += physics_settings.angle_step + velocity*physics_settings.turn_ratio;
     }
-    if (command.arrowUp && velocityModule > -physics_settings.max_velocity_to_reverse) {
-        this._body.force[0] = physics_settings.linear_force*Math.cos(this._body.angle*Math.PI/180);
-        this._body.force[1] = physics_settings.linear_force*Math.sin(this._body.angle*Math.PI/180);
-    }
-    if(command.arrowDown && physics_settings.reverse_gear && velocityModule < physics_settings.max_velocity_to_reverse){
-        this._body.force[0] = -physics_settings.linear_force*Math.cos(this._body.angle*Math.PI/180);
-        this._body.force[1] = -physics_settings.linear_force*Math.sin(this._body.angle*Math.PI/180);
-    }
+        
+    this._body.velocity[0] = velocity*Math.cos(this._body.angle*Math.PI/180);
+    this._body.velocity[1] = velocity*Math.sin(this._body.angle*Math.PI/180);
 };
 
 InputComponent.prototype.initNewTrajectory = function(command){
@@ -289,8 +327,14 @@ InputComponent.prototype.followTrajectoryUpdate = function(command) {
         }
     }
 
-    this._body.force[0] = physics_settings.linear_force*Math.cos(this._body.angle*Math.PI/180);
-    this._body.force[1] = physics_settings.linear_force*Math.sin(this._body.angle*Math.PI/180);
+    var velocityVector = {
+        "x": this._body.velocity[0],
+        "y": this._body.velocity[1]
+    };
+    var velocity = this.module(velocityVector);
+
+    this._body.velocity[0] = velocity*Math.cos(this._body.angle*Math.PI/180);
+    this._body.velocity[1] = velocity*Math.sin(this._body.angle*Math.PI/180);
 };
 
 InputComponent.prototype.clearCurrentTrajectory = function(command) {

@@ -59,7 +59,7 @@ var EntityFactory = {
 
 		var shape = new p2.Rectangle(sprite.width, sprite.height);
 		shape.collisionGroup = PLAYER;
-		shape.collisionMask = BULLET | PLAYER;
+		shape.collisionMask = PLAYER;
 	    body.addShape(shape);
 	    body.damping = physics_settings.linear_damping;
     	body.angularDamping = physics_settings.angular_damping
@@ -99,7 +99,7 @@ var EntityFactory = {
 
 		var shape = new p2.Rectangle(sprite.width, sprite.height);
 		shape.collisionGroup = PLAYER;
-		shape.collisionMask = BULLET | PLAYER;
+		shape.collisionMask = PLAYER;
 	    body.addShape(shape);
 	    body.damping = physics_settings.linear_damping;
     	body.angularDamping = physics_settings.angular_damping

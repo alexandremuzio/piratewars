@@ -33,7 +33,7 @@ PhaserInputComponent.prototype.init = function() {
     this._leftAttackKey = this._input.keyboard.addKey(Phaser.Keyboard.Q);
     this._rightAttackKey = this._input.keyboard.addKey(Phaser.Keyboard.E); 
     this._input.mouse.onMouseDown = this.onMouseDown.bind(this);
-    
+
     this._snapshots = this.owner.components.get('outSync').snapshots;
     this._socket = this.owner.components.get('network').socket;
 }
@@ -79,24 +79,16 @@ PhaserInputComponent.prototype.captureInput = function() {
         this._mouseLeftButtonDown = false;
     }
 
-// <<<<<<< HEAD
-//     // check if the attack keys are pressed
-//     if (this._leftAttackKey.isDown) {
-//         command.push('q');
-//     }
-//     if (this._rightAttackKey.isDown) {
-//         command.push('e');
-// =======
-//     // check if the attack key is pressed
-//     if (this._attackKey.isDown) {
-//         command.space = true;
-// >>>>>>> Adding move by click and updating moving by arrows
-//     }
-
-    if (command.length > 0) {
-        this.processCommand(command);
-        this._snapshots.add(command);
+    // check if the attack keys are pressed
+    if (this._leftAttackKey.isDown) {
+        command.qKey = true;
     }
+    if (this._rightAttackKey.isDown) {
+        command.eKey = true;
+    }
+
+    this.processCommand(command);
+    this._snapshots.add(command);
 }
 
 PhaserInputComponent.prototype.createNextPointIndicator = function(x, y) {

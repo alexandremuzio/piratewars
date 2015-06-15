@@ -69,6 +69,7 @@ LoginState.prototype.loadAssets = function() {
     thisGame.load.image('gameTiles', 'assets/watertile.png');
     thisGame.load.image('boat_0', 'assets/boat_0.png');
     thisGame.load.image('bullet', 'assets/bullet.png');
+    thisGame.load.image('red_arrow', 'assets/red_arrow.png');
 };
 
 module.exports = LoginState;

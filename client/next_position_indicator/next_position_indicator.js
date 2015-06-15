@@ -2,6 +2,7 @@
 
 var prop = require('./next_position_indicator_properties.json');
 
+// Declare as entity
 function NextPositionIndicator( game, x, y ) {
     this.game = game;
     this.x = x;

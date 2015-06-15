@@ -36,7 +36,7 @@ var EntityFactory = {
 
 	    var shape = new p2.Rectangle(80, 40); ////change to correct size
 	    shape.collisionGroup = PLAYER;
-		shape.collisionMask = BULLET | PLAYER;
+		shape.collisionMask = PLAYER;
 		body.addShape(shape);
 		
 	    body.damping = physics_settings.linear_damping;

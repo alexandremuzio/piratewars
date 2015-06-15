@@ -4,7 +4,7 @@ var GameEngine = require('../game_engine.js');
 var GameComponent = require('../core/component.js');
 
 function PhysicsComponent(body) {
-	console.log("inside physicsComp constr");
+	// console.log("inside physicsComp constr");
 	this.key = "physics";
 	this.body = body;
 	GameEngine.getInstance().world.addBody(this.body);

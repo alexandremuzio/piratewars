@@ -4,7 +4,7 @@ var GameEngine = require('../../shared/game_engine.js');
 var GameComponent = require('../../shared/core/component.js');
 
 function SpriteComponent(sprite) {
-	console.log("inside SpriteComponent constr");
+	// console.log("inside SpriteComponent constr");
 	this.key = "sprite";
 	this.sprite = sprite;
 };

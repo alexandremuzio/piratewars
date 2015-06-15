@@ -1,6 +1,6 @@
 'use strict'
 
-var BulletComponent = require('../../shared/components/bullet.js');
+var BulletComponent = require('../components/bullet.js');
 var Entity = require('../../shared/core/entity.js');
 var GameEngine = require('../../shared/game_engine.js');
 var PhysicsComponent = require('../../shared/components/physics.js');
@@ -22,18 +22,17 @@ var EntityCreator = {
 		this.game = data.game;
 	},
 
-	createBullet : function(player, canonPosition, side) {
-		console.log("createBullet");
+	createBullet : function(player, cannonPosition, side) {
+		// console.log("createBullet");
 		var bulletId = UUID();
 		var entity = new Entity(bulletId);
 
 		//CHANGE TO GET FROM TRANSFORM//////////
 		var playerBody = player.components.get("physics").body;
 		//bullet properties
-		var x = canonPosition.x;
-		var y = canonPosition.y;
-		console.log(x, y);
-		console.log(playerBody)
+		var x = cannonPosition.x;
+		var y = cannonPosition.y;
+
 		var angle;
 		if (side == "left")  angle = playerBody.angle - 90;
 		else angle = playerBody.angle + 90;
@@ -48,8 +47,10 @@ var EntityCreator = {
 	            mass : bulletMass,
 	            position: [x, y],
 	            velocity: [bulletVelocity *  Math.cos(angle *  Math.PI/ 180.0),
-	            		   bulletVelocity *  Math.sin(angle *  Math.PI/ 180.0)]
+	            		   bulletVelocity *  Math.sin(angle *  Math.PI/ 180.0)],
 	    });
+	    body.entity = entity;
+	    
 	    var shape = new p2.Circle(1); //////set radius!!
 		shape.collisionGroup = BULLET;
 		shape.collisionMask = PLAYER;
@@ -61,7 +62,7 @@ var EntityCreator = {
 		entity.components.add(new PhysicsComponent(body));
 		entity.components.add(new SpriteComponent(sprite));
 		entity.components.add(new BulletComponent(player.id));
-		console.log("End of entity");
+		// console.log("End of entity");
 		return entity;
 	}
 };

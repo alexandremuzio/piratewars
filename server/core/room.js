@@ -17,7 +17,7 @@ Room.prototype.init = function() {
 }
 
 Room.prototype.onConnection = function(socket) {
-	console.log("onconection");
+	// console.log("onconection");
 	var client = new Client(socket, this);
 	client.init();
 }

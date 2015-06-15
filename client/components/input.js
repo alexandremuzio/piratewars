@@ -3,8 +3,7 @@
 var InputComponent = require('../../shared/components/input.js');
 
 function PhaserInputComponent(input) {
-	console.log("inside PhaserInputComp constr");
-	this.key = "input";
+	// console.log("inside PhaserInputComp constr");
 	this._input = input;
 
     // this._cursorKeys = this._input.keyboard.createCursorKeys();

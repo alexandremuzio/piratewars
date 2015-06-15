@@ -1,19 +1,19 @@
 'use strict'
 
 var _ = require('underscore');
-var MathUtils = require('../utils/math')
 var ComponentBase = require('../core/component');
+var MathUtils = require('../utils/math')
 
-function CanonComponent(player) {
-	this.key = 'canon';
+function CannonComponent() {
+	this.key = 'cannon';
 };
 
 ///
-CanonComponent.prototype = Object.create(ComponentBase.prototype);
-CanonComponent.prototype.constructor = CanonComponent;
+CannonComponent.prototype = Object.create(ComponentBase.prototype);
+CannonComponent.prototype.constructor = CannonComponent;
 ///
 
-CanonComponent.prototype.update = function() {
+CannonComponent.prototype.update = function() {
 	var body = this.owner.components.get("physics").body;
 	var rectangle = body.shapes[0];
 
@@ -24,8 +24,8 @@ CanonComponent.prototype.update = function() {
 	var rightVector = MathUtils.vector(rectangle.height/1.5, rightAngle);
 	var paraVector = MathUtils.vector(rectangle.width/4,body.angle);
 
-	//update canon positions
-	this.leftCanons = [
+	//update Cannon positions
+	this.leftCannons = [
 		{
 			x: body.position[0] + leftVector.x,
 			y: body.position[1] + leftVector.y
@@ -41,7 +41,7 @@ CanonComponent.prototype.update = function() {
 
 	];
 
-	this.rightCanons = [
+	this.rightCannons = [
 		{
 			x: body.position[0] + rightVector.x,
 			y: body.position[1] + rightVector.y
@@ -56,20 +56,21 @@ CanonComponent.prototype.update = function() {
 		}
 
 	];
+
 }
 
-CanonComponent.prototype.shootLeftCanons = function() {
+CannonComponent.prototype.shootLeftCannons = function() {
 	var creator = this.owner.components.get("creator");
-	_.each(this.leftCanons, function(canon) {
-    	creator.createBullet(canon, "left");
+	_.each(this.leftCannons, function(cannon) {
+    	creator.createBullet(cannon, "left");
 	});
 }
 
-CanonComponent.prototype.shootRightCanons = function() {
+CannonComponent.prototype.shootRightCannons = function() {
 	var creator = this.owner.components.get("creator");
-    _.each(this.rightCanons, function(canon) {
-    	creator.createBullet(canon, "right");
+    _.each(this.rightCannons, function(cannon) {
+    	creator.createBullet(cannon, "right");
 	});
 }
 
-module.exports = CanonComponent;
+module.exports = CannonComponent;

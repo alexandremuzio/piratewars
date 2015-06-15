@@ -3,8 +3,8 @@
 var InputComponent = require('../../shared/components/input.js');
 
 function ServerInputComponent(snapshots) {
-	console.log("inside serverInputComponent constr");
-	this.key = "input";
+	// console.log("inside serverInputComponent constr");
+	InputComponent.apply(this);
 	this._snapshots = snapshots;
 }
 

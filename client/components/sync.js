@@ -4,7 +4,7 @@ var GameComponent = require('../../shared/core/component.js');
 var SnapshotManager = require('../../shared/core/snapshot_manager.js');
 
 function SyncComponent() {
-	console.log("inside SyncComponent constr");
+	// console.log("inside SyncComponent constr");
 	this.key = "outSync";
 	this.snapshots = new SnapshotManager();
 };

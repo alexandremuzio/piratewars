@@ -7,7 +7,7 @@ var SnapshotManager = require('../../shared/core/snapshot_manager.js');
 var GameEngine = require('../../shared/game_engine.js');
 
 function Client(socket, room) {
-	console.log("inside client constr");
+	// console.log("inside client constr");
 	this._id =  UUID();
 	this._room = room;
 	this._socket = socket;
@@ -16,25 +16,24 @@ function Client(socket, room) {
 }
 
 Client.prototype.init = function() {
-	console.log("client init");
+	// console.log("client init");
 	this._socket.emit('onconnected');
 	this._socket.on('player.ready', this.onReady.bind(this));
 }
 
 Client.prototype.onReady = function() {
-	console.log("client onReady");
+	// console.log("client onReady");
 	this._player = this.createPlayer();
 	this._socket.on('client.sync', this.queueSyncFromClient.bind(this));
 	this._room.clients.push(this);
 }
 
 Client.prototype.createPlayer = function() {
-	console.log("client createPlayer");
+	// console.log("client createPlayer");
 	var data = {};
 	data.socket = this._socket;
 	data.snapshots = this._snapshots;
 	var entity = EntityFactory.createPlayer(data);
-	GameEngine.getInstance().addEntity(entity);
 	this._socket.emit('player.create', { id: entity.id });
 	return entity;
 }

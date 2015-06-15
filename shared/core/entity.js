@@ -5,7 +5,7 @@ var ComponentManager = require('./component_manager.js');
 var Transform = require('../components/transform.js');
 
 function Entity(id) {
-	console.log("inside entity constr");
+	// console.log("inside entity constr");
 	GameEngine.getInstance().addEntity(this, id);
     this.id = id;
 	this.transform = new Transform();
@@ -22,6 +22,10 @@ Entity.prototype.update = function() {
 
 Entity.prototype.sync = function(transform) {
 	this.trigger('entity.sync', transform, this);
+}
+
+Entity.prototype.damage = function(amount, attacker) {
+    this.trigger('entity.damage', amount, attacker, this);
 }
 
 //internal

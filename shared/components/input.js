@@ -4,7 +4,7 @@ var GameEngine = require('../game_engine');
 var GameComponent = require('../core/component');
 
 function InputComponent() {
-	console.log("inside InputComp constr");
+	// console.log("inside InputComp constr");
 	this.key = "input";
 };
 
@@ -40,15 +40,15 @@ InputComponent.prototype.processCommand = function(command) {
             case 'q':
             	//shoot projectile
                 if (this.owner.components.get("cooldown").activate()) {
-                    var canons = this.owner.components.get("canon");
-                    canons.shootLeftCanons();
+                    var cannons = this.owner.components.get("cannon");
+                    cannons.shootLeftCannons();
                 }
                 break;
             case 'e':
                 //shoot projectile
                 if (this.owner.components.get("cooldown").activate()) {
-                    var canons = this.owner.components.get("canon");
-                    canons.shootRightCanons();
+                    var cannons = this.owner.components.get("cannon");
+                    cannons.shootRightCannons();
                 }
                 break;
             default:

@@ -15,6 +15,10 @@ PhysicsComponent.prototype = Object.create(GameComponent.prototype);
 PhysicsComponent.prototype.constructor = PhysicsComponent;
 ///
 
+PhysicsComponent.prototype.init = function() {
+	this.owner.on('entity.destroy', this.onEntityDestroy.bind(this));
+}
+
 PhysicsComponent.prototype.update = function() {}
 
 PhysicsComponent.prototype.getTransform = function() {
@@ -33,6 +37,10 @@ PhysicsComponent.prototype.setTransform = function(transform) {
 	this.body.velocity = [transform.velocity.x, transform.velocity.y];
 	this.body.angle = transform.angle;
 	// console.log("body position x= ", this.body.position[0]);
+}
+
+PhysicsComponent.prototype.onEntityDestroy = function() {
+	GameEngine.getInstance().world.removeBody(this.body);
 }
 
 module.exports = PhysicsComponent;

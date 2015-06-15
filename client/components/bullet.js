@@ -16,7 +16,15 @@ BulletComponent.prototype.init = function() {
 	this.currentTime = new Date();
 }
 
-BulletComponent.prototype.update= function() {
-}
+BulletComponent.prototype.update = function() {
+	var newCurrentTime = new Date();
+	this.currentAliveTime += (newCurrentTime - this.currentTime);
+	this.currentTime =  newCurrentTime;
 
+	if (this.currentAliveTime >= this.bulletSurvivalTime) {
+		//delete bullet some way
+		// console.log("Bullet should be deleted now!");
+		this.owner.destroy();
+	}
+};
 module.exports = BulletComponent;

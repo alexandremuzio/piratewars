@@ -20,6 +20,11 @@ Entity.prototype.update = function() {
 	this.components.update();
 }
 
+Entity.prototype.destroy = function() {
+    this.trigger('entity.destroy', this);    
+    GameEngine.getInstance().deleteEntity(this);
+}
+
 Entity.prototype.sync = function(transform) {
 	this.trigger('entity.sync', transform, this);
 }

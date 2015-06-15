@@ -16,8 +16,8 @@ var SyncComponent = require('../components/sync.js');
 
 ///////////////////// Send these to a data file /////////////////////////////
 var playerSpriteSize = 0.2;
-var playerDamping = 0.95;
-var playerAngularDamping = 0.95;
+var playerDamping = 0;
+var playerAngularDamping = 0;
 var playerMass = 1;
 
 //collision groups

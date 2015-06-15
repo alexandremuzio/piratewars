@@ -8,7 +8,7 @@ var BulletComponent = require('../components/bullet.js');
 var PhysicsComponent = require('../../shared/components/physics.js');
 
 ///////////////////// Send these to a data file /////////////////////////////
-var bulletVelocity = 100;
+var bulletVelocity = 50;
 var bulletSpriteScale = 0.2;
 var bulletMass = 0.2;
 
@@ -38,7 +38,8 @@ var EntityCreator = {
 
 		var body = new p2.Body({
 	            name: "bullet",
-	            mass: bulletMass,
+	            type: p2.Body.KINEMATIC,
+	            /*mass: bulletMass,*/
 	            position: [x, y],
 	            velocity: [bulletVelocity *  Math.cos(angle *  Math.PI/ 180.0),
 	            		   bulletVelocity *  Math.sin(angle *  Math.PI/ 180.0)]

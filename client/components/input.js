@@ -5,6 +5,7 @@ var InputComponent = require('../../shared/components/input.js');
 function PhaserInputComponent(input) {
 	// console.log("inside PhaserInputComp constr");
 	this._input = input;
+    InputComponent.apply(this);
 
     // this._cursorKeys = this._input.keyboard.createCursorKeys();
     // this._attackKey = this._input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);

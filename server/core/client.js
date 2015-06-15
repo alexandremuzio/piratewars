@@ -24,6 +24,7 @@ Client.prototype.init = function() {
 Client.prototype.onReady = function() {
 	// console.log("client onReady");
 	this._player = this.createPlayer();
+	console.log("after createPlayer");
 	this._socket.on('client.sync', this.queueSyncFromClient.bind(this));
 	this._room.clients.push(this);
 }

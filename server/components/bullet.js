@@ -4,7 +4,6 @@ var BaseComponent = require('../../shared/components/bullet');
 var GameEngine = require('../../shared/game_engine');
 
 ///////////////////// Send these to a data file /////////////////////////////
-var bulletSurvivalTime = 2000;
 var bulletDamage = 30;
 
 function BulletComponent() {
@@ -29,6 +28,7 @@ BulletComponent.prototype.update = function() {
 	if (this.currentAliveTime >= this.bulletSurvivalTime) {
 		//delete bullet some way
 		// console.log("Bullet should be deleted now!");
+		this.owner.destroy();
 	}
 	// console.log(this.owner.components.get("physics").body.position);
 };
@@ -44,7 +44,7 @@ BulletComponent.prototype.createCollisionHandler = function() {
         if((bodyA.id == body.id || bodyB.id == body.id)){
         	var playerEntity = (bodyA.id != body.id ) ? bodyA.entity : bodyB.entity;
         	playerEntity.damage(bulletDamage, this.owner);
-        	// console.log("Bullet collided");
+        	console.log("Bullet collided");
         }
     });
 };

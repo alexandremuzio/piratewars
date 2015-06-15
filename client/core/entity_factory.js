@@ -15,7 +15,7 @@ var SpriteComponent = require('../components/sprite.js');
 var SyncComponent = require('../components/sync.js');
 var HealthBarComponent = require('../components/health_bar.js');
 var TextComponent = require('../components/text.js');
-var FollowComponent = require('../../shared/components/follow.js');
+var FollowComponent = require('../components/follow.js');
 
 ///////////////////// Send these to a data file /////////////////////////////
 var playerSpriteSize = 0.2;
@@ -79,7 +79,7 @@ var EntityFactory = {
 		entity.components.add(new CannonComponent(entity));
 		entity.components.add(new CreatorComponent());
 
-		createHealthBar(entity);
+		this.createHealthBar(entity);
 		return entity;
 	},
 
@@ -124,41 +124,48 @@ var EntityFactory = {
 		/* GameEngine needs an ID, now is set randomly */
 		var entityInside = new Entity(17); //MUST FIX IT
 
-		var bodyInside = new p2.Body({
-				name: "healthBarInside",
-				mass: 0, /* STATIC body */
-				position: [205, 100]
-			});
-		bodyInside.angle = 0;
+		var referenceBody = player.components.get("physics").body;
+		var referenceSprite = player.components.get("sprite").sprite;
+		var referenceHeight = player.components.get("sprite").getHeight();
 
 		var redBarSprite = this.game.add.sprite(205, 100, 'redbar');
-		redBarSprite.scale.setTo(healthBarSpriteSize, healthBarSpriteSize);
-	    
+		redBarSprite.anchor.setTo(0.0, 0.0);
+	    redBarSprite.scale.setTo(healthBarSpriteSize, healthBarSpriteSize);
+		
+	    var bodyInside = new p2.Body({
+				name: "healthBarInside",
+				mass: 0, /* STATIC body */
+				
+				//Position must be in the right distance from reference (player)
+				position: [referenceBody.position[0] - redBarSprite.width/2.0, referenceBody.position[1] - 0.5*referenceHeight]
+			});
+	    bodyInside.angle = 0;
+		
 	    entityInside.components.add(new PhysicsComponent(bodyInside));
 		entityInside.components.add(new SpriteComponent(redBarSprite));
 		entityInside.components.add(new HealthBarComponent(player));
-		
+		entityInside.components.add(new FollowComponent(referenceSprite));
+
 	    /* GameEngine needs an ID, now is set randomly */
 		var entityOutline = new Entity(18); //MUST FIX IT
 
-		var bodyOutline = new p2.Body({
+		var blackBoxSprite = this.game.add.sprite(205, 100, 'blackbox');
+		blackBoxSprite.anchor.setTo(0.0, 0.0);
+		blackBoxSprite.scale.setTo(healthBarSpriteSize, healthBarSpriteSize);
+	    
+	    var bodyOutline = new p2.Body({
 				name: "healthBarOutline",
 				mass: 0, /* STATIC body */
-				position: [205, 100]
+
+				//Position must be in the right distance from reference (player)
+				position: [referenceBody.position[0] - blackBoxSprite.width/2.0, referenceBody.position[1] - 0.5*referenceHeight]
 			});
 		bodyOutline.angle = 0;
-
-	    var blackBoxSprite = this.game.add.sprite(205, 100, 'blackbox');
-		blackBoxSprite.scale.setTo(healthBarSpriteSize, healthBarSpriteSize);
 	    
 		entityOutline.components.add(new PhysicsComponent(bodyOutline));
 		entityOutline.components.add(new SpriteComponent(blackBoxSprite));
-		entityOutline.components.add(new FollowComponent(bodyInside));
+		entityOutline.components.add(new FollowComponent(referenceSprite));
 	}
 };
 
 module.exports = EntityFactory;
-
-	
-
-;

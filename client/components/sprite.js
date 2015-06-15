@@ -3,8 +3,6 @@
 var GameEngine = require('../../shared/game_engine.js');
 var GameComponent = require('../../shared/core/component.js');
 
-//private variable
-var originalTextureRect;
 
 function SpriteComponent(sprite) {
 	// console.log("inside SpriteComponent constr");
@@ -20,7 +18,7 @@ SpriteComponent.prototype.constructor = SpriteComponent;
 SpriteComponent.prototype.init = function() {
 	this.owner.on('entity.destroy', this.onEntityDestroy.bind(this));	/* Crop is based on texture (must use texture width and height) */
 
-	originalTextureRect = new Phaser.Rectangle(0, 0, this.sprite.texture.width, this.sprite.texture.height);
+	this.originalTextureRect = new Phaser.Rectangle(0, 0, this.sprite.texture.width, this.sprite.texture.height);
 	/* Saved original texture rect because crop will modify texture properties */
 	this.sprite.crop(new Phaser.Rectangle(0, 0, this.sprite.texture.width, this.sprite.texture.height), false);
 }
@@ -53,7 +51,7 @@ SpriteComponent.prototype.onEntityDestroy = function() {
 }
 
 SpriteComponent.prototype.cropHorizontally = function(percentage) {
-	this.sprite.cropRect.width = originalTextureRect.width*percentage;
+	this.sprite.cropRect.width = this.originalTextureRect.width*percentage;
 	this.sprite.updateCrop();
 }
 

@@ -45,13 +45,14 @@ PlayState.prototype.preload = function() {
 };
 
 PlayState.prototype.create = function() {
+    
     this.game.world.setBounds(0, 0, 2000, 2000);
     this.assignAssets();
     //this.game.map.setCollisionBetween(1, 100000, true, 'islandsLayer');
     this.createTexts();
     this.createInitialEntities(); 
     this.assignNetworkCallbacks();
-    GameEngine.getInstance(); //??    
+    
     // setInterval(this.debugUpdate.bind(this), 1000);
     this.socket.emit('player.ready');
 };
@@ -78,7 +79,7 @@ PlayState.prototype.render = function() {
 PlayState.prototype.applySyncFromServer = function() {
     // console.log("Starting applySyncFromServer");
     var lastSnapshot = this.outSnapshotManager.getLast();
-    console.log(lastSnapshot);
+    // console.log(lastSnapshot);
     if (lastSnapshot) {
         this.outSnapshotManager.clear();
         // console.log("snapshot true");
@@ -114,7 +115,7 @@ PlayState.prototype.createInitialEntities = function() {
 
 PlayState.prototype.createTexts = function() {
     // Creating debug text
-    this.text = thisGame.add.text(0, 0, "0 Players Connected", {
+    this.text = this.game.add.text(0, 0, "0 Players Connected", {
         font: "20px Arial",
         fill: "#ff0044",
         align: "center"

@@ -43,4 +43,13 @@ PhysicsComponent.prototype.onEntityDestroy = function() {
 	GameEngine.getInstance().world.removeBody(this.body);
 }
 
+PhysicsComponent.prototype.getDeltaX = function() {
+	return this.body.deltaX;
+};
+
+
+PhysicsComponent.prototype.getDeltaY = function() {
+	return this.body.deltaY;
+};
+
 module.exports = PhysicsComponent;

@@ -114,8 +114,8 @@ PlayState.prototype.createInitialEntities = function() {
 
 PlayState.prototype.createTexts = function() {
     // Creating debug text
-    this.text = this.game.add.text(0, 0, "0 Players Connected", {
-        font: "20px Ariael",
+    this.text = thisGame.add.text(0, 0, "0 Players Connected", {
+        font: "20px Arial",
         fill: "#ff0044",
         align: "center"
     });

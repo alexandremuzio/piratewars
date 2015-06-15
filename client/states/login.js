@@ -35,6 +35,7 @@ LoginState.prototype.create = function() {
     this.addNextStateEvents();
 };
 
+//Add next state functions to Enter Key or Login button
 LoginState.prototype.addNextStateEvents = function() {
     document.getElementById("loginbtn").addEventListener("click", function() {
         document.getElementById("initialScreen").style.display = "none";
@@ -52,7 +53,18 @@ LoginState.prototype.addNextStateEvents = function() {
     });
 };
 
+//Switch to next state
+LoginState.prototype.switchState = function(param) {
+    console.log('Going to ' + nextState);
+    thisGame.state.start(nextState, true, false, param);
+}
+
 LoginState.prototype.loadAssets = function() {
+    /* ------------- health bar assets -----------------*/
+    thisGame.load.image('blackbox', 'assets/blackbox.png');
+    thisGame.load.image('redbar', 'assets/redbar.png');
+    /* ------------------------------------------------ */
+
     thisGame.load.tilemap('backgroundmap', 'assets/map.json', null, Phaser.Tilemap.TILED_JSON);
     thisGame.load.image('gameTiles', 'assets/watertile.png');
     thisGame.load.image('boat_0', 'assets/boat_0.png');

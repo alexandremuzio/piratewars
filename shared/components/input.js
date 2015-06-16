@@ -14,18 +14,9 @@ function InputComponent() {
     this._circle;
     this._rotating = false;
     this._rotateOnCounterClockWise;
-    this._theta0;
-    this._alpha = 5*Math.PI/180;
-    this._nAlphaCounter = 0;
     this._clickedPointInCycle = false;
     this._centerToClickedPointVector;
-
-    if( this.client ){
-        this._game = arguments[0];
-        this._nextPointIndicator;
-        //Test
-        this._g = this._game.add.graphics(0, 0);
-    }    
+    this.initNewTrajectoryCalled = false;
 };
 
 ///
@@ -34,72 +25,19 @@ InputComponent.prototype.constructor = InputComponent;
 ///
 
 InputComponent.prototype.processCommand = function(command) {
-// 	var body = this.owner.components.get("physics").body;
-//     // console.log(body);
-//     var velocity = Math.sqrt(Math.pow(body.velocity[0], 2) + Math.pow(body.velocity[1], 2));
-// 	for (var i in command) {
-// 		switch (command[i]) {
-// 			case 'arrowUp':
-//                 velocity += physics_settings.velocity_step;
-//                 break;
-//             case 'arrowDown':
-//                 velocity -= physics_settings.velocity_step;
-//                 break;
-//             case 'arrowLeft':
-//                 body.angle -= physics_settings.angle_step;
-//                 // if (body.velocity[0] > 5 || body.velocity[1] > 5) {
-//                     // body.angularForce = -100
-//                     //player_properties.angular_force;
-//                 // }
-//                 break;
-//             case 'arrowRight':
-//                 body.angle += physics_settings.angle_step;
-//                 // if (body.velocity[0] > 5 || body.velocity[1] > 5) {
-//                     //body.angularForce = +100
-//                     //player_properties.angular_force;
-//                 // }
-//                 break;
-//             case 'q':
-//             	//shoot projectile
-//                 if (this.owner.components.get("cooldown").activate()) {
-//                     var cannons = this.owner.components.get("cannon");
-//                     cannons.shootLeftCannons();
-//                 }
-//                 break;
-//             case 'e':
-//                 //shoot projectile
-//                 if (this.owner.components.get("cooldown").activate()) {
-//                     var cannons = this.owner.components.get("cannon");
-//                     cannons.shootRightCannons();
-//                 }
-//                 break;
-//             default:
-//                 break;
-// 		}
-// 	}
-//     if (velocity < 0)                { velocity = 0; }
-//     if (velocity > physics_settings.max_velocity) { velocity = physics_settings.max_velocity; }
-//     body.velocity[0] = velocity*Math.cos(body.angle*Math.PI/180);
-//     body.velocity[1] = velocity*Math.sin(body.angle*Math.PI/180);
-
-    this.updateAttack(command);
-
-	if( this._body == null )
+    if( this._body == null )
         this._body = this.owner.components.get("physics").body;
+
+    this.processAttack(command);
 
     if( this.hasArrowCommand(command)){
         if( this._followingTrajectory ){ // Move by arrows => destroy current trajectory
-            this.clearCurrentTrajectory();
             this._followingTrajectory = false;
         }
-        this.arrowCommandUpdate(command);
+        this.processArrowCommand(command);
     }
     else if( command.mouseLeftButtonDown ){ // Mouse click
-        if( this._followingTrajectory ){ // Change trajectory
-            this.clearCurrentTrajectory();
-        }
         this.initNewTrajectory(command);
-        this._followingTrajectory = true;
     }
 
     if( this._followingTrajectory ){
@@ -109,21 +47,7 @@ InputComponent.prototype.processCommand = function(command) {
     this.correctVelocity();
 };
 
-InputComponent.prototype.correctVelocity = function() {
-    var velocityVector = {
-        "x": this._body.velocity[0],
-        "y": this._body.velocity[1]
-    };
-
-    var velocity = this.module(velocityVector);
-    if (velocity < physics_settings.min_velocity) { velocity = physics_settings.min_velocity; }
-    if (velocity > physics_settings.max_velocity) { velocity = physics_settings.max_velocity; }
-
-    this._body.velocity[0] = velocity*Math.cos(this._body.angle*Math.PI/180);
-    this._body.velocity[1] = velocity*Math.sin(this._body.angle*Math.PI/180);
-};
-
-InputComponent.prototype.updateAttack = function(command) {
+InputComponent.prototype.processAttack = function(command) {
     if( command.qKey  ){
         if (this.owner.components.get("cooldown").activate()) {
             var cannons = this.owner.components.get("cannon");
@@ -147,21 +71,15 @@ InputComponent.prototype.hasArrowCommand = function(command) {
     return false;
 };
 
-InputComponent.prototype.arrowCommandUpdate = function(command) {
-    var velocityVector = {
-        "x": this._body.velocity[0],
-        "y": this._body.velocity[1]
-    };
-    var velocity = this.module(velocityVector);
-    var velAngle = this.getAngleFromVector(velocityVector);
+InputComponent.prototype.processArrowCommand = function(command) {
+    var velocity = this.getVelocity();
+    var velAngle = this.getAngleFromVector(this.getVelocityVector);
 
     if( Math.abs(this.getDeltaAngleFromAngles( velAngle, this._body.angle)) > 90 ) // Reverse gear on
         velocity *= -1;
 
     var curveOn = false;
     if( velocity > physics_settings.min_velocity_to_curve )
-        curveOn = true;
-    else if( velocity < -physics_settings.min_velocity_to_curve && physics_settings.curve_in_reverse_gear )
         curveOn = true;
 
     if (command.arrowUp) {
@@ -175,7 +93,8 @@ InputComponent.prototype.arrowCommandUpdate = function(command) {
         velocity -= physics_settings.velocity_step; 
     }
     
-    this.correctVelocity();
+    if (velocity < physics_settings.min_velocity) { velocity = physics_settings.min_velocity; }
+    if (velocity > physics_settings.max_velocity) { velocity = physics_settings.max_velocity; }
 
     if (command.arrowLeft && curveOn) {
         // Temp
@@ -191,13 +110,15 @@ InputComponent.prototype.arrowCommandUpdate = function(command) {
 };
 
 InputComponent.prototype.initNewTrajectory = function(command){
+    this.initNewTrajectoryCalled = true; // Acessed by client/input to create new nextPointIndicator
+
     //Test
     // this._g.lineStyle(2, 0xff0000);
     // this._g.drawCircle(command.mouseWorldX, command.mouseWorldY, 50);
 
-    // Normalized vector in boat direction
+    // Normalized vector in boat direction ( normal coordinates )
     var boatDirectionVector = this.getBoatDirectionVector();
-    // Normalized vector in boat to clicked point direction
+    // Normalized vector in boat to clicked point direction ( normal coordinates )
     var boatToClickedPointVector = this.getBoatToClickedPointVector(command);
 
     this._rotateOnCounterClockWise = this.v1ReachV2RotatingOnCounterClockWise(boatDirectionVector, boatToClickedPointVector);
@@ -208,17 +129,17 @@ InputComponent.prototype.initNewTrajectory = function(command){
     // this._g.lineStyle(2, 0x00ff00);
     // this._g.drawCircle(this._circle.x0, this._circle.y0, 2*this._circle.radius);
 
-    var circleCenterToBoatVector = {
+    var circleCenterToBoatVector = { // In world coordinates
         "x": this._body.position[0] - this._circle.x0,
         "y": this._body.position[1] - this._circle.y0
     }
-    this._theta0 = this.getAngleFromVector(circleCenterToBoatVector)*Math.PI/180; // In world coordinates
-    this._nAlphaCounter = 0;
     this._clickedPoint = {
         "x": command.mouseWorldX,
         "y": command.mouseWorldY
     }
+    
     this._rotating = true;
+    this._followingTrajectory = true;
 
     this._centerToClickedPointVector = {
         "x": command.mouseWorldX - this._circle.x0,
@@ -228,29 +149,7 @@ InputComponent.prototype.initNewTrajectory = function(command){
         this._clickedPointInCycle = true;
     else
         this._clickedPointInCycle = false;
-
-    if( this.client ){
-        this.createNextPointIndicator( command.mouseWorldX, command.mouseWorldY );
-    }
 }
-
-// In world coordinates
-InputComponent.prototype.getTrajectoryCircle = function(boatDirectionVector){
-    var circle = {};
-    circle.radius = physics_settings.curve_radius;
-    var vAux = {};
-    if( this._rotateOnCounterClockWise ){
-        vAux.x = -boatDirectionVector.y;
-        vAux.y = boatDirectionVector.x;
-    }
-    else{
-        vAux.x = boatDirectionVector.y;
-        vAux.y = -boatDirectionVector.x;
-    }
-    circle.x0 = this._body.position[0] + vAux.x*circle.radius;
-    circle.y0 = this._body.position[1] - vAux.y*circle.radius;
-    return circle;
-};
 
 InputComponent.prototype.followTrajectoryUpdate = function(command) { 
     if( this._rotating ){  
@@ -264,7 +163,7 @@ InputComponent.prototype.followTrajectoryUpdate = function(command) {
         // this._g.moveTo(this._body.position[0], this._body.position[1]);
         // this._g.lineTo(this._clickedPoint.x, this._clickedPoint.y);
 
-        var boatDirectionVector = this.getVectorFromAngle(this._body.angle); // In normal coordinates
+        var boatDirectionVector = this.getBoatDirectionVector(); // In normal coordinates
 
         // Test
         // this._g.lineStyle(2, 0x000000);
@@ -279,8 +178,6 @@ InputComponent.prototype.followTrajectoryUpdate = function(command) {
 
         if( this._clickedPointInCycle ){
             if( Math.abs(this.getDeltaAngleFromVectors(centerToBoat, this._centerToClickedPointVector)) < 5 ){
-                if( this.client )
-                    this._nextPointIndicator.autoDestroy();
                 this._rotating = false;
             }  
         }
@@ -289,8 +186,6 @@ InputComponent.prototype.followTrajectoryUpdate = function(command) {
                 if(!this._clickedPointInCycle && this.v1ReachV2RotatingOnCounterClockWise( boatDirectionVector, boatToClickedPointVector)){
                     boatToClickedPointVector.y *= -1; // Now boatToClickedPointVector.y is in world coordinates
                     this._body.angle = this.getAngleFromVector(boatToClickedPointVector);
-                    if( this.client )
-                        this._nextPointIndicator.autoDestroy();
                     this._rotating = false;
                 }
             }
@@ -298,8 +193,6 @@ InputComponent.prototype.followTrajectoryUpdate = function(command) {
                 if(!this._clickedPointInCycle && this.v1ReachV2RotatingOnCounterClockWise(boatToClickedPointVector, boatDirectionVector)){
                     boatToClickedPointVector.y *= -1; // Now boatToClickedPointVector.y is in world coordinates
                     this._body.angle = this.getAngleFromVector(boatToClickedPointVector);
-                    if(this.client)
-                        this._nextPointIndicator.autoDestroy();
                     this._rotating = false;
                 }
             }
@@ -327,19 +220,47 @@ InputComponent.prototype.followTrajectoryUpdate = function(command) {
         }
     }
 
-    var velocityVector = {
-        "x": this._body.velocity[0],
-        "y": this._body.velocity[1]
-    };
-    var velocity = this.module(velocityVector);
+    var velocity = this.getVelocity();
 
     this._body.velocity[0] = velocity*Math.cos(this._body.angle*Math.PI/180);
     this._body.velocity[1] = velocity*Math.sin(this._body.angle*Math.PI/180);
 };
 
-InputComponent.prototype.clearCurrentTrajectory = function(command) {
-    if( this._nextPointIndicator )
-        this._nextPointIndicator.autoDestroy();
+InputComponent.prototype.correctVelocity = function() {
+    var velocity = this.getVelocity();
+
+    if (velocity < physics_settings.min_velocity) { velocity = physics_settings.min_velocity; }
+    if (velocity > physics_settings.max_velocity) { velocity = physics_settings.max_velocity; }
+
+    this._body.velocity[0] = velocity*Math.cos(this._body.angle*Math.PI/180);
+    this._body.velocity[1] = velocity*Math.sin(this._body.angle*Math.PI/180);
+};
+
+InputComponent.prototype.getVelocityVector = function(){
+    var velocityVector = {
+        "x": this._body.velocity[0],
+        "y": this._body.velocity[1]
+    };
+    return velocityVector;
+};
+
+InputComponent.prototype.getVelocity = function(){
+    return this.module(this.getVelocityVector());
+};
+
+// In world coordinates
+InputComponent.prototype.getTrajectoryCircle = function(boatDirectionVector){
+    var circle = {};
+    circle.radius = physics_settings.curve_radius;
+    var vAux = {};
+    if( this._rotateOnCounterClockWise )
+        vAux = this.rotate90CCW(boatDirectionVector);
+    else
+        vAux = this.rotate90CW(boatDirectionVector);
+    this.normalize(vAux);
+    circle.x0 = this._body.position[0] + vAux.x*circle.radius;
+    circle.y0 = this._body.position[1] - vAux.y*circle.radius;
+    return circle;
 };
 
 // v and v2 in normal coordinates

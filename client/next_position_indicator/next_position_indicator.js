@@ -2,7 +2,7 @@
 
 var prop = require('./next_position_indicator_properties.json');
 
-// Declare as entity
+// After create subentity concept delete this class and create it as an entity with 4 redArrow subentitys
 function NextPositionIndicator( game, x, y ) {
     this.game = game;
     this.x = x;

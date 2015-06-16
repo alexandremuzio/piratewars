@@ -13,8 +13,9 @@ function PhaserInputComponent(input) {
     this._mouseLeftButtonDown = false;
     this._mouseWorldX;
     this._mouseWorldY;
-    this._nextPointIndicator;
-    this.client = true;
+    this._nextPositionIndicator;
+    this._lastFollowingTrajectory = false;
+    this._lastRotating = false;
 
     // Call base constructor  
     InputComponent.call(this, input.game);
@@ -52,14 +53,13 @@ PhaserInputComponent.prototype.onMouseDown = function() {
 PhaserInputComponent.prototype.update = function() {
 	//console.log("input");
 	this.captureInput();
-    if( this._nextPointIndicator )
-        this._nextPointIndicator.update();
+    this.updateNextPositionIndicator();
 }
 
 PhaserInputComponent.prototype.captureInput = function() {
-	var command = {};
+    var command = {};
 
-	// check if arrow keys are pressed
+    // check if arrow keys are pressed
     if (this._cursorKeys.up.isDown && !this._cursorKeys.down.isDown) {
         command.arrowUp = true;
     } else if (this._cursorKeys.down.isDown) {
@@ -91,8 +91,28 @@ PhaserInputComponent.prototype.captureInput = function() {
     this._snapshots.add(command);
 }
 
-PhaserInputComponent.prototype.createNextPointIndicator = function(x, y) {
-    this._nextPointIndicator = new NextPositionIndicatorConstructor(this._input.game, x, y );
+PhaserInputComponent.prototype.updateNextPositionIndicator = function() {
+    if( !this._followingTrajectory && this._lastFollowingTrajectory && this._nextPositionIndicator ){
+        this._nextPositionIndicator.autoDestroy();
+        this._nextPositionIndicator = null;
+    }
+    this._lastFollowingTrajectory = this._followingTrajectory;
+
+    if( !this._rotating && this._lastRotating && this._nextPositionIndicator ){
+        this._nextPositionIndicator.autoDestroy();
+        this._nextPositionIndicator = null;
+    }
+    this._lastRotating = this._rotating;
+
+    if( this.initNewTrajectoryCalled ){
+        if( this._nextPositionIndicator )
+            this._nextPositionIndicator.autoDestroy();
+        this._nextPositionIndicator = new NextPositionIndicatorConstructor(this._input.game, this._clickedPoint.x, this._clickedPoint.y);
+        this.initNewTrajectoryCalled = false;
+    }
+
+    if( this._nextPositionIndicator )
+        this._nextPositionIndicator.update();
 }
 
 module.exports = PhaserInputComponent;

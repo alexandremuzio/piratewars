@@ -38,13 +38,15 @@ var GameEngine = (function () {
 			world: _world,
 			gameStep: function() {
 				for (var i in _entities) {
-					// console.log("id=", i);
-					_entities[i].update();
+					_entities[i].updateBeforeWorldStep();
 				}
-				// console.log("deleting");
-				_deleteEntities();
-				// console.log("step");
+				// console.log("doing world step");
 				_world.step(_stepLength);
+				for (var i in _entities) {
+					_entities[i].updateAfterWorldStep();
+				}
+				// console.log("deleting entities");
+				_deleteEntities();
 			},
 			addEntity: function(entity, id) {
 				// console.log("gameEngine addEntity");

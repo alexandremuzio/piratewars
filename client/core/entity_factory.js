@@ -17,6 +17,11 @@ var HealthBarComponent = require('../components/health_bar.js');
 var TextComponent = require('../components/text.js');
 var FollowComponent = require('../components/follow.js');
 
+var physics_settings = require('../../shared/settings/boats/default_boat/physics.json');
+///////////////////// Send these to a data file /////////////////////////////
+var playerSpriteSize = 0.2;
+var textSize = 0.2;
+var healthBarSpriteSize = 0.2;
 var stronghold_settings = require('../../shared/settings/stronghold.json');
 var player_settings = require('../../shared/settings/player.json');
 
@@ -75,6 +80,7 @@ var EntityFactory = {
 		entity.components.add(new PlayerControllerComponent());
 		entity.components.add(new TextComponent(text));
 		entity.components.add(new CannonComponent(entity));
+		entity.components.add(new CreatorComponent());
 
 		// this.createHealthBar(entity);
 		return entity;

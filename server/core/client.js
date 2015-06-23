@@ -22,9 +22,9 @@ Client.prototype.init = function() {
 	// console.log("client init");
 	this._socket.emit('onconnected');
 	this._socket.on('player.ready', this.onReady.bind(this));
-	process.on("SIGINT", function(){
-    	console.log(this._packagesLost + " from " + this._lastStep + " lost (" + 100*this._packagesLost/this._lastStep + "%)");
-	}.bind(this));
+	// process.on("SIGINT", function(){
+ //    	console.log(this._packagesLost + " from " + this._lastStep + " lost (" + 100*this._packagesLost/this._lastStep + "%)");
+	// }.bind(this));
 }
 
 Client.prototype.onReady = function() {

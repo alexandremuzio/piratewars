@@ -59,14 +59,8 @@ PlayState.prototype.create = function() {
 
 //update loop - runs at 60fps
 PlayState.prototype.update = function() {
-    // if (this.selfPlayer) {
-        // console.log("");
-        // console.log("x1= ", this.selfPlayer.components.get('physics').getTransform().position.x);
-        this.applySyncFromServer();
-        // console.log("x2= ", this.selfPlayer.components.get('physics').getTransform().position.x);
-        GameEngine.getInstance().gameStep();
-        // console.log("x3= ", this.selfPlayer.components.get('physics').getTransform().position.x);
-    // }
+    this.applySyncFromServer();
+    GameEngine.getInstance().gameStep();
 };
 
 PlayState.prototype.render = function() {
@@ -144,16 +138,12 @@ PlayState.prototype.debugUpdate = function() {
     if (this.selfPlayer) {
         console.log("");
         console.log("STARTING applySyncFromServer");
-        console.log("x=", this.selfPlayer.components.get('physics').getTransform().position.x);
-        this.applySyncFromServer();
-        console.log("x=", this.selfPlayer.components.get('physics').getTransform().position.x);
+        this.applySyncFromServer();;
         console.log("ENDING applySyncFromServer");
         console.log("STARTING gameStep");
         GameEngine.getInstance().gameStep();
-        console.log("x=", this.selfPlayer.components.get('physics').getTransform().position.x);
         console.log("ENDING gameStep");
         console.log("STARTING emit");
-        this.socket.emit('client.sync', this.selfPlayer.components.get('physics').getTransform());
         console.log("ENDING emit");
     }
 };

@@ -3,23 +3,43 @@
 var GameEngine = require('../game_engine.js');
 var ComponentManager = require('./component_manager.js');
 var Transform = require('../components/transform.js');
+// var ChildrenManager = require('./children_manager.js');
 
 function Entity(id, key) {
 	// console.log("inside entity constr");
 	GameEngine.getInstance().addEntity(this, id);
     this.key = key;
     this.id = id;
-	this.transform = new Transform();
+    this.father;
+	this.transform = new Transform(this);
 	this.components = new ComponentManager(this);
-	this._eventHandlers = {};
+	// this.children = new ChildrenManager(this);
+    this._eventHandlers = {};
 };
 
 /**
  * @override
  */
-Entity.prototype.update = function() {
-	this.components.update();
+Entity.prototype.updateBeforeWorldStep = function() {
+    this.components.updateBeforeWorldStep();
 }
+
+Entity.prototype.updateAfterWorldStep = function() {
+    this.components.updateAfterWorldStep();
+}
+
+// // father must be an reference to an entity
+// // x0, y0, alpha0 are initial transform local variables
+// Entity.prototype.setFather = function( father, x0, y0, alpha0 ) {
+//     if( this.father ){
+//         console.error('The entity ' + this.id + ' already has a father');
+//     }
+//     else{
+//         this.father = father;
+//         this.transform.initLocalVariables(x0, y0, alpha0);
+//         father.children.add(this);
+//     }   
+// }
 
 Entity.prototype.destroy = function() {
     this.trigger('entity.destroy', this);    

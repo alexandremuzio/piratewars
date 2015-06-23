@@ -54,14 +54,14 @@ CannonComponent.prototype.update = function() {
 			x: body.position[0] + paraVector.x + rightVector.x,
 			y: body.position[1] + paraVector.y+ rightVector.y
 		}
-
 	];
-
 }
 
 CannonComponent.prototype.shootLeftCannons = function() {
+	console.log('shootLeftCannons');
 	var creator = this.owner.components.get("creator");
 	_.each(this.leftCannons, function(cannon) {
+		console.log('enter');
     	creator.createBullet(cannon, "left");
 	});
 }

@@ -41,7 +41,7 @@ SyncComponent.prototype.sendSyncToServer = function() {//update = function() {
 }
 
 SyncComponent.prototype.onSyncronization = function(transform) {
-	this.owner.components.get('physics').setTransform(transform);
+	this.owner.transform.setTransform(transform);
 }
 
 module.exports = SyncComponent;

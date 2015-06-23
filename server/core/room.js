@@ -60,12 +60,11 @@ Room.prototype.sendSyncToClients = function() {
 	clientSnapshot.bullets = {};
 	_.each(GameEngine.getInstance().entities, function(entity) {
 		if (entity.key === 'player') {
-			clientSnapshot.players[entity.id] = entity.components.get('physics').getTransform();
+			clientSnapshot.players[entity.id] = entity.transform.getTransform();
 		}
 		else if (entity.key === 'bullet' && entity.components.get('bullet').sent === false) {
 			entity.components.get('bullet').sent = true;
-			clientSnapshot.bullets[entity.id] = entity.components.get('physics').getTransform();
-			// console.log("Sending bullet ", entity.id);
+			clientSnapshot.bullets[entity.id] = entity.transform.getTransform();
 		}
 	});
 	this.syncClients(clientSnapshot);

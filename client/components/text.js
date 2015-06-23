@@ -24,7 +24,7 @@ TextComponent.prototype.setAnchor = function(x, y) {
 TextComponent.prototype.init = function() {};
 
 TextComponent.prototype.update = function() {
-	var transform = this.owner.components.get("physics").getTransform();
+	var transform = this.owner.transform.getTransform();
 	this.text.position.x = transform.position.x;
 	this.text.position.y = transform.position.y + 0.5*this.owner.components.get("sprite").getHeight();
 };

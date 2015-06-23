@@ -52,12 +52,14 @@ InputComponent.prototype.processAttack = function(command) {
         if (this.owner.components.get("cooldown").activate()) {
             var cannons = this.owner.components.get("cannon");
             cannons.shootLeftCannons();
+            console.log('shoot left');
         }
     }
     if( command.eKey ){
         if (this.owner.components.get("cooldown").activate()) {
             var cannons = this.owner.components.get("cannon");
             cannons.shootRightCannons();
+            console.log('shoot right');
         }
     }
 };

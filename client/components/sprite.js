@@ -24,7 +24,7 @@ SpriteComponent.prototype.init = function() {
 }
 
 SpriteComponent.prototype.update = function() {
-	var transform = this.owner.components.get("physics").getTransform();
+	var transform = this.owner.transform.getTransform();
 	this.sprite.position.x = transform.position.x;
 	this.sprite.position.y = transform.position.y;
 	this.sprite.angle = transform.angle;

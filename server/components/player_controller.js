@@ -17,7 +17,7 @@ Player.prototype.constructor = BaseComponent;
 ///
 
 Player.prototype.init = function() {
-	this.owner.on("entity.damage", this.onDamage.bind(this));
+	// this.owner.on("entity.damage", this.onDamage.bind(this));
 	this.owner.on("entity.collision", this.onCollision.bind(this));
 }
 

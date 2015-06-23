@@ -18,13 +18,9 @@ FollowComponent.prototype.init = function() {
 };
 
 FollowComponent.prototype.update = function() {
-
-	/////////////////  IMPROVE THIS ///////////////////
-	var transform = this.owner.components.get("physics").getTransform();
+	var transform = this.owner.transform.getTransform();
 	transform.position = {x: transform.position.x + this.followSprite.deltaX, y: transform.position.y + this.followSprite.deltaY};
-	///////////////////////////////////////////////////
-
-	this.owner.components.get("physics").setTransform(transform);
+	this.owner.transform.setTransform(transform);
 }
 
 module.exports = FollowComponent;

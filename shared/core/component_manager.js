@@ -1,14 +1,24 @@
 'use strict'
 
+var _ = require('underscore');
+
 function ComponentManager(owner) {
 	this._components = {};
 	this._owner = owner;
 };
 
-ComponentManager.prototype.update = function() {
-	for (var i in this._components) {
-		this._components[i].update();
-	}
+ComponentManager.prototype.updateBeforeWorldStep = function() {
+	_.each(this._components, function(component){
+		if( component.key != 'sprite' )
+			component.update();
+	});
+};
+
+ComponentManager.prototype.updateAfterWorldStep = function() {
+	this._owner.transform.update();
+	var spriteComponent = this.get('sprite');
+	if( spriteComponent )
+		spriteComponent.update();
 };
 
 ComponentManager.prototype.add = function(component) {

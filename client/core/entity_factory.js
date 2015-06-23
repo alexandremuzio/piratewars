@@ -80,7 +80,6 @@ var EntityFactory = {
 		entity.components.add(new PlayerControllerComponent());
 		entity.components.add(new TextComponent(text));
 		entity.components.add(new CannonComponent(entity));
-		entity.components.add(new CreatorComponent());
 
 		// this.createHealthBar(entity);
 		return entity;

@@ -24,10 +24,26 @@ SpriteComponent.prototype.init = function() {
 }
 
 SpriteComponent.prototype.update = function() {
-	var transform = this.owner.transform.getTransform();
-	this.sprite.position.x = transform.position.x;
-	this.sprite.position.y = transform.position.y;
-	this.sprite.angle = transform.angle;
+	// MPTest
+	if( this.owner.key != 'test' ){
+		var transform = this.owner.transform.getTransform();
+		if( typeof transform.position.x === 'number' && typeof transform.position.y === 'number' && typeof transform.angle === 'number' ){
+			this.sprite.position.x = transform.position.x;
+			this.sprite.position.y = transform.position.y;
+			this.sprite.angle = transform.angle;
+		}
+	}
+	else{
+		var transform = this.owner.transform.getTransform();
+		// console.log("transform.position.x = " + transform.position.x);
+		// console.log("transform.position.y = " + transform.position.y);
+		// console.log("transform.angle = " + transform.angle);
+		if( typeof transform.position.x === 'number' && typeof transform.position.y === 'number' && typeof transform.angle === 'number' ){
+			this.sprite.position.x = transform.position.x;
+			this.sprite.position.y = transform.position.y;
+			this.sprite.angle = transform.angle;
+		}
+	}
 }
 
 SpriteComponent.prototype.getHeight = function() {

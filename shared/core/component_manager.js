@@ -15,7 +15,7 @@ ComponentManager.prototype.updateBeforeWorldStep = function() {
 };
 
 ComponentManager.prototype.updateAfterWorldStep = function() {
-	this._owner.transform.update();
+	this._owner.transform.updateAfterWorldStep();
 	var spriteComponent = this.get('sprite');
 	if( spriteComponent )
 		spriteComponent.update();

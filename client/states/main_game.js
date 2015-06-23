@@ -155,6 +155,9 @@ PlayState.prototype.onGameSync = function(snapshot) {
 PlayState.prototype.onPlayerCreate = function(data) {    
     console.log("Creating a new player!");
     this.selfPlayer = EntityFactory.createLocalPlayer({ id: data.id });
+    // MPTemp
+    this.temp = EntityFactory.createTemp();
+    this.temp.setFather(this.selfPlayer, 0, 0, 45);
     this.game.camera.follow(this.selfPlayer.components.get("sprite").sprite);
 }
 

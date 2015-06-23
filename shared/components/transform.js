@@ -6,7 +6,7 @@ function Transform(owner) {
 	this._position = {"x": 0, "y": 0}; 
 	this._velocity = {"x": 0, "y": 0}; // remove this 
 	this._angle = 0;
-	// localPosition and localAngle are used declared when initLocalVariables is called
+	// localPosition and localAngle are declared when initLocalVariables is called
 	// this._localPosition = {"x": 0, "y": 0}; 
 	// this._localAngle = 0;
 	this._owner = owner;
@@ -120,6 +120,13 @@ Transform.prototype.updateLocalPosition = function(){
 
 // Doesn't passed by reference
 Transform.prototype.getPosition = function(){
+	// Sync position with body
+	var phsicsComponent = this._owner.components.get('physics');
+	if( phsicsComponent ){
+		var body = this._owner.components.get('physics').body;
+		this.setPositionWithoutUpdateBody({ "x": body.position[0], "y": body.position[1] });
+	}
+
 	var position = {
 		"x": this._position.x,
 		"y": this._position.y
@@ -176,6 +183,12 @@ Transform.prototype.updateLocalAngle = function(){
 };
 
 Transform.prototype.getAngle = function(){
+	// Sync angle with body
+	var phsicsComponent = this._owner.components.get('physics');
+	if( phsicsComponent ){
+		var body = this._owner.components.get('physics').body;
+		this.setAngleWithoutUpdateBody(body.angle);
+	}
 	return this._angle;
 };
 
@@ -204,6 +217,12 @@ Transform.prototype.setVelocityWithoutUpdateBody = function(velocity){ // remove
 
 // Doesn't passed by reference
 Transform.prototype.getVelocity = function(){ // remove this
+	var phsicsComponent = this._owner.components.get('physics');
+	if( phsicsComponent ){
+		var body = this._owner.components.get('physics').body;
+		this.setVelocityWithoutUpdateBody({ "x": body.velocity[0], "y": body.velocity[1] });
+	}
+
 	var velocity = {
 		"x": this._velocity.x,
 		"y": this._velocity.y
@@ -214,15 +233,9 @@ Transform.prototype.getVelocity = function(){ // remove this
 // Doesn't passed by reference
 Transform.prototype.getTransform = function(velocity){ // remove this
 	var transform = {};
-	transform.position = {
-		"x": this._position.x, 
-		"y": this._position.y
-	};
-	transform.velocity = {
-		"x": this._velocity.x,
-		"y": this._velocity.y
-	};
-	transform.angle = this._angle;
+	transform.position = this.getPosition();
+	transform.velocity = this.getVelocity();
+	transform.angle = this.getAngle();
 	return transform;
 };
 

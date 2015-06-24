@@ -88,6 +88,8 @@ Entity.prototype.trigger = function(event) {
         for (var i = 0; i < this._eventHandlers[event].length; i++) {
             this._eventHandlers[event][i].apply(this, params);
         }
+
+        this._eventHandlers = {}; //Clear events
     }
 }
 

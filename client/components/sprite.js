@@ -2,12 +2,14 @@
 
 var GameEngine = require('../../shared/game_engine.js');
 var GameComponent = require('../../shared/core/component.js');
+var _ = require('underscore')
 
 
-function SpriteComponent(sprite) {
-	// console.log("inside SpriteComponent constr");
+function SpriteComponent(sprites_info) {
+	console.log("inside SpriteComponent constr");
 	this.key = "sprite";
-	this.sprite = sprite;
+	this._sprites_info = sprites_info;
+	this._sprites = {};
 };
 
 ///
@@ -18,57 +20,85 @@ SpriteComponent.prototype.constructor = SpriteComponent;
 SpriteComponent.prototype.init = function() {
 	this.owner.on('entity.destroy', this.onEntityDestroy.bind(this));	/* Crop is based on texture (must use texture width and height) */
 
-	this.originalTextureRect = new Phaser.Rectangle(0, 0, this.sprite.texture.width, this.sprite.texture.height);
-	/* Saved original texture rect because crop will modify texture properties */
-	this.sprite.crop(new Phaser.Rectangle(0, 0, this.sprite.texture.width, this.sprite.texture.height), false);
+	this.owner.on('entity.destroy', this.onEntityDestroy.bind(this));
+
+	console.log("inside SpriteComponent init");
+
+	_.each(this._sprites_info, function(sprite_i, key) {
+		
+        if(sprite_i.scale) { sprite_i.sprite.scale.setTo(sprite_i.scale.x, sprite_i.scale.y); }
+        
+        if(sprite_i.anchor) { sprite_i.sprite.anchor.setTo(sprite_i.anchor.x, sprite_i.anchor.y); }
+        
+        if(sprite_i.tint) { sprite_i.sprite.tint = sprite_i.tint; }
+
+        sprite_i.originalTexture = new Phaser.Rectangle(0, 0, sprite_i.sprite.texture.width, sprite_i.sprite.texture.height);
+        sprite_i.sprite.crop(new Phaser.Rectangle(0, 0, sprite_i.sprite.texture.width, sprite_i.sprite.texture.height), false);
+
+        this._sprites[key] = sprite_i.sprite;
+    }, this);
+
+	console.log("after SpriteComponent init");
+//	/* Crop is based on texture (must use texture width and height) */
+//	this.originalTextureRect = new Phaser.Rectangle(0, 0, this.sprite.texture.width, this.sprite.texture.height);
+//	/* Saved original texture rect because crop will modify texture properties */
+//	this.sprite.crop(new Phaser.Rectangle(0, 0, this.sprite.texture.width, this.sprite.texture.height), false);
 }
 
 SpriteComponent.prototype.update = function() {
-	// MPTest
+	var transform = this.owner.transform.getTransform();
+	
+    // MPTest
 	if( this.owner.key != 'test' ){
-		var transform = this.owner.transform.getTransform();
 		if( typeof transform.position.x === 'number' && typeof transform.position.y === 'number' && typeof transform.angle === 'number' ){
-			this.sprite.position.x = transform.position.x;
-			this.sprite.position.y = transform.position.y;
-			this.sprite.angle = transform.angle;
+		    _.each(this._sprites, function(sprite) {
+		        sprite.position.x = transform.position.x;
+		        sprite.position.y = transform.position.y;
+		        sprite.angle = transform.angle;
+	        });
 		}
 	}
 	else{
-		var transform = this.owner.transform.getTransform();
-		// console.log("transform.position.x = " + transform.position.x);
-		// console.log("transform.position.y = " + transform.position.y);
-		// console.log("transform.angle = " + transform.angle);
 		if( typeof transform.position.x === 'number' && typeof transform.position.y === 'number' && typeof transform.angle === 'number' ){
-			this.sprite.position.x = transform.position.x;
-			this.sprite.position.y = transform.position.y;
-			this.sprite.angle = transform.angle;
+		    _.each(this._sprites, function(sprite) {
+		        sprite.position.x = transform.position.x;
+		        sprite.position.y = transform.position.y;
+		        sprite.angle = transform.angle;
+	        });
 		}
 	}
 }
 
-SpriteComponent.prototype.getHeight = function() {
-	return this.sprite.height;
+SpriteComponent.prototype.kill = function(key) {
+    var sprite = this._sprites.get[key];
+    if(sprite) {
+        sprite.kill();
+    }
 }
 
-SpriteComponent.prototype.getWidth = function() {
-	return this.sprite.width;
-}
-
-SpriteComponent.prototype.setScale = function(x, y) {
-	this.sprite.scale.setTo(x, y);
-}
-
-SpriteComponent.prototype.setAnchor = function(x, y) {
-	this.sprite.anchor.setTo(x, y);
+SpriteComponent.prototype.revive = function(key) {
+	var sprite = this._sprites[key];
+	if(sprite) {
+		sprite.revive();
+	}
 }
 
 SpriteComponent.prototype.onEntityDestroy = function() {
-	this.sprite.destroy();
+	_.each(this._sprites, function(sprite) {
+        sprite.destroy();
+    });
 }
 
-SpriteComponent.prototype.cropHorizontally = function(percentage) {
-	this.sprite.cropRect.width = this.originalTextureRect.width*percentage;
-	this.sprite.updateCrop();
+SpriteComponent.prototype.getSprite = function(key) {
+	return this._sprites[key];
+}
+
+SpriteComponent.prototype.cropImage = function(key, percentage) {
+	var sprite = this._sprites[key];
+	var originalTextureWidth = this._sprites_info[key].originalTexture.width;
+
+	sprite.cropRect.width = originalTextureWidth*percentage;
+	sprite.updateCrop();
 }
 
 module.exports = SpriteComponent;

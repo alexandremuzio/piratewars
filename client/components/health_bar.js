@@ -2,8 +2,6 @@
 
 var GameEngine = require('../../shared/game_engine.js');
 var GameComponent = require('../../shared/core/component.js');
-//Private
-var playerMaxLife;
 
 function HealthBarComponent() {
 	console.log("inside HealthBarComponent constr");

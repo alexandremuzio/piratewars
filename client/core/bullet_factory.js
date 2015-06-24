@@ -23,15 +23,28 @@ var BulletFactory = {
 	createBullet : function(initialPosition, angle) {
 		// console.log("createBullet");
 		var bulletId = UUID();
-		var entity = new Entity(bulletId, 'bullet');
+		var entity = new Entity(bulletId, 'bullet'),
+            entityGroup, sprites_info;
 
-		var sprite = this.game.add.sprite(initialPosition.x, initialPosition.y, 'bullet');
-		sprite.anchor.setTo(0.5, 0.5);
-		sprite.width = bullet_settings.radius;
-		sprite.height = bullet_settings.radius;
+		entityGroup = this.game.add.group();
 
-		var velocity = MathUtils.vector(bullet_settings.physics.velocity, angle);
-
+		sprites_info = {
+			boat: {
+				sprite: entityGroup.create(initialPosition.x, initialPosition.y, 'bullet'),
+				scale: { 
+	        		x: bullet_settings.radius,
+	        		y: bullet_settings.radius
+        		},
+	        	anchor: {
+	        		x: 0.5,
+	        		y: 0.5
+	        	},
+        		tint: 0xff6600
+			}
+		};
+		
+        var velocity = MathUtils.vector(bullet_settings.physics.velocity, angle);
+		
 		var body = new p2.Body({
 	            name: "bullet",
 	            type: p2.Body.KINEMATIC,
@@ -56,13 +69,27 @@ var BulletFactory = {
 	createRemoteBullet : function(transform) {
 		// console.log("createBullet");
 		var bulletId = UUID();
-		var entity = new Entity(bulletId);
+		var entity = new Entity(bulletId),
+		    entityGroup, sprites_info;
 
-		var sprite = this.game.add.sprite(transform.x, transform.y, 'bullet');
-		sprite.anchor.setTo(0.5, 0.5);
-		sprite.width = bullet_settings.radius;
-		sprite.height = bullet_settings.radius;
+		entityGroup = this.game.add.group();
 
+		sprites_info = {
+			boat: {
+				sprite: entityGroup.create(transform.x, transform.y, 'bullet'),
+				scale: { 
+	        		x: bullet_settings.radius,
+	        		y: bullet_settings.radius
+        		},
+	        	anchor: {
+	        		x: 0.5,
+	        		y: 0.5
+	        	},
+        		tint: 0xff6600
+			}
+		};
+
+		
 		var body = new p2.Body({
 	            name: "bullet",
 	            type: p2.Body.KINEMATIC,
@@ -83,8 +110,8 @@ var BulletFactory = {
 		entity.components.add(new PhysicsComponent(body));
 		entity.components.add(new SpriteComponent(sprite));
 		entity.components.add(new BulletComponent());
-
-		return entity;
+		
+        return entity;
 	}
 };
 

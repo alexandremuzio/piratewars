@@ -84,8 +84,6 @@ PlayState.prototype.applySyncFromServer = function() {
                 // console.log("creating remote player");
                 PlayerFactory.createRemotePlayer({ id: key });
             }
-
-            // console.log(lastSnapshot.players[key].health);
             GameEngine.getInstance().entities[key].sync(lastSnapshot.players[key]);
         }
         for (var key in lastSnapshot.bullets) {
@@ -160,8 +158,8 @@ PlayState.prototype.onGameSync = function(snapshot) {
 PlayState.prototype.onPlayerCreate = function(data) {    
     console.log("Creating a new player!");
     this.selfPlayer = PlayerFactory.createLocalPlayer({ id: data.id });
-    this.game.camera.follow(this.selfPlayer.components.get("sprite").sprite);
-    
+    this.game.camera.follow(this.selfPlayer.components.get("sprite").getSprite('boat'));
+
     // MPTest
     GameEngine.getInstance().printEntityHierarchy();
 }

@@ -16,6 +16,7 @@ function Entity(id, key) {
 	this.components = new ComponentManager(this);
 	this.childrenManager = new ChildrenManager(this);
     this._eventHandlers = {};
+    this._followFatherAngle = true;
 };
 
 /**
@@ -40,6 +41,14 @@ Entity.prototype.setFather = function( father, x0, y0, alpha0 ) {
         this.transform.initLocalVariables(x0, y0, alpha0);
         father.childrenManager.add(this);
     }
+}
+
+Entity.prototype.setFollowFatherAngle = function(value) {
+    this._followFatherAngle = value;
+}
+
+Entity.prototype.getFollowFatherAngle = function(value) {
+    return this._followFatherAngle;
 }
 
 Entity.prototype.destroy = function() {

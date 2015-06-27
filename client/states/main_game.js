@@ -62,6 +62,7 @@ PlayState.prototype.update = function() {
     // GameEngine.getInstance().printEntityHierarchy();
     this.applySyncFromServer();
     GameEngine.getInstance().gameStep();
+    // GameEngine.getInstance().printEntityHierarchy();
 };
 
 PlayState.prototype.render = function() {

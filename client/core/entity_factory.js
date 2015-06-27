@@ -84,7 +84,10 @@ var EntityFactory = {
 		// var subentity = this.createTemp();
 		// subentity.setFather(entity, -30, 0, 90);
 
-		// this.createHealthBar(entity);
+		var healthBar = this.createHealthBar();
+		healthBar.setFather(entity, 0, -30, 0);
+		healthBar.setFollowFatherAngle(false);
+
 		return entity;
 	},
 
@@ -142,55 +145,43 @@ var EntityFactory = {
 		return entity;
 	},
 
-	createHealthBar: function(player) {
+	createHealthBar: function() {
 		/* GameEngine needs an ID, now is set randomly */
-		var entityInside = new Entity(UUID(), "healthBarInside"); //MUST FIX IT
+		var entity = new Entity(UUID(), 'health bar');
 
-		var referenceBody = player.components.get("physics").body;
-		var referenceSprite = player.components.get("sprite").sprite;
-		var referenceHeight = player.components.get("sprite").getHeight();
+		var healthBarInside = this.createHealthBarInside();
+		healthBarInside.setFather(entity, 0, 0, 0 );
+
+		var healthBarOutside = this.createHealthBarOutside();
+		healthBarOutside.setFather(entity, 0, 0, 0);
+
+		return entity;
+	},
+
+	createHealthBarInside: function() {
+		var entity = new Entity(UUID(), 'health bar inside'); //MUST FIX IT
 
 		var redBarSprite = this.game.add.sprite(205, 100, 'redbar');
-		redBarSprite.anchor.setTo(0.0, 0.0);
+		redBarSprite.anchor.setTo(0.5, 0.5);
 	    redBarSprite.scale.setTo(player_settings.health_bar.scale, 
 	    						 player_settings.health_bar.scale);
 		
-	    var bodyInside = new p2.Body({
-				name: "healthBarInside",
-				mass: 0, /* STATIC body */
-				
-				//Position must be in the right distance from reference (player)
-				position: [referenceBody.position[0] - redBarSprite.width/2.0,
-							 referenceBody.position[1] - 0.5*referenceHeight]
-			});
-	    bodyInside.angle = 0;
-		
-	    entityInside.components.add(new PhysicsComponent(bodyInside));
-		entityInside.components.add(new SpriteComponent(redBarSprite));
-		entityInside.components.add(new HealthBarComponent(player));
-		entityInside.components.add(new FollowComponent(referenceSprite));
+		entity.components.add(new SpriteComponent(redBarSprite));
+	   
+		return entity;
+	},
 
-	    /* GameEngine needs an ID, now is set randomly */
-		var entityOutline = new Entity(UUID(), "healthBarOutline");
+	createHealthBarOutside: function() {
+		var entity = new Entity(UUID(), 'health bar outside'); //MUST FIX IT
 
 		var blackBoxSprite = this.game.add.sprite(205, 100, 'blackbox');
-		blackBoxSprite.anchor.setTo(0.0, 0.0);
+		blackBoxSprite.anchor.setTo(0.5, 0.5);
 		blackBoxSprite.scale.setTo(player_settings.health_bar.scale,
 									 player_settings.health_bar.scale);
 	    
-	    var bodyOutline = new p2.Body({
-				name: "healthBarOutline",
-				mass: 0, /* STATIC body */
+		entity.components.add(new SpriteComponent(blackBoxSprite));
 
-				//Position must be in the right distance from reference (player)
-				position: [referenceBody.position[0] - blackBoxSprite.width/2.0,
-							 referenceBody.position[1] - 0.5*referenceHeight]
-			});
-		bodyOutline.angle = 0;
-	    
-		entityOutline.components.add(new PhysicsComponent(bodyOutline));
-		entityOutline.components.add(new SpriteComponent(blackBoxSprite));
-		entityOutline.components.add(new FollowComponent(referenceSprite));
+		return entity;
 	},
 
 	createStronghold : function(index) {

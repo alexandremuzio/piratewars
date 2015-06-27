@@ -21,7 +21,7 @@
 	"width": 90,
 	"height" : 30,
 
-	"healthbar" :
+	"health_bar" :
 	{
 		"scale" : 0.2
 	},

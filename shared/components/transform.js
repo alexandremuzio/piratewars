@@ -152,11 +152,14 @@ Transform.prototype.setAngleWithoutUpdateBody = function(angle){
 	// Update children angle
 	if( this._owner.childrenManager.hasChildren() && deltaAngle !== 0 ){
 		_.each( this._owner.childrenManager.getChildrenArray(), function( childEntity ){
-			var localPosition = childEntity.transform.getLocalPosition();
-			var radius = MathUtils.module(localPosition);
-			var angle = MathUtils.getAngleFromVector(localPosition) + deltaAngle;
-			childEntity.transform.setLocalPosition(MathUtils.vector(radius, angle));
-			childEntity.transform.setDeltaAngle(deltaAngle);
+			if( childEntity.getFollowFatherAngle() ){
+				var localPosition = childEntity.transform.getLocalPosition();
+				var radius = MathUtils.module(localPosition);
+				var angle = MathUtils.getAngleFromVector(localPosition) + deltaAngle;
+				if( radius > 0 )
+					childEntity.transform.setLocalPosition(MathUtils.vector(radius, angle));
+				childEntity.transform.setDeltaAngle(deltaAngle);
+			}
 		});
 	}
 };

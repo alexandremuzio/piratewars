@@ -15,10 +15,20 @@ var GameEngine = (function () {
 		var _scheduledForDeletion = [];
 		var _deleteEntities = function() {
 				_.each(_scheduledForDeletion, function(id) {	
-					// console.log("deleting= ", id);				
+					// console.log("deleting= ", id);			
 					delete _entities[id];
 				});
 				_scheduledForDeletion = [];
+		};
+		var _printEntityAndChildren = function( nTabs, entity, function_printEntityAndChildren ) {
+			var s = '';
+			for( var i = 0; i < nTabs; i++ )
+				s += '	';
+			console.log(s + '->' + entity.key);
+
+			_.each(entity.childrenManager.getChildrenArray(), function(childEntity){
+				function_printEntityAndChildren(nTabs+1, childEntity, function_printEntityAndChildren);
+			}.bind(this));
 		};
 
 		_world.on("beginContact", function(event){
@@ -55,6 +65,12 @@ var GameEngine = (function () {
 			},
 			deleteEntity: function(entity) {
 				_scheduledForDeletion.push(entity.id);
+			},
+			printEntityHierarchy: function() {
+				_.each(_entities, function(entity){
+					if( !entity.father )
+						_printEntityAndChildren(0, entity, _printEntityAndChildren);
+				});
 			}
 		};
 	};

@@ -16,4 +16,8 @@ SnapshotManager.prototype.getLast = function(key) {
 	return this._snapshots.pop();
 };
 
+SnapshotManager.prototype.length = function(key) {
+	return this._snapshots.length;
+};
+
 module.exports = SnapshotManager;

@@ -4,6 +4,7 @@ var GameEngine = require('../game_engine.js');
 var ComponentManager = require('./component_manager.js');
 var Transform = require('../components/transform.js');
 var ChildrenManager = require('./children_manager.js');
+var _ = require('underscore');
 
 function Entity(id, key) {
 	// console.log("inside entity constr");
@@ -32,16 +33,21 @@ Entity.prototype.updateAfterWorldStep = function() {
 // x0, y0, alpha0 are initial transform local variables
 Entity.prototype.setFather = function( father, x0, y0, alpha0 ) {
     if( this.father ){
-        console.error('The entity ' + this.id + ' already has a father');
+        console.error('Entity ' + this.id + ' already has a father');
     }
     else{
         this.father = father;
         this.transform.initLocalVariables(x0, y0, alpha0);
         father.childrenManager.add(this);
-    }   
+    }
 }
 
 Entity.prototype.destroy = function() {
+    // Destroy children first
+    _.each(this.childrenManager.getChildrenArray(), function(subentity){
+        subentity.destroy();
+    });
+
     this.trigger('entity.destroy', this);    
     GameEngine.getInstance().deleteEntity(this);
 }

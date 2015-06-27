@@ -9,13 +9,18 @@ function ComponentManager(owner) {
 
 ComponentManager.prototype.updateBeforeWorldStep = function() {
 	_.each(this._components, function(component){
-		if( component.key != 'sprite' )
+		if( component.key != 'sprite' && component.key != 'outSync' )
 			component.update();
 	});
 };
 
 ComponentManager.prototype.updateAfterWorldStep = function() {
 	this._owner.transform.updateAfterWorldStep();
+
+	var syncComponent = this.get('outSync');
+	if( syncComponent )
+		syncComponent.update();
+	
 	var spriteComponent = this.get('sprite');
 	if( spriteComponent )
 		spriteComponent.update();

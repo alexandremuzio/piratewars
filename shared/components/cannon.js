@@ -58,10 +58,8 @@ CannonComponent.prototype.update = function() {
 }
 
 CannonComponent.prototype.shootLeftCannons = function() {
-	console.log('shootLeftCannons');
 	var creator = this.owner.components.get("creator");
 	_.each(this.leftCannons, function(cannon) {
-		console.log('enter');
     	creator.createBullet(cannon, "left");
 	});
 }

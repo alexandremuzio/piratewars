@@ -17,6 +17,8 @@ function PhaserInputComponent(input) {
     this._nextPositionIndicator;
     this._lastFollowingTrajectory = false;
     this._lastRotating = false;
+    // MPTemp
+    this._commandId = 0;
 
     // Call base constructor  
     InputComponent.call(this, input.game);
@@ -87,6 +89,9 @@ PhaserInputComponent.prototype.captureInput = function() {
     if (this._rightAttackKey.isDown) {
         command.eKey = true;
     }
+
+    // MPTemp
+    command.id = this._commandId++;
 
     this.processCommand(command);
     if (!_.isEmpty(command)) {

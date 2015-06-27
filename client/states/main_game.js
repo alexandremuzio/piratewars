@@ -157,8 +157,8 @@ PlayState.prototype.onPlayerCreate = function(data) {
     console.log("Creating a new player!");
     this.selfPlayer = EntityFactory.createLocalPlayer({ id: data.id });
     // MPTemp
-    this.temp = EntityFactory.createTemp();
-    this.temp.setFather(this.selfPlayer, -30, 0, 90);
+    // this.temp = EntityFactory.createTemp();
+    // this.temp.setFather(this.selfPlayer, -30, 0, 90);
     this.game.camera.follow(this.selfPlayer.components.get("sprite").sprite);
 }
 

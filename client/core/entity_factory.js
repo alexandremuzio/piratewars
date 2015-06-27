@@ -81,25 +81,28 @@ var EntityFactory = {
 		entity.components.add(new TextComponent(text));
 		entity.components.add(new CannonComponent(entity));
 
-		// this.createHealthBar(entity);
-		return entity;
-	},
-
-	// MPTemp
-	createTemp : function() {
-		console.log("inside entity factory createLocalPlayer")
-		var entity = new Entity(454524, 'test');
-
-		var sprite = this.game.add.sprite(100, 100, 'boat_0');
-		sprite.anchor.setTo(0.5, 0.5); // Default anchor at the center
-	    sprite.scale.setTo(0.3, 0.3);
-	    sprite.tint = 0xffffff;
-
-		entity.components.add(new SpriteComponent(sprite));
+		// var subentity = this.createTemp();
+		// subentity.setFather(entity, -30, 0, 90);
 
 		// this.createHealthBar(entity);
 		return entity;
 	},
+
+	// // MPTemp
+	// createTemp : function() {
+	// 	console.log("inside entity factory createLocalPlayer")
+	// 	var entity = new Entity(454524, 'test');
+
+	// 	var sprite = this.game.add.sprite(100, 100, 'boat_0');
+	// 	sprite.anchor.setTo(0.5, 0.5); // Default anchor at the center
+	//     sprite.scale.setTo(0.3, 0.3);
+	//     sprite.tint = 0xffffff;
+
+	// 	entity.components.add(new SpriteComponent(sprite));
+
+	// 	// this.createHealthBar(entity);
+	// 	return entity;
+	// },
 
 	createRemotePlayer : function(data) {
 		// console.log("inside entity factory createRemotePlayer");

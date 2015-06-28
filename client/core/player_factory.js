@@ -35,14 +35,24 @@ var PlayerFactory = {
 
 	createLocalPlayer : function(data) {
 		console.log("inside entity factory createLocalPlayer")
-		var entity = new Entity(data.id, "player");
+		var entity = new Entity(data.id, "player"),
+		    entityGroup, sprites_info;
 
-		var sprite = this.game.add.sprite(100, 100, 'boat_0');
-		sprite.anchor.setTo(0.5, 0.5);
-	    sprite.width = player_settings.width;
-	    sprite.height = player_settings.height;
-	    // sprite.tint = 0xff6600;
-	    
+		entityGroup = this.game.add.group();
+
+		console.log('Antes de sprites_info');
+		sprites_info = {
+			boat: {
+        		sprite: entityGroup.create(100, 100, 'boat_0'),
+				width: player_settings.width,
+	        	height: player_settings.height,
+	        	anchor: {
+	        		x: 0.5,
+	        		y: 0.5
+	        	},
+        		//tint: 0xff6600
+			}
+		};
 	    /* Player name, must be set by the user (MUST FIX) */
 	    var text = this.game.add.text(0, 0, "Edgard Yano", {
 		        font: player_settings.text.font,
@@ -74,7 +84,7 @@ var PlayerFactory = {
 		entity.components.add(new SyncComponent());
 		entity.components.add(new PhaserInputComponent(this.game.input));
 		entity.components.add(new PhysicsComponent(body));
-		entity.components.add(new SpriteComponent(sprite));
+		entity.components.add(new SpriteComponent(sprites_info));
 		entity.components.add(new PlayerControllerComponent());
 		entity.components.add(new TextComponent(text));
 
@@ -91,42 +101,42 @@ var PlayerFactory = {
 	},
 
 	createHealthBar: function(id) {
-		var entity = new Entity(id, 'health_bar');
+		var entity = new Entity(id, 'health_bar'),
+		    entityGroup, sprites_info;
 
 		var scale = 1;
 
-		var healthBarInside = this.createHealthBarInside(id+'-inside', scale);
-		healthBarInside.setBaseEntity(entity, 0, 0, 0 );
-		var healthBarInsideSprite = healthBarInside.components.get('sprite');
+		entityGroup = this.game.add.group();
 
-		var healthBarOutside = this.createHealthBarOutside(id+'-outside', scale);
-		healthBarOutside.setBaseEntity(entity, 0, 0, 0);
-
-		return entity;
-	},
-
-	createHealthBarInside: function(id, scale) {
-		var entity = new Entity(id, 'health_bar_inside');
-
-		var redBarSprite = this.game.add.sprite(205, 100, 'redbar');
-		redBarSprite.scale.setTo(player_settings.health_bar.scale,
-								 player_settings.health_bar.scale);
-		redBarSprite.anchor.setTo( 0.5, 0.5);
-	    
-		entity.components.add(new SpriteComponent(redBarSprite));
+		sprites_info = {
+			blood: {
+        		sprite: entityGroup.create(205, 205, 'redbar'),
+				scale: { 
+	        		x: player_settings.health_bar.scale,
+	        		y: player_settings.health_bar.scale
+        		},
+	        	anchor: {
+	        		x: 0.0,
+	        		y: 0.0
+	        	},
+        		//tint: 0xff6600
+			},
+			outline: {
+        		sprite: entityGroup.create(205, 205, 'blackbox'),
+				scale: { 
+	        		x: player_settings.health_bar.scale,
+	        		y: player_settings.health_bar.scale
+        		},
+	        	anchor: {
+	        		x: 0.0,
+	        		y: 0.0
+	        	},
+        		//tint: 0xff6600
+			}
+		};
+				
+	    entity.components.add(new SpriteComponent(sprites_info));
 		entity.components.add(new HealthBarComponent());
-	   
-		return entity;
-	},
-
-	createHealthBarOutside: function(id, scale) {
-		var entity = new Entity(id, 'health_bar_outside');
-
-		var blackBoxSprite = this.game.add.sprite(205, 100, 'blackbox');
-		blackBoxSprite.anchor.setTo(0.5, 0.5);
-		blackBoxSprite.scale.setTo(player_settings.health_bar.scale,
-								   player_settings.health_bar.scale);
-		entity.components.add(new SpriteComponent(blackBoxSprite));
 
 		return entity;
 	},
@@ -157,13 +167,27 @@ var PlayerFactory = {
 	},
 
 	createCannon : function(id, key) {
-		var entity = new Entity(id, key);
+		var entity = new Entity(id, key),
+		    entityGroup, sprites_info;
 
-		var cannonSprite = this.game.add.sprite(205, 100, 'cannon_0');
-		cannonSprite.anchor.setTo(0.5, 0.5);
-		cannonSprite.scale.setTo(0.15, 0.15);
+		entityGroup = this.game.add.group();
 
-		entity.components.add(new SpriteComponent(cannonSprite));
+		sprites_info = {
+			boat: {
+				sprite: entityGroup.create(205, 100, 'cannon_0'),
+				scale: { 
+	        		x: 0.15,
+	        		y: 0.15
+        		},
+	        	anchor: {
+	        		x: 0.5,
+	        		y: 0.5
+	        	},
+        		//tint: 0xff6600
+			}
+		}			
+
+		entity.components.add(new SpriteComponent(sprites_info));
 		entity.components.add(new CannonController());
 
 		// Creating bulletInitialTransform subentity
@@ -181,13 +205,23 @@ var PlayerFactory = {
 	createRemotePlayer : function(data) {
 		// console.log("inside entity factory createRemotePlayer");
 		
-		var entity = new Entity(data.id, "remote_player");
+		var entity = new Entity(data.id, "remote_player"),
+		    entityGroup, sprites_info;
 
-		var sprite = this.game.add.sprite(100, 100, 'boat_0');
-		sprite.anchor.setTo(0.5, 0.5);
-	    sprite.width = player_settings.width;
-	    sprite.height = player_settings.height;
-	    // sprite.tint = 0xff6600; --get color from team
+		entityGroup = this.game.add.group();
+
+		sprites_info = {
+			boat: {
+				sprite: entityGroup.create(100, 100, 'boat_0'),
+				width: player_settings.width,
+	        	height: player_settings.height,
+	        	anchor: {
+	        		x: 0.5,
+	        		y: 0.5
+	        	},
+        		//tint: 0xff6600
+			}
+		};
 
 		var body = new p2.Body({
 	            name: "player",
@@ -209,7 +243,7 @@ var PlayerFactory = {
 		entity.components.add(new CooldownComponent());
 		entity.components.add(new NetworkComponent(this.socket));
 		entity.components.add(new PhysicsComponent(body));
-		entity.components.add(new SpriteComponent(sprite));
+		entity.components.add(new SpriteComponent(sprites_info));
 		entity.components.add(new SyncComponent());
 		entity.components.add(new PlayerControllerComponent());
 
@@ -223,13 +257,23 @@ var PlayerFactory = {
 	createStronghold : function(index) {
 		var data = stronghold_settings.bases[index];
 
-		var entity = new Entity(data.id, 'stronghold');
+		var entity = new Entity(data.id, 'stronghold'),
+		    entityGroup, sprites_info;
 
-		var sprite = this.game.add.sprite(data.initialPos.x, data.initialPos.x, 'stronghold');
-		sprite.anchor.setTo(0.5, 0.5); // Default anchor at the center
-		sprite.width = data.width;
-		sprite.height = data.height;
-	    sprite.tint = data.color;
+		entityGroup = this.game.add.group();
+
+		sprites_info = {
+			boat: {
+				sprite: entityGroup.create(data.initialPos.x, data.initialPos.y, 'stronghold'),
+				width: data.width,
+	        	height: data.height,
+	        	anchor: {
+	        		x: 0.5,
+	        		y: 0.5
+	        	},
+        		tint: data.color
+			}
+		};
 
 		var body = new p2.Body({
 	            name: "stronghold",
@@ -247,7 +291,7 @@ var PlayerFactory = {
 		entity.components.add(new NetworkComponent(this.socket));
 		entity.components.add(new SyncComponent());
 		entity.components.add(new PhysicsComponent(body));
-		entity.components.add(new SpriteComponent(sprite));
+		entity.components.add(new SpriteComponent(sprites_info));
 		entity.components.add(new StrongholdComponent());
 
 		return entity;

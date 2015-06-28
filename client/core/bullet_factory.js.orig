@@ -23,26 +23,43 @@ var BulletFactory = {
 	createBullet : function(initialPosition, angle) {
 		// console.log("createBullet");
 		var bulletId = UUID();
-		var entity = new Entity(bulletId, 'bullet'),
-            entityGroup, sprites_info;
+<<<<<<< HEAD:client/core/bullet_factory.js
+		var entity = new Entity(bulletId, 'bullet');
+=======
+		var entity = new Entity(bulletId),
+		    entityGroup, sprites_info;
 
 		entityGroup = this.game.add.group();
 
 		sprites_info = {
 			boat: {
-				sprite: entityGroup.create(initialPosition.x, initialPosition.y, 'bullet'),
-				width: bullet_settings.radius,
-				height: bullet_settings.radius,
+				sprite: entityGroup.create(100, 100, 'bullet'),
+				scale: { 
+	        		x: bulletSpriteScale,
+	        		y: bulletSpriteScale
+        		},
 	        	anchor: {
 	        		x: 0.5,
 	        		y: 0.5
 	        	},
-        		//tint: 0xff6600
+        		tint: 0xff6600
 			}
 		};
-		
-        var velocity = MathUtils.vector(bullet_settings.physics.velocity, angle);
-		
+>>>>>>> Changing sprites to map of sprites:client/core/entity_creator.js
+
+		var sprite = this.game.add.sprite(initialPosition.x, initialPosition.y, 'bullet');
+		sprite.anchor.setTo(0.5, 0.5);
+		sprite.width = bullet_settings.radius;
+		sprite.height = bullet_settings.radius;
+
+<<<<<<< HEAD:client/core/bullet_factory.js
+		var velocity = MathUtils.vector(bullet_settings.physics.velocity, angle);
+=======
+		var angle;
+		if (side == "left")  angle = playerBody.angle - 90;
+		else angle = playerBody.angle + 90;
+>>>>>>> Changing sprites to map of sprites:client/core/entity_creator.js
+
 		var body = new p2.Body({
 	            name: "bullet",
 	            type: p2.Body.KINEMATIC,
@@ -58,15 +75,30 @@ var BulletFactory = {
 	    body.addShape(shape);
 
 		entity.components.add(new PhysicsComponent(body));
-		entity.components.add(new SpriteComponent(sprites_info));
+<<<<<<< HEAD:client/core/bullet_factory.js
+		entity.components.add(new SpriteComponent(sprite));
 		entity.components.add(new BulletComponent());
 
+=======
+		entity.components.add(new SpriteComponent(sprites_info));
+		entity.components.add(new BulletComponent(player.id));
+		// console.log("End of entity");
+>>>>>>> Changing sprites to map of sprites:client/core/entity_creator.js
 		return entity;
 	},
 
 	createRemoteBullet : function(transform) {
 		// console.log("createBullet");
 		var bulletId = UUID();
+<<<<<<< HEAD:client/core/bullet_factory.js
+		var entity = new Entity(bulletId);
+
+		var sprite = this.game.add.sprite(transform.x, transform.y, 'bullet');
+		sprite.anchor.setTo(0.5, 0.5);
+		sprite.width = bullet_settings.radius;
+		sprite.height = bullet_settings.radius;
+
+=======
 		var entity = new Entity(bulletId),
 		    entityGroup, sprites_info;
 
@@ -74,18 +106,21 @@ var BulletFactory = {
 
 		sprites_info = {
 			boat: {
-				sprite: entityGroup.create(transform.x, transform.y, 'bullet'),
-				width: bullet_settings.radius,
-				height: bullet_settings.radius,
+				sprite: entityGroup.create(100, 100, 'bullet'),
+				scale: { 
+	        		x: bulletSpriteScale,
+	        		y: bulletSpriteScale
+        		},
 	        	anchor: {
 	        		x: 0.5,
 	        		y: 0.5
 	        	},
-        		//tint: 0xff6600
+        		tint: 0xff6600
 			}
 		};
 
 		
+>>>>>>> Changing sprites to map of sprites:client/core/entity_creator.js
 		var body = new p2.Body({
 	            name: "bullet",
 	            type: p2.Body.KINEMATIC,
@@ -106,8 +141,8 @@ var BulletFactory = {
 		entity.components.add(new PhysicsComponent(body));
 		entity.components.add(new SpriteComponent(sprites_info));
 		entity.components.add(new BulletComponent());
-		
-        return entity;
+
+		return entity;
 	}
 };
 

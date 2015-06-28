@@ -19,7 +19,6 @@ function Entity(id, key) {
     this._followBaseEntityAngle = true;
 };
 
-
 /**
  * @override
  */
@@ -73,16 +72,17 @@ Entity.prototype.damage = function(amount, attacker) {
     this.trigger('entity.damage', amount, attacker, this);
 }
 
+<<<<<<< HEAD
 Entity.prototype.collision = function(collider) {
     this.trigger('entity.collision', collider, this);
-}
-
+=======
 Entity.prototype.die = function() {
     this.trigger('entity.die', this);
 }
 
 Entity.prototype.revive = function() {
     this.trigger('entity.revive', this);
+>>>>>>> Started to implement life
 }
 
 //internal
@@ -97,6 +97,8 @@ Entity.prototype.trigger = function(event) {
         for (var i = 0; i < this._eventHandlers[event].length; i++) {
             this._eventHandlers[event][i].apply(this, params);
         }
+
+        this._eventHandlers = {}; //Clear events
     }
 }
 

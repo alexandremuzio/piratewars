@@ -6,7 +6,7 @@ var BulletComponent = require('../components/bullet.js');
 var CannonComponent = require('../../shared/components/cannon.js');
 var CooldownComponent = require('../../shared/components/cooldown.js');
 var BaseManagerComponent = require('../../shared/components/base.js');
-var LifeComponent = require('../components/life.js');
+var LifeComponent = require('../../shared/components/life.js');
 var CreatorComponent = require('../components/creator.js');
 var Entity = require('../../shared/core/entity.js');
 var NetworkComponent = require('../../shared/components/network.js');
@@ -98,7 +98,7 @@ var EntityFactory = {
 		entity.components.add(new TextComponent(text));
 		entity.components.add(new CannonComponent(entity));
 		entity.components.add(new CreatorComponent());
-		entity.components.add(new LifeComponent(10)); //Random value (MUST FIX)
+		entity.components.add(new LifeComponent());
 
 		this.createHealthBar(entity);
 		return entity;

@@ -14,9 +14,13 @@ BaseComponent.prototype.constructor = BaseComponent;
 ///
 
 BaseComponent.prototype.init = function() {
-
+	this.owner.on('entity.die', this.onBaseDie.bind(this));
 }
 
 BaseComponent.prototype.update = function() {}
+
+BaseComponent.prototype.onBaseDie = function() {
+	// What happens when base dies
+}
 
 module.exports = BaseComponent;

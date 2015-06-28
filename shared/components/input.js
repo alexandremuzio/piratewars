@@ -8,7 +8,7 @@ var physics_settings = require('../settings/boats/default_boat/physics.json');
 function InputComponent() {
 	// console.log("inside InputComp constr");
 	this.key = "input";
-    this._followingTrajectory = false;
+    this.followingTrajectory = false;
     this._body;
     this._clickedPoint;
     this._circle;
@@ -31,8 +31,8 @@ InputComponent.prototype.processCommand = function(command) {
     this.processAttack(command);
 
     if( this.hasArrowCommand(command)){
-        if( this._followingTrajectory ){ // Move by arrows => destroy current trajectory
-            this._followingTrajectory = false;
+        if( this.followingTrajectory ){ // Move by arrows => destroy current trajectory
+            this.followingTrajectory = false;
         }
         this.processArrowCommand(command);
     }
@@ -40,7 +40,7 @@ InputComponent.prototype.processCommand = function(command) {
         this.initNewTrajectory(command);
     }
 
-    if( this._followingTrajectory ){
+    if( this.followingTrajectory ){
         this.followTrajectoryUpdate();
     }
 
@@ -139,7 +139,7 @@ InputComponent.prototype.initNewTrajectory = function(command){
     }
     
     this._rotating = true;
-    this._followingTrajectory = true;
+    this.followingTrajectory = true;
 
     this._centerToClickedPointVector = {
         "x": command.mouseWorldX - this._circle.x0,

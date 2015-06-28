@@ -7,6 +7,7 @@ function SyncComponent() {
 	// console.log("inside SyncComponent constr");
 	this.key = "outSync";
 	this.snapshots = new SnapshotManager();
+	this._stepCounter = 0;
 };
 
 ///
@@ -17,16 +18,25 @@ SyncComponent.prototype.constructor = SyncComponent;
 SyncComponent.prototype.init = function() {
 	this.owner.on('entity.sync', this.onSyncronization.bind(this));
     this._socket = this.owner.components.get('network').socket;
+    setInterval(this.sendSyncToServer.bind(this), 1000/30);
 }
 
-SyncComponent.prototype.update = function() {
+SyncComponent.prototype.sendSyncToServer = function() {//update = function() {
 	// This should be out of here if we don't want to send a sync every step
 	// Change getLast to send a pack of inputs if this happens
 	var lastSnapshot = this.snapshots.getLast();
 	if (lastSnapshot) {
 		this.snapshots.clear();
 		// console.log(lastSnapshot);
-		this._socket.emit('client.sync', lastSnapshot);
+		var message = {commands: lastSnapshot};
+		var tempEntities = this.owner.components.get('creator').getTempEntities();
+		// console.log("tempEntities inside sync", tempEntities);
+		if (tempEntities.length > 0) {
+			message.tempEntities = tempEntities;
+			// console.log("Sending bullets, message= ", message);
+		}
+		message.step = this._stepCounter++;
+		this._socket.emit('client.sync', message);
 	}
 }
 

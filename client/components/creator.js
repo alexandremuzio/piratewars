@@ -6,6 +6,7 @@ var EntityCreator= require('../core/entity_creator.js');
 function CreatorComponent() {
 	// console.log("inside CreatorComponent constr");
 	this.key = "creator";
+	this.temporaryEntitiesIDs = [];
 }
 
 ///
@@ -17,7 +18,25 @@ CreatorComponent.prototype.createBullet = function(cannonPosition, side) {
 	// console.log("CreatorComponent createBullet");
     var bullet = EntityCreator.createBullet(this.owner, cannonPosition, side);
     // console.log(bullet);
+    this.temporaryEntitiesIDs.push(bullet.id);
+    // console.log("CreateBullet", this.temporaryEntitiesIDs);
     return bullet;
+}
+
+CreatorComponent.prototype.getTempEntities = function() {
+	if (this.temporaryEntitiesIDs.length > 0) {
+		// Cloning array before emptying it
+		var tempEntities = this.temporaryEntitiesIDs.slice(0);
+		this.temporaryEntitiesIDs = [];
+    	// console.log("GetTemp: this.tempEntities", this.temporaryEntitiesIDs);
+    	// console.log("GetTemp: var tempEntities", tempEntities);
+
+		return tempEntities;
+	}
+	else {
+		// console.log("Returning empty array");
+		return [];
+	}
 }
 
 module.exports = CreatorComponent;

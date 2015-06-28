@@ -92,7 +92,12 @@ PlayState.prototype.applySyncFromServer = function() {
             GameEngine.getInstance().entities[key].sync(lastSnapshot.players[key]);
         }
         for (var key in lastSnapshot.bullets) {
-            EntityCreator.createRemoteBullet(lastSnapshot.bullets[key]);
+            if (!GameEngine.getInstance().entities[key]) {
+                EntityCreator.createRemoteBullet(lastSnapshot.bullets[key]);
+            }
+            else {
+                GameEngine.getInstance().entities[key].sync(lastSnapshot.bullets[key]);
+            }
         }
     }
 }

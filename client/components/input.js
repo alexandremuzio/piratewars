@@ -1,5 +1,6 @@
 'use strict'
 
+var _ = require('underscore');
 var InputComponent = require('../../shared/components/input.js');
 var NextPositionIndicatorConstructor = require('../next_position_indicator/next_position_indicator.js');
 
@@ -88,7 +89,9 @@ PhaserInputComponent.prototype.captureInput = function() {
     }
 
     this.processCommand(command);
-    this._snapshots.add(command);
+    if (!_.isEmpty(command)) {
+        this._snapshots.add(command);
+    }
 }
 
 PhaserInputComponent.prototype.updateNextPositionIndicator = function() {

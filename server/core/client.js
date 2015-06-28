@@ -13,12 +13,18 @@ function Client(socket, room) {
 	this._socket = socket;
 	this._player = null;
 	this._snapshots = new SnapshotManager();
+	//DEBUG
+	this._packagesLost = 0;
+	this._lastStep = -1;
 }
 
 Client.prototype.init = function() {
 	// console.log("client init");
 	this._socket.emit('onconnected');
 	this._socket.on('player.ready', this.onReady.bind(this));
+	process.on("SIGINT", function(){
+    	console.log(this._packagesLost + " from " + this._lastStep + " lost (" + 100*this._packagesLost/this._lastStep + "%)");
+	}.bind(this));
 }
 
 Client.prototype.onReady = function() {
@@ -39,8 +45,12 @@ Client.prototype.createPlayer = function() {
 	return entity;
 }
 
-Client.prototype.queueSyncFromClient = function(transform) {
-	this._snapshots.add(transform);
+Client.prototype.queueSyncFromClient = function(message) {
+	if (message.step !== this._lastStep + 1) {
+		this._packagesLost += (this._lastStep + 1) - message.step; 
+	}
+	this._lastStep = message.step;
+	this._snapshots.add(message);
 }
 
 Client.prototype.syncGame = function(snapshot) {

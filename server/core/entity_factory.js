@@ -44,13 +44,13 @@ var EntityFactory = {
 	    body.angle = 0;
 		GameEngine.getInstance().world.addBody(body);
 
+		entity.components.add(new CreatorComponent());
 		entity.components.add(new CooldownComponent());
 		entity.components.add(new NetworkComponent(data.socket));
 		entity.components.add(new PhysicsComponent(body));
 		entity.components.add(new ServerInputComponent(data.snapshots));
 		entity.components.add(new PlayerControllerComponent());
 		entity.components.add(new CannonComponent());
-		entity.components.add(new CreatorComponent());
 
 		return entity;
 	}

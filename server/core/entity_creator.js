@@ -21,9 +21,9 @@ var EntityCreator = {
 		this.game = game;
 	},
 
-	createBullet : function(player, cannonPosition, side) {
+	createBullet : function(player, cannonPosition, side, UUID) {
 		// console.log("createBullet");
-		var bulletId = UUID();
+		var bulletId = UUID;
 		var entity = new Entity(bulletId, 'bullet');
 
 		//CHANGE TO GET FROM TRANSFORM//////////

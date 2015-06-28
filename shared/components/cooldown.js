@@ -19,10 +19,12 @@ CooldownComponent.prototype.constructor = CooldownComponent;
 CooldownComponent.prototype.activate = function() {
 	var currentTime = new Date();
 	if (currentTime - this.lastUsedTime < this.chargeTime) {
+		// console.log("cooldown false");
 		return false;
 	}
 
 	this.lastUsedTime = currentTime;
+	// console.log("cooldown true");
 	return true;
 }
 

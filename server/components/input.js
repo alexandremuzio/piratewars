@@ -15,12 +15,19 @@ ServerInputComponent.prototype.constructor = ServerInputComponent;
 
 ServerInputComponent.prototype.update = function() {
 	// console.log("input update!!!!");
-	var lastSnapshot = this._snapshots.getLast();
-	// console.log(lastSnapshot);
-	if (lastSnapshot) {
+	var message = this._snapshots.getLast();
+	// console.log(message);
+	if (message) {
 		this._snapshots.clear();
 		// console.log("Applying!");
-		this.processCommand(lastSnapshot);
+		// console.log("tempEntities on input: ", message);
+		if (message.tempEntities) {
+			this.owner.components.get('creator').temporaryEntitiesIDs = message.tempEntities;
+		}
+		this.processCommand(message.commands);
+	}
+	else if (this.followingTrajectory) {
+		this.processCommand({});
 	}
 }
 

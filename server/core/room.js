@@ -14,6 +14,7 @@ function Room(socket) {
 Room.prototype.init = function() {
 	this._socket.sockets.on('connect', this.onConnection.bind(this));
     setInterval(this.gameLoop.bind(this), 1000/60);
+    setInterval(this.sendSyncToClients.bind(this), 1000/20);
 }
 
 Room.prototype.onConnection = function(socket) {
@@ -35,7 +36,7 @@ Room.prototype.gameLoop = function() {
     // console.log("ENDING gameStep");
 
     // console.log("STARTING emit");
-	this.sendSyncToClients();
+	//this.sendSyncToClients(); // Now done inside a setInterval function
 	// console.log("ENDING emit");
 	// console.log("");
 }
@@ -57,6 +58,7 @@ Room.prototype.sendSyncToClients = function() {
 		else if (entity.key === 'bullet' && entity.components.get('bullet').sent === false) {
 			entity.components.get('bullet').sent = true;
 			clientSnapshot.bullets[entity.id] = entity.components.get('physics').getTransform();
+			// console.log("Sending bullet ", entity.id);
 		}
 	});
 	this.syncClients(clientSnapshot);

@@ -34,6 +34,10 @@ Entity.prototype.damage = function(amount, attacker) {
     this.trigger('entity.damage', amount, attacker, this);
 }
 
+Entity.prototype.collision = function(collider) {
+    this.trigger('entity.collision', collider, this);
+}
+
 //internal
 Entity.prototype.on = function(event, handler) {
     this._eventHandlers[event] = this._eventHandlers[event] || [];

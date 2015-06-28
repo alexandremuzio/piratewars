@@ -18,14 +18,19 @@ Player.prototype.constructor = BaseComponent;
 
 Player.prototype.init = function() {
 	this.owner.on("entity.damage", this.onDamage.bind(this));
+	this.owner.on("entity.collision", this.onCollision.bind(this));
 }
 
 Player.prototype.update = function() {}
 
-Player.prototype.onDamage = function(amount, attacker) {
-	this.playerHeath -= amount;
-	//check if player died;
-	console.log("Player lost life!");
+// Player.prototype.onDamage = function(amount, attacker) {
+// 	this.playerHeath -= amount;
+// 	//check if player died;
+// 	console.log("Player lost life!");
+// }
+
+Player.prototype.onCollision = function(collider) {
+	console.log("Player collided!");
 }
 
-module.exports = Player;///////////////////// Send these to a data file /////////////////////////////
+module.exports = Player;

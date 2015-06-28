@@ -21,18 +21,29 @@ var GameEngine = (function () {
 				_scheduledForDeletion = [];
 		};
 
+		_world.on("beginContact", function(event){
+	        var bodyA = event.bodyA;
+	        var bodyB = event.bodyB;
+	        // console.log("Colliding %s %s with %s %s", bodyA.entity.key, bodyA.entity.id, bodyB.entity.id, bodyB.entity.key);
+
+	        // console.log("Impacting!!");
+	        bodyA.entity.collision(bodyB.entity);
+	        bodyB.entity.collision(bodyA.entity);
+   	 	});
+
+
 		return {
 			// Public properties and functions
 			entities: _entities,
 			world: _world,
 			gameStep: function() {
 				for (var i in _entities) {
-					// console.log("id= ", i);
+					// console.log("id=", i);
 					_entities[i].update();
 				}
-				// console.log("deleting entities");
+				// console.log("deleting");
 				_deleteEntities();
-				// console.log("doing world step");
+				// console.log("step");
 				_world.step(_stepLength);
 			},
 			addEntity: function(entity, id) {

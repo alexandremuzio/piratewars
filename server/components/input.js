@@ -22,7 +22,7 @@ ServerInputComponent.prototype.update = function() {
 		// console.log("Applying!");
 		// console.log("tempEntities on input: ", message);
 		if (message.tempEntities) {
-			this.owner.components.get('creator').temporaryEntitiesIDs = message.tempEntities;
+			this.owner.subentityManager.get('cannons_manager').components.get('cannons_manager_controller').temporaryEntitiesIDs = message.tempEntities;
 		}
 		this.processCommand(message.commands);
 	}

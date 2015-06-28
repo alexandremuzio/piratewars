@@ -88,9 +88,11 @@ PlayState.prototype.applySyncFromServer = function() {
         }
         for (var key in lastSnapshot.bullets) {
             if (!GameEngine.getInstance().entities[key]) {
+                // console.log("creating remoteBullet");
                 BulletFactory.createRemoteBullet(lastSnapshot.bullets[key]);
             }
             else {
+                // console.log("syncing localBullet");
                 GameEngine.getInstance().entities[key].sync(lastSnapshot.bullets[key]);
             }
         }

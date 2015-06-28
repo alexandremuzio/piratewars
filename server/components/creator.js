@@ -14,13 +14,13 @@ CreatorComponent.prototype = Object.create(BaseComponent.prototype);
 CreatorComponent.prototype.constructor = CreatorComponent;
 ///
 
-// CreatorComponent.prototype.createBullet = function(canonPosition, side) {
-// 	// console.log("CreatorComponent createBullet");
-// 	var id = this.getFirstAvailableID();
-//     var bullet = EntityCreator.createBullet(this.owner, canonPosition, side, id);
-//     // console.log(bullet);   
-//     return bullet;
-// }
+CreatorComponent.prototype.createBullet = function(canonPosition, side) {
+	// console.log("CreatorComponent createBullet");
+	var id = this.getFirstAvailableID();
+    var bullet = EntityCreator.createBullet(this.owner, canonPosition, side, id);
+    // console.log(bullet);   
+    return bullet;
+}
 
 CreatorComponent.prototype.getFirstAvailableID = function() {
 	if (this.temporaryEntitiesIDs.length === 0) {

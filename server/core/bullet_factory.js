@@ -22,9 +22,9 @@ var BulletFactory = {
 		this.game = data.game;
 	},
 
-	createBullet : function(initialPosition, angle) {
+	createBullet : function(initialPosition, angle, id) {
 		// console.log("createBullet");
-		var bulletId = UUID();
+		var bulletId = id;
 		var entity = new Entity(bulletId, 'bullet');
 
 		var velocity = MathUtils.vector(bulletVelocity, angle);

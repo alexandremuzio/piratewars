@@ -30,8 +30,6 @@ Room.prototype.onConnection = function(socket) {
 	client.init();
 }
 
-Room.prototype.onClientIncomingSync = function(transform) {}
-
 Room.prototype.gameLoop = function() {
 	// console.log("");
     // console.log("STARTING applySyncFromClient");

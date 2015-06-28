@@ -17,7 +17,7 @@ CannonController.prototype.constructor = CannonController;
 CannonController.prototype.shoot = function() {
 	// console.log(this.owner.subentityManager.get('bullet_start'));
 	var bulletStartTransform = this.owner.subentityManager.get('bullet_start').transform;
-	BulletFactory.createBullet(bulletStartTransform.getPosition(), bulletStartTransform.getAngle());
+	return BulletFactory.createBullet(bulletStartTransform.getPosition(), bulletStartTransform.getAngle());
 }
 
 module.exports = CannonController;

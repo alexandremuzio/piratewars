@@ -18,30 +18,24 @@ CannonsManagerController.prototype.update = function() {
 
 CannonsManagerController.prototype.shootLeft = function() {
 	_.each(this.leftCannons, function(cannon) {
-		var bullet = cannon.components.get('cannon_controller').shoot();
-		this.temporaryEntitiesIDs.push(bullet.id);
+		var id = this.getFirstAvailableID();
+		var bullet = cannon.components.get('cannon_controller').shoot(id);
 	}.bind(this));
 }
 
 CannonsManagerController.prototype.shootRight = function() {
 	_.each(this.rightCannons, function(cannon) {
-		var bullet = cannon.components.get('cannon_controller').shoot();
-		this.temporaryEntitiesIDs.push(bullet.id);
+		var id = this.getFirstAvailableID();
+		var bullet = cannon.components.get('cannon_controller').shoot(id);
 	}.bind(this));
 }
 
-CannonsManagerController.prototype.getTempEntities = function() {
-	if (this.temporaryEntitiesIDs.length > 0) {
-		// Cloning array before emptying it
-		var tempEntities = this.temporaryEntitiesIDs.slice(0);
-		this.temporaryEntitiesIDs = [];
-    	// console.log("GetTemp: this.tempEntities", this.temporaryEntitiesIDs);
-    	// console.log("GetTemp: var tempEntities", tempEntities);
-		return tempEntities;
+CannonsManagerController.prototype.getFirstAvailableID = function() {
+	if (this.temporaryEntitiesIDs.length === 0) {
+		console.log("ERROR: tried to get id from empty array (package loss)");		
 	}
-	else {
-		// console.log("Returning empty array");
-		return [];
+	else {		
+		return this.temporaryEntitiesIDs.shift();
 	}
 }
 

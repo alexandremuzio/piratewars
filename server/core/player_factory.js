@@ -11,7 +11,7 @@ var ServerInputComponent = require('../components/input.js');
 var PhysicsComponent = require('../../shared/components/physics.js');
 var GameEngine = require('../../shared/game_engine.js');
 var StrongholdComponent = require('../components/stronghold');
-var CannonsManagerController = require('../../shared/components/cannons_manager_controller.js');
+var CannonsManagerController = require('../components/cannons_manager_controller.js');
 var CannonController = require('../components/cannon_controller');
 
 var player_settings = require('../../shared/settings/player.json');

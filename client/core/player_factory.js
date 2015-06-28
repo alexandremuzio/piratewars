@@ -14,7 +14,7 @@ var SpriteComponent = require('../components/sprite.js');
 var SyncComponent = require('../components/sync.js');
 var HealthBarComponent = require('../components/health_bar.js');
 var TextComponent = require('../components/text.js');
-var CannonsManagerController = require('../../shared/components/cannons_manager_controller.js');
+var CannonsManagerController = require('../components/cannons_manager_controller.js');
 var CannonController = require('../components/cannon_controller.js');
 
 var physics_settings = require('../../shared/settings/boats/default_boat/physics.json');
@@ -86,7 +86,7 @@ var PlayerFactory = {
 		healthBar.setBaseEntity(entity, 0, -30, 0);
 		healthBar.setFollowBaseEntityAngle(false);
 
-		var cannonsManager = this.createCannonsManager(data.id+'-cannons_manager')
+		var cannonsManager = this.createCannonsManager(data.id+'-cannons_manager');
 		cannonsManager.setBaseEntity(entity, 0, 0, 0);
 
 		return entity;

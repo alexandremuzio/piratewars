@@ -29,7 +29,8 @@ SyncComponent.prototype.sendSyncToServer = function() {//update = function() {
 		this.snapshots.clear();
 		// console.log(lastSnapshot);
 		var message = {commands: lastSnapshot};
-		var tempEntities = this.owner.components.get('creator').getTempEntities();
+		// console.log(this.owner.subentityManager.get('cannons_manager').components.get('cannons_manager_controller'));
+		var tempEntities = this.owner.subentityManager.get('cannons_manager').components.get('cannons_manager_controller').getTempEntities();
 		// console.log("tempEntities inside sync", tempEntities);
 		if (tempEntities.length > 0) {
 			message.tempEntities = tempEntities;

@@ -69,7 +69,7 @@ var GameEngine = (function () {
 			printEntityHierarchy: function() {
 				console.log('-------- Printing Entity Hierarchy --------');
 				_.each(_entities, function(entity){
-					if( !entity.father )
+					if( !entity.baseEntity )
 						_printEntityAndSubentitys(0, entity, _printEntityAndSubentitys);
 				});
 			}

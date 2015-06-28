@@ -9,7 +9,7 @@ function BulletComponent() {
 	BaseComponent.apply(this);
 	this.sent = false;
 
-	this.bulletDamage = bullet_settings.damage;
+	this.damage = bullet_settings.damage;
 }
 
 ///
@@ -19,7 +19,7 @@ BulletComponent.prototype.constructor = BulletComponent;
 
 BulletComponent.prototype.init = function() {
 	this.currentTime = new Date();
-	// this.createCollisionHandler();
+	this.owner.on("entity.collision", this.onCollision.bind(this));
 }
 
 BulletComponent.prototype.update = function() {
@@ -33,6 +33,22 @@ BulletComponent.prototype.update = function() {
 		this.owner.destroy();
 	}
 	// console.log(this.owner.components.get("physics").body.position);
+};
+
+BulletComponent.prototype.onCollision = function(collider) {
+
+	if (collider.key == "player") {
+		collider.damage(this.damage, collider);
+		console.log("damaging player!");
+	}
+
+	if (collider.key == "stronghold") {
+		collider.damage(this.damage, collider);
+		console.log("damaging stronghold!");
+	}
+
+	//kill bullet after collision
+	this.owner.destroy();
 };
 
 module.exports = BulletComponent;

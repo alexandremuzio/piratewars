@@ -3,9 +3,9 @@
 	"physics" :
 		{
 			"mass": 0.0002,
-			"velocity" : 500
+			"velocity" : 50
 		},
-	"radius" : 3,
+	"radius" : 5,
 	"damage" : 30,
 	"survival_time" : 2000
 }

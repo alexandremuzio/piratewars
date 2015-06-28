@@ -13,6 +13,7 @@ var GameEngine = require('../../shared/game_engine.js');
 var StrongholdComponent = require('../components/stronghold');
 var CannonsManagerController = require('../components/cannons_manager_controller.js');
 var CannonController = require('../components/cannon_controller');
+var HealthComponent = require('../components/health');
 
 var player_settings = require('../../shared/settings/player.json');
 var stronghold_settings = require('../../shared/settings/stronghold.json');
@@ -21,7 +22,6 @@ var stronghold_settings = require('../../shared/settings/stronghold.json');
 var PLAYER = Math.pow(2,0);
 var BULLET = Math.pow(2,1);
 var STRONGHOLD = Math.pow(2,2);
-
 
 //static class
 var PlayerFactory = {
@@ -41,10 +41,11 @@ var PlayerFactory = {
 		shape.collisionMask = PLAYER | STRONGHOLD | BULLET;
 		body.addShape(shape);
 		
-	    body.damping = player_settings.physics.linear_damping;
-    	body.angularDamping = player_settings.physics.angular_damping;
+	    // body.damping = player_settings.physics.linear_damping;
+    	// body.angularDamping = player_settings.physics.angular_damping;
 	    body.angle = 0;
 
+	    entity.components.add(new HealthComponent(player_settings.maxHealth));
 		entity.components.add(new CreatorComponent());
 		entity.components.add(new CooldownComponent());
 		entity.components.add(new NetworkComponent(data.socket));
@@ -63,43 +64,6 @@ var PlayerFactory = {
 
 		return entity;
 	},
-
-	// createHealthBar: function(id) {
-	// 	var entity = new Entity(id, 'health_bar');
-
-	// 	var healthBarInside = this.createHealthBarInside(id+'inside');
-	// 	healthBarInside.setBaseEntity(entity, 0, 0, 0 );
-	// 	var healthBarInsideSprite = healthBarInside.components.get('sprite');
-
-	// 	var healthBarOutside = this.createHealthBarOutside(id+'outside');
-	// 	healthBarOutside.setBaseEntity(entity, 0, 0, 0);
-
-	// 	return entity;
-	// },
-
-	// createHealthBarInside: function(id) {
-	// 	var entity = new Entity(id, 'health_bar_inside');
-
-	// 	var redBarSprite = this.game.add.sprite(205, 100, 'redbar');
-	// 	redBarSprite.scale.setTo(healthBarSpriteSize, healthBarSpriteSize);
-	// 	redBarSprite.anchor.setTo( 0.5, 0.5);
-	    
-	// 	entity.components.add(new SpriteComponent(redBarSprite));
-	// 	entity.components.add(new HealthBarComponent());
-	   
-	// 	return entity;
-	// },
-
-	// createHealthBarOutside: function(id) {
-	// 	var entity = new Entity(id, 'health_bar_outside');
-
-	// 	var blackBoxSprite = this.game.add.sprite(205, 100, 'blackbox');
-	// 	blackBoxSprite.anchor.setTo(0.5, 0.5);
-	// 	blackBoxSprite.scale.setTo(healthBarSpriteSize, healthBarSpriteSize);
-	// 	entity.components.add(new SpriteComponent(blackBoxSprite));
-
-	// 	return entity;
-	// },
 
 	createCannonsManager : function(id) {
 		var entity = new Entity(id, 'cannons_manager');
@@ -155,12 +119,13 @@ var PlayerFactory = {
 	        });
 		body.entity = entity;
 
-	    var shape = new p2.Rectangle(data.width, data.height); ////change to correct size
+	    var shape = new p2.Rectangle(data.width, data.height);
 	    shape.collisionGroup = STRONGHOLD;
 		shape.collisionMask = PLAYER | BULLET;
 		body.addShape(shape);
 	    body.angle = 0;
 
+	    entity.components.add(new HealthComponent(stronghold_settings.maxHealth));
 		entity.components.add(new NetworkComponent(data.socket));
 		entity.components.add(new PhysicsComponent(body));
 		entity.components.add(new StrongholdComponent());

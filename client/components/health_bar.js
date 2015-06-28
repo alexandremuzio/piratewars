@@ -7,7 +7,7 @@ var playerMaxLife;
 
 function HealthBarComponent() {
 	console.log("inside HealthBarComponent constr");
-	this.key = 'healthBar';
+	this.key = 'health_bar';
 }
 
 HealthBarComponent.prototype = Object.create(GameComponent.prototype);
@@ -16,21 +16,18 @@ HealthBarComponent.prototype.constructor = HealthBarComponent;
 HealthBarComponent.prototype.init = function() {
 	//Delete this
 	this.tick = 0;
-	this.percentege = 1.0;
+	this.percentage = 1.0;
 };
 
 HealthBarComponent.prototype.update = function() {
-	this.tick++;
-	if(this.tick > 100) {
-		///////////////
-		this.percentege -= 0.05;
-		if(this.percentege < 0) this.percentege = 1.0;
-		this.tick = 0;
-		//////////////
+	var currentHealth = this.owner.baseEntity.baseEntity.components.get("health").currentHealth;
+	var maxHealth = this.owner.baseEntity.baseEntity.components.get("health").maxHealth;
 
-		this.owner.components.get("sprite").cropHorizontally(this.percentege); //Change to playerLife/MaxLife
-		
-	}
+	this.percentage = currentHealth / maxHealth;
+	console.log(currentHealth);
+	console.log(maxHealth);
+
+	this.owner.components.get("sprite").cropHorizontally(this.percentage);
 };
 
 module.exports = HealthBarComponent;

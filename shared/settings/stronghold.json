@@ -17,5 +17,7 @@
 			"height" : 200,
 			"color" : "0x0000ff"
 		}
-	]
+	],
+
+	"maxHealth" : 3000
 }

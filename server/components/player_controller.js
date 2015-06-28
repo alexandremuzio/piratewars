@@ -2,13 +2,8 @@
 
 var BaseComponent = require('../../shared/components/player_controller');
 
-///////////////////// Send these to a data file /////////////////////////////
-var playerHealth = 100;
-
 function Player() {
 	BaseComponent.apply(this);
-
-	this.playerHeath = playerHealth;
 };
 
 ///
@@ -18,8 +13,8 @@ Player.prototype.constructor = BaseComponent;
 
 Player.prototype.init = function() {
 	// this.owner.on("entity.damage", this.onDamage.bind(this));
-	this.owner.on("entity.collision", this.onCollision.bind(this));
-}
+	// this.owner.on("entity.collision", this.onCollision.bind(this));
+};
 
 Player.prototype.update = function() {}
 
@@ -29,8 +24,14 @@ Player.prototype.update = function() {}
 // 	console.log("Player lost life!");
 // }
 
-Player.prototype.onCollision = function(collider) {
-	console.log("Player collided!");
-}
+// Player.prototype.onCollision = function(collider) {
+// 	console.log("Player collided!");
+
+// 	// if (collider.key == "bullet") {
+// 	// 	console.log(collider);
+// 	// 	var damage = collider.components.get("bullet").damage;
+// 	// 	this.owner.damage(damage, collider);
+// 	// }
+// };
 
 module.exports = Player;

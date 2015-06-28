@@ -3,12 +3,9 @@
 var GameComponent = require('../core/component');
 var GameEngine = require('../game_engine');
 
-///////////////////// Send these to a data file /////////////////////////////
-var strongholdHealth = 3000;
 
 function StrongholdComponent() {
 	this.key = "stronghold";
-	this.health = strongholdHealth;
 }
 
 ///

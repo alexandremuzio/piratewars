@@ -20,6 +20,7 @@
 		},
 	"width": 90,
 	"height" : 30,
+	"maxHealth" : 100,
 
 	"health_bar" :
 	{

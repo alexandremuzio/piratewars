@@ -71,6 +71,7 @@ LoginState.prototype.loadAssets = function() {
     thisGame.load.image('bullet', 'assets/bullet.png');
     thisGame.load.image('red_arrow', 'assets/red_arrow.png');
     thisGame.load.image('stronghold', 'assets/stronghold.png');
+	thisGame.load.image('cannon_0', 'assets/cannon_0.png');
 };
 
 module.exports = LoginState;

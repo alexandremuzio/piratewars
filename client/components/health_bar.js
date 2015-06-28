@@ -4,13 +4,10 @@ var GameEngine = require('../../shared/game_engine.js');
 var GameComponent = require('../../shared/core/component.js');
 //Private
 var playerMaxLife;
-var playerReference;
 
-
-function HealthBarComponent(player) {
+function HealthBarComponent() {
 	console.log("inside HealthBarComponent constr");
 	this.key = 'healthBar';
-	playerReference = player;
 }
 
 HealthBarComponent.prototype = Object.create(GameComponent.prototype);
@@ -32,6 +29,7 @@ HealthBarComponent.prototype.update = function() {
 		//////////////
 
 		this.owner.components.get("sprite").cropHorizontally(this.percentege); //Change to playerLife/MaxLife
+		
 	}
 };
 

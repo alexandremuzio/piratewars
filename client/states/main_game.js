@@ -4,6 +4,7 @@ var _ = require('underscore');
 var GameEngine = require('../../shared/game_engine.js');
 var EntityFactory = require('../core/entity_factory.js');
 var EntityCreator = require('../core/entity_creator.js');
+var BulletFactory = require('../core/bullet_factory.js');
 var GameComponent = require('../../shared/core/component.js');
 var SnapshotManager = require('../../shared/core/snapshot_manager.js');
 
@@ -24,6 +25,7 @@ function PlayState(game, socket) {
 
     EntityFactory.init(data);
     EntityCreator.init(data);
+    BulletFactory.init(data);
 };
 
 
@@ -62,7 +64,6 @@ PlayState.prototype.update = function() {
     // GameEngine.getInstance().printEntityHierarchy();
     this.applySyncFromServer();
     GameEngine.getInstance().gameStep();
-    // GameEngine.getInstance().printEntityHierarchy();
 };
 
 PlayState.prototype.render = function() {
@@ -161,6 +162,8 @@ PlayState.prototype.onPlayerCreate = function(data) {
     // this.temp = EntityFactory.createTemp();
     // this.temp.setFather(this.selfPlayer, -30, 0, 90);
     this.game.camera.follow(this.selfPlayer.components.get("sprite").sprite);
+    // MPTest
+    GameEngine.getInstance().printEntityHierarchy();
 }
 
 PlayState.prototype.setPhaserPreferences = function() {    

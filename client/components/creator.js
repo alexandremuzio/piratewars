@@ -1,7 +1,7 @@
 'use strict'
 
 var BaseComponent = require('../../shared/core/component.js');
-var EntityCreator= require('../core/entity_creator.js');
+var BulletFactory= require('../core/bullet_factory.js');
 
 function CreatorComponent() {
 	// console.log("inside CreatorComponent constr");
@@ -14,9 +14,9 @@ CreatorComponent.prototype = Object.create(BaseComponent.prototype);
 CreatorComponent.prototype.constructor = CreatorComponent;
 ///
 
-CreatorComponent.prototype.createBullet = function(cannonPosition, side) {
+CreatorComponent.prototype.createBullet = function(cannonPosition, angle) {
 	// console.log("CreatorComponent createBullet");
-    var bullet = EntityCreator.createBullet(this.owner, cannonPosition, side);
+    var bullet = BulletFactory.createBullet(this.owner, cannonPosition, angle);
     // console.log(bullet);
     this.temporaryEntitiesIDs.push(bullet.id);
     // console.log("CreateBullet", this.temporaryEntitiesIDs);

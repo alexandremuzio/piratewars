@@ -160,6 +160,7 @@ Transform.prototype.setAngleWithoutUpdateBody = function(angle){
 					childEntity.transform.setLocalPosition(MathUtils.vector(radius, angle));
 				childEntity.transform.setDeltaAngle(deltaAngle);
 			}
+			
 		});
 	}
 };

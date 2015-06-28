@@ -33,6 +33,7 @@ Entity.prototype.updateAfterWorldStep = function() {
 // father must be an reference to an entity
 // x0, y0, alpha0 are initial transform local variables
 Entity.prototype.setFather = function( father, x0, y0, alpha0 ) {
+    console.log('call set father of ' + this.key);
     if( this.father ){
         console.error('Entity ' + this.id + ' already has a father');
     }

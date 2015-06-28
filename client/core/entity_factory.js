@@ -16,6 +16,8 @@ var SyncComponent = require('../components/sync.js');
 var HealthBarComponent = require('../components/health_bar.js');
 var TextComponent = require('../components/text.js');
 var FollowComponent = require('../components/follow.js');
+var CannonsManagerController = require('../components/cannons_manager_controller.js');
+var CannonController = require('../components/cannon_controller.js');
 
 var physics_settings = require('../../shared/settings/boats/default_boat/physics.json');
 ///////////////////// Send these to a data file /////////////////////////////
@@ -69,6 +71,7 @@ var EntityFactory = {
 	    body.damping = player_settings.physics.linear_damping;
     	body.angularDamping = player_settings.physics.angular_damping
 	    body.angle = 0;
+		GameEngine.getInstance().world.addBody(body);
 
 		entity.components.add(new CooldownComponent());
 		entity.components.add(new CreatorComponent());
@@ -81,31 +84,63 @@ var EntityFactory = {
 		entity.components.add(new TextComponent(text));
 		entity.components.add(new CannonComponent(entity));
 
-		// var subentity = this.createTemp();
-		// subentity.setFather(entity, -30, 0, 90);
-
-		var healthBar = this.createHealthBar();
+		// Subentitys
+		// Creating HealthBar subentity
+		var healthBar = this.createHealthBar(data.id+'health_bar');
 		healthBar.setFather(entity, 0, -30, 0);
 		healthBar.setFollowFatherAngle(false);
+
+		var cannonsManager = this.createCannonsManager(data.id+'cannons_manager')
+		cannonsManager.setFather(entity, 0, 0, 0);
 
 		return entity;
 	},
 
-	// // MPTemp
-	// createTemp : function() {
-	// 	console.log("inside entity factory createLocalPlayer")
-	// 	var entity = new Entity(454524, 'test');
+	createCannonsManager : function(id) {
+		var entity = new Entity(id, 'cannons_manager');
 
-	// 	var sprite = this.game.add.sprite(100, 100, 'boat_0');
-	// 	sprite.anchor.setTo(0.5, 0.5); // Default anchor at the center
-	//     sprite.scale.setTo(0.3, 0.3);
-	//     sprite.tint = 0xffffff;
+		var cannonsManagerController = new CannonsManagerController();
+		entity.components.add(cannonsManagerController);
 
-	// 	entity.components.add(new SpriteComponent(sprite));
+		// Cannons parameters
+		var x0 = -20;
+		var y0 = 8;
+		var xInterval = 15;
+		// Creating cannons subentitys
+		for( var i = 0; i < 3; i++ ){
+			var cannon = this.createCannon(id+'cannon'+(i+1), 'cannon'+(i+1));
+			cannon.setFather(entity, x0 + xInterval*i, -y0, -90);
+			cannonsManagerController.addLeft(cannon);
+		}
+		for( var i = 0; i < 3; i++ ){
+			var cannon = this.createCannon(id+'cannon'+(i+4), 'cannon'+(i+4));
+			cannon.setFather(entity, x0 + xInterval*i, y0, 90);
+			cannonsManagerController.addRight(cannon);
+		}
 
-	// 	// this.createHealthBar(entity);
-	// 	return entity;
-	// },
+		return entity;
+	},
+
+	createCannon : function(id, key) {
+		var entity = new Entity(id, key);
+
+		var cannonSprite = this.game.add.sprite(205, 100, 'cannon_0');
+		cannonSprite.anchor.setTo(0.5, 0.5);
+		cannonSprite.scale.setTo(0.15, 0.15);
+		entity.components.add(new SpriteComponent(cannonSprite));
+		entity.components.add(new CannonController());
+
+		// Creating bulletInitialTransform subentity
+		var bulletStart = this.createEmptyEntity(id+'bullet_start', 'bullet_start');
+		bulletStart.setFather(entity, 15, 0, 0);
+
+		return entity;
+	},
+
+	createEmptyEntity : function(id, key) {
+		var entity = new Entity(id, key);
+		return entity;
+	},
 
 	createRemotePlayer : function(data) {
 		// console.log("inside entity factory createRemotePlayer");
@@ -145,21 +180,20 @@ var EntityFactory = {
 		return entity;
 	},
 
-	createHealthBar: function() {
-		/* GameEngine needs an ID, now is set randomly */
-		var entity = new Entity(UUID(), 'health bar');
+	createHealthBar: function(id) {
+		var entity = new Entity(id, 'health_bar');
 
-		var healthBarInside = this.createHealthBarInside();
+		var healthBarInside = this.createHealthBarInside(id+'inside');
 		healthBarInside.setFather(entity, 0, 0, 0 );
 
-		var healthBarOutside = this.createHealthBarOutside();
+		var healthBarOutside = this.createHealthBarOutside(id+'outside');
 		healthBarOutside.setFather(entity, 0, 0, 0);
 
 		return entity;
 	},
 
-	createHealthBarInside: function() {
-		var entity = new Entity(UUID(), 'health bar inside'); //MUST FIX IT
+	createHealthBarInside: function(id) {
+		var entity = new Entity(id, 'health_bar_inside');
 
 		var redBarSprite = this.game.add.sprite(205, 100, 'redbar');
 		redBarSprite.anchor.setTo(0.5, 0.5);
@@ -171,8 +205,8 @@ var EntityFactory = {
 		return entity;
 	},
 
-	createHealthBarOutside: function() {
-		var entity = new Entity(UUID(), 'health bar outside'); //MUST FIX IT
+	createHealthBarOutside: function(id) {
+		var entity = new Entity(id, 'health_bar_outside');
 
 		var blackBoxSprite = this.game.add.sprite(205, 100, 'blackbox');
 		blackBoxSprite.anchor.setTo(0.5, 0.5);

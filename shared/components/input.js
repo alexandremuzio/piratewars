@@ -50,14 +50,16 @@ InputComponent.prototype.processCommand = function(command) {
 InputComponent.prototype.processAttack = function(command) {
     if( command.qKey  ){
         if (this.owner.components.get("cooldown").activate()) {
-            var cannons = this.owner.components.get("cannon");
-            cannons.shootLeftCannons();
+            var cannonsManager = this.owner.childrenManager.getChild('cannons_manager');
+            var cannonsManagerController = cannonsManager.components.get("cannons_manager_controller");
+            cannonsManagerController.shootLeft();
         }
     }
     if( command.eKey ){
         if (this.owner.components.get("cooldown").activate()) {
-            var cannons = this.owner.components.get("cannon");
-            cannons.shootRightCannons();
+            var cannonsManager = this.owner.childrenManager.getChild('cannons_manager');
+            var cannonsManagerController = cannonsManager.components.get("cannons_manager_controller");
+            cannonsManagerController.shootRight();
         }
     }
 };
@@ -179,6 +181,7 @@ InputComponent.prototype.followTrajectoryUpdate = function(command) {
         if( this._clickedPointInCycle ){
             if( Math.abs(this.getDeltaAngleFromVectors(centerToBoat, this._centerToClickedPointVector)) < 5 ){
                 this._rotating = false;
+                this._followingTrajectory = false;
             }  
         }
         else{
@@ -187,6 +190,7 @@ InputComponent.prototype.followTrajectoryUpdate = function(command) {
                     boatToClickedPointVector.y *= -1; // Now boatToClickedPointVector.y is in world coordinates
                     this._body.angle = this.getAngleFromVector(boatToClickedPointVector);
                     this._rotating = false;
+                    this._followingTrajectory = false;
                 }
             }
             else{
@@ -194,6 +198,7 @@ InputComponent.prototype.followTrajectoryUpdate = function(command) {
                     boatToClickedPointVector.y *= -1; // Now boatToClickedPointVector.y is in world coordinates
                     this._body.angle = this.getAngleFromVector(boatToClickedPointVector);
                     this._rotating = false;
+                    this._followingTrajectory = false;
                 }
             }
         }

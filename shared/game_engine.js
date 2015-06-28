@@ -67,7 +67,7 @@ var GameEngine = (function () {
 				_scheduledForDeletion.push(entity.id);
 			},
 			printEntityHierarchy: function() {
-				console.log('-------- Printing Entity Hieracy --------');
+				console.log('-------- Printing Entity Hierarchy --------');
 				_.each(_entities, function(entity){
 					if( !entity.father )
 						_printEntityAndChildren(0, entity, _printEntityAndChildren);

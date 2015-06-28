@@ -8,9 +8,9 @@ var BulletComponent = require('../components/bullet.js');
 var PhysicsComponent = require('../../shared/components/physics.js');
 
 ///////////////////// Send these to a data file /////////////////////////////
-var bulletVelocity = 50;
+var bulletVelocity = 500;
 var bulletSpriteScale = 0.2;
-var bulletMass = 0.2;
+var bulletMass = 0.00002;
 
 //collision groups
 var PLAYER = Math.pow(2,0);
@@ -39,21 +39,20 @@ var EntityCreator = {
 
 		var body = new p2.Body({
 	            name: "bullet",
-	            type: p2.Body.KINEMATIC,
-	            /*mass: bulletMass,*/
+	            // type: p2.Body.KINEMATIC,
+	            mass: 0,
 	            position: [x, y],
 	            velocity: [bulletVelocity *  Math.cos(angle *  Math.PI/ 180.0),
 	            		   bulletVelocity *  Math.sin(angle *  Math.PI/ 180.0)]
 	    });
 	    body.entity = entity;
 
-		var shape = new p2.Circle(5); //////set radius!!
+		var shape = new p2.Circle(1); //////set radius!!
 		shape.collisionGroup = BULLET;
 		shape.collisionMask = PLAYER | STRONGHOLD;
+		shape.sensor = true;
 		body.addShape(shape);
-
 		body.angle = angle;
-		GameEngine.getInstance().world.addBody(body);
 
 		entity.components.add(new PhysicsComponent(body));
 		entity.components.add(new BulletComponent(player.id));

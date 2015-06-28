@@ -14,7 +14,7 @@ var GameEngine = require('../../shared/game_engine.js');
 var StrongholdComponent = require('../components/stronghold');
 
 var stronghold_settings = require('../../shared/settings/stronghold.json');
-var physics_settings = require('../../shared/settings/boats/default_boat/physics.json');
+var player_settings = require('../../shared/settings/player.json');
 ///////////////////// Send these to a data file /////////////////////////////
 var playerSpriteSize = 0.2;
 
@@ -31,20 +31,19 @@ var EntityFactory = {
 
 		var body = new p2.Body({
 	            name: "player",
-	            mass: physics_settings.mass,
+	            mass: player_settings.physics.mass,
 	            position: [100, 100]
 	        });
 		body.entity = entity;
 
-	    var shape = new p2.Rectangle(80, 40); ////change to correct size
+	    var shape = new p2.Rectangle(player_settings.width, player_settings.height);
 	    shape.collisionGroup = PLAYER;
-		shape.collisionMask = PLAYER | STRONGHOLD;
+		shape.collisionMask = PLAYER | STRONGHOLD | BULLET;
 		body.addShape(shape);
 		
-	    body.damping = physics_settings.linear_damping;
-	    body.angularDamping = physics_settings.angular_damping;
+	    body.damping = player_settings.physics.linear_damping;
+    	body.angularDamping = player_settings.physics.angular_damping;
 	    body.angle = 0;
-		GameEngine.getInstance().world.addBody(body);
 
 		entity.components.add(new CreatorComponent());
 		entity.components.add(new CooldownComponent());

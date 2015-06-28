@@ -18,7 +18,7 @@ var TextComponent = require('../components/text.js');
 var FollowComponent = require('../components/follow.js');
 
 var stronghold_settings = require('../../shared/settings/stronghold.json');
-var physics_settings = require('../../shared/settings/boats/default_boat/physics.json');
+var player_settings = require('../../shared/settings/player.json');
 ///////////////////// Send these to a data file /////////////////////////////
 var playerSpriteSize = 0.2;
 var textSize = 0.2;
@@ -42,11 +42,12 @@ var EntityFactory = {
 
 		var sprite = this.game.add.sprite(100, 100, 'boat_0');
 		sprite.anchor.setTo(0.5, 0.5); // Default anchor at the center
-	    sprite.scale.setTo(playerSpriteSize, playerSpriteSize);
-	    sprite.tint = 0xff6600;
+	    sprite.width = player_settings.width;
+	    sprite.height = player_settings.height;
+	    // sprite.tint = 0xff6600;
 	    
 	    /* Player name, must be set by the user (MUST FIX) */
-	    var text = this.game.add.text(0, 0, "Edgar Yano", {
+	    var text = this.game.add.text(0, 0, ".", {
 		        font: "12px Arial",
 		        fill: "#ff0044",
 		        align: "center"
@@ -55,19 +56,18 @@ var EntityFactory = {
 
 		var body = new p2.Body({
 	            name: "player",
-	            mass: physics_settings.mass,
+	            mass: player_settings.physics.mass,
 	            position: [100, 100]
 	        });
 		body.entity = entity;
 
-		var shape = new p2.Rectangle(sprite.width, sprite.height);
+		var shape = new p2.Rectangle(player_settings.width, player_settings.height);
 		shape.collisionGroup = PLAYER;
-		shape.collisionMask = PLAYER | STRONGHOLD;
+		shape.collisionMask = PLAYER | STRONGHOLD | BULLET;
 	    body.addShape(shape);
-	    body.damping = physics_settings.linear_damping;
-    	body.angularDamping = physics_settings.angular_damping
+	    body.damping = player_settings.physics.linear_damping;
+    	body.angularDamping = player_settings.physics.angular_damping
 	    body.angle = 0;
-		GameEngine.getInstance().world.addBody(body);
 
 		entity.components.add(new CooldownComponent());
 		entity.components.add(new CreatorComponent());
@@ -80,7 +80,7 @@ var EntityFactory = {
 		entity.components.add(new TextComponent(text));
 		entity.components.add(new CannonComponent(entity));
 
-		this.createHealthBar(entity);
+		// this.createHealthBar(entity);
 		return entity;
 	},
 
@@ -91,23 +91,26 @@ var EntityFactory = {
 
 		var sprite = this.game.add.sprite(100, 100, 'boat_0');
 		sprite.anchor.setTo(0.5, 0.5); // Default anchor at the center
-	    sprite.scale.setTo(playerSpriteSize, playerSpriteSize);
-	    sprite.tint = 0xff0066;
+	    sprite.width = player_settings.width;
+	    sprite.height = player_settings.height;
+
+	    console.log(sprite.width, sprite.height);
+	    // sprite.tint = 0xff6600;
+
 		var body = new p2.Body({
 	            name: "player",
-	            mass: physics_settings.mass,
+	            mass: player_settings.physics.mass,
 	            position: [100, 100]
 	        });
 		body.entity = entity;
 
-		var shape = new p2.Rectangle(sprite.width, sprite.height);
+		var shape = new p2.Rectangle(player_settings.width, player_settings.height);
 		shape.collisionGroup = PLAYER;
-		shape.collisionMask = PLAYER | STRONGHOLD;
+		shape.collisionMask = PLAYER | STRONGHOLD | BULLET;
 	    body.addShape(shape);
-	    body.damping = physics_settings.linear_damping;
-    	body.angularDamping = physics_settings.angular_damping
+	    body.damping = player_settings.physics.linear_damping;
+    	body.angularDamping = player_settings.physics.angular_damping
 	    body.angle = 0;
-		GameEngine.getInstance().world.addBody(body);
 
 		entity.components.add(new CooldownComponent());
 		entity.components.add(new NetworkComponent(this.socket));

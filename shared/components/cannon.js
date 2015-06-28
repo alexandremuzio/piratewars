@@ -19,9 +19,9 @@ CannonComponent.prototype.update = function() {
 
 	var leftAngle = body.angle - 90;
 	var rightAngle = body.angle + 90;
-
-	var leftVector = MathUtils.vector(rectangle.height/1.5, leftAngle);
-	var rightVector = MathUtils.vector(rectangle.height/1.5, rightAngle);
+	
+	var leftVector = MathUtils.vector(rectangle.height, leftAngle);
+	var rightVector = MathUtils.vector(rectangle.height, rightAngle);
 	var paraVector = MathUtils.vector(rectangle.width/4,body.angle);
 
 	//update Cannon positions

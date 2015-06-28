@@ -1,5 +1,5 @@
 {
-	"mass":1,
+	"mass":100,
 	"linear_force": 500,
 	"linear_damping": 0,
 	"angular_force": 300,

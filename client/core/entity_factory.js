@@ -16,7 +16,7 @@ var SyncComponent = require('../components/sync.js');
 var HealthBarComponent = require('../components/health_bar.js');
 var TextComponent = require('../components/text.js');
 var FollowComponent = require('../components/follow.js');
-var CannonsManagerController = require('../components/cannons_manager_controller.js');
+var CannonsManagerController = require('../../shared/components/cannons_manager_controller.js');
 var CannonController = require('../components/cannon_controller.js');
 
 var physics_settings = require('../../shared/settings/boats/default_boat/physics.json');
@@ -82,16 +82,54 @@ var EntityFactory = {
 		entity.components.add(new SpriteComponent(sprite));
 		entity.components.add(new PlayerControllerComponent());
 		entity.components.add(new TextComponent(text));
-		entity.components.add(new CannonComponent(entity));
 
 		// Subentitys
 		// Creating HealthBar subentity
-		var healthBar = this.createHealthBar(data.id+'health_bar');
+		var healthBar = this.createHealthBar(data.id+'-health_bar');
 		healthBar.setFather(entity, 0, -30, 0);
 		healthBar.setFollowFatherAngle(false);
 
-		var cannonsManager = this.createCannonsManager(data.id+'cannons_manager')
+		var cannonsManager = this.createCannonsManager(data.id+'-cannons_manager')
 		cannonsManager.setFather(entity, 0, 0, 0);
+
+		return entity;
+	},
+
+	createHealthBar: function(id) {
+		var entity = new Entity(id, 'health_bar');
+
+		var scale = 1;
+
+		var healthBarInside = this.createHealthBarInside(id+'inside', scale);
+		healthBarInside.setFather(entity, 0, 0, 0 );
+		var healthBarInsideSprite = healthBarInside.components.get('sprite');
+
+		var healthBarOutside = this.createHealthBarOutside(id+'outside', scale);
+		healthBarOutside.setFather(entity, 0, 0, 0);
+
+		return entity;
+	},
+
+	createHealthBarInside: function(id, scale) {
+		var entity = new Entity(id, 'health_bar_inside');
+
+		var redBarSprite = this.game.add.sprite(205, 100, 'redbar');
+		redBarSprite.scale.setTo(healthBarSpriteSize, healthBarSpriteSize);
+		redBarSprite.anchor.setTo( 0.5, 0.5);
+	    
+		entity.components.add(new SpriteComponent(redBarSprite));
+		entity.components.add(new HealthBarComponent());
+	   
+		return entity;
+	},
+
+	createHealthBarOutside: function(id, scale) {
+		var entity = new Entity(id, 'health_bar_outside');
+
+		var blackBoxSprite = this.game.add.sprite(205, 100, 'blackbox');
+		blackBoxSprite.anchor.setTo(0.5, 0.5);
+		blackBoxSprite.scale.setTo(healthBarSpriteSize, healthBarSpriteSize);
+		entity.components.add(new SpriteComponent(blackBoxSprite));
 
 		return entity;
 	},
@@ -174,46 +212,11 @@ var EntityFactory = {
 		entity.components.add(new SpriteComponent(sprite));
 		entity.components.add(new SyncComponent());
 		entity.components.add(new PlayerControllerComponent());
-		entity.components.add(new CannonComponent());
 		entity.components.add(new CreatorComponent());
 
-		return entity;
-	},
-
-	createHealthBar: function(id) {
-		var entity = new Entity(id, 'health_bar');
-
-		var healthBarInside = this.createHealthBarInside(id+'inside');
-		healthBarInside.setFather(entity, 0, 0, 0 );
-
-		var healthBarOutside = this.createHealthBarOutside(id+'outside');
-		healthBarOutside.setFather(entity, 0, 0, 0);
-
-		return entity;
-	},
-
-	createHealthBarInside: function(id) {
-		var entity = new Entity(id, 'health_bar_inside');
-
-		var redBarSprite = this.game.add.sprite(205, 100, 'redbar');
-		redBarSprite.anchor.setTo(0.5, 0.5);
-	    redBarSprite.scale.setTo(player_settings.health_bar.scale, 
-	    						 player_settings.health_bar.scale);
-		
-		entity.components.add(new SpriteComponent(redBarSprite));
-	   
-		return entity;
-	},
-
-	createHealthBarOutside: function(id) {
-		var entity = new Entity(id, 'health_bar_outside');
-
-		var blackBoxSprite = this.game.add.sprite(205, 100, 'blackbox');
-		blackBoxSprite.anchor.setTo(0.5, 0.5);
-		blackBoxSprite.scale.setTo(player_settings.health_bar.scale,
-									 player_settings.health_bar.scale);
-	    
-		entity.components.add(new SpriteComponent(blackBoxSprite));
+		// Subentitys
+		var cannonsManager = this.createCannonsManager(data.id+'cannons_manager')
+		cannonsManager.setFather(entity, 0, 0, 0);
 
 		return entity;
 	},
@@ -247,7 +250,7 @@ var EntityFactory = {
 		entity.components.add(new SpriteComponent(sprite));
 
 		return entity;
-	},
+	}
 };
 
 module.exports = EntityFactory;

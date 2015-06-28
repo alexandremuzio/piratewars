@@ -1,7 +1,7 @@
 'use strict'
 
 var _ = require('underscore');
-var ComponentBase = require('../../shared/core/component');
+var BaseComponent = require('../core/component.js');
 
 function CannonsManagerController() {
 	this.key = 'cannons_manager_controller';
@@ -10,7 +10,7 @@ function CannonsManagerController() {
 };
 
 ///
-CannonsManagerController.prototype = Object.create(ComponentBase.prototype);
+CannonsManagerController.prototype = Object.create(BaseComponent.prototype);
 CannonsManagerController.prototype.constructor = CannonsManagerController;
 ///
 

@@ -14,14 +14,14 @@ CreatorComponent.prototype = Object.create(BaseComponent.prototype);
 CreatorComponent.prototype.constructor = CreatorComponent;
 ///
 
-CreatorComponent.prototype.createBullet = function(cannonPosition, angle) {
-	// console.log("CreatorComponent createBullet");
-    var bullet = BulletFactory.createBullet(this.owner, cannonPosition, angle);
-    // console.log(bullet);
-    this.temporaryEntitiesIDs.push(bullet.id);
-    // console.log("CreateBullet", this.temporaryEntitiesIDs);
-    return bullet;
-}
+// CreatorComponent.prototype.createBullet = function(cannonPosition, angle) {
+// 	// console.log("CreatorComponent createBullet");
+//     var bullet = BulletFactory.createBullet(this.owner, cannonPosition, angle);
+//     // console.log(bullet);
+//     this.temporaryEntitiesIDs.push(bullet.id);
+//     // console.log("CreateBullet", this.temporaryEntitiesIDs);
+//     return bullet;
+// }
 
 CreatorComponent.prototype.getTempEntities = function() {
 	if (this.temporaryEntitiesIDs.length > 0) {

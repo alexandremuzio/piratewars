@@ -10,8 +10,6 @@ function ChildrenManager(owner) {
 
 // child must be an reference to an entity
 ChildrenManager.prototype.add = function(child) {
-	console.log('call ChildrenManager.add');
-	console.log('child.key: ' + child.key);
 	if( child ){
 		if( this._children[child.key]  ){
 			console.error("Trying add subentities with the same key");

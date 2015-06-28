@@ -2,13 +2,11 @@
 
 var BaseComponent = require('../../shared/core/component.js');
 
-
 //cooldown used for bullet
 function CooldownComponent() {
 	this.key = "cooldown";
 	this.chargeTime = 1000;
 	this.lastUsedTime = new Date();
-	// console.log("EntityFactory= ", EntityFactory);
 }
 
 ///

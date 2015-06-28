@@ -3,7 +3,6 @@
 var UUID = require('node-uuid');
 var GameEngine = require('../../shared/game_engine.js');
 var BulletComponent = require('../components/bullet.js');
-var CannonComponent = require('../../shared/components/cannon.js');
 var CooldownComponent = require('../../shared/components/cooldown.js');
 var CreatorComponent = require('../components/creator.js');
 var Entity = require('../../shared/core/entity.js');
@@ -15,7 +14,6 @@ var SpriteComponent = require('../components/sprite.js');
 var SyncComponent = require('../components/sync.js');
 var HealthBarComponent = require('../components/health_bar.js');
 var TextComponent = require('../components/text.js');
-var FollowComponent = require('../components/follow.js');
 var CannonsManagerController = require('../../shared/components/cannons_manager_controller.js');
 var CannonController = require('../components/cannon_controller.js');
 
@@ -32,8 +30,7 @@ var PLAYER = Math.pow(2,0);
 var BULLET = Math.pow(2,1);
 var STRONGHOLD = Math.pow(2,2);
 
-
-var EntityFactory = {
+var PlayerFactory = {
 	init : function (data) {
 		this.game = data.game;
 		this.socket = data.socket;
@@ -86,11 +83,11 @@ var EntityFactory = {
 		// Subentitys
 		// Creating HealthBar subentity
 		var healthBar = this.createHealthBar(data.id+'-health_bar');
-		healthBar.setFather(entity, 0, -30, 0);
-		healthBar.setFollowFatherAngle(false);
+		healthBar.setBaseEntity(entity, 0, -30, 0);
+		healthBar.setFollowBaseEntityAngle(false);
 
 		var cannonsManager = this.createCannonsManager(data.id+'-cannons_manager')
-		cannonsManager.setFather(entity, 0, 0, 0);
+		cannonsManager.setBaseEntity(entity, 0, 0, 0);
 
 		return entity;
 	},
@@ -100,12 +97,12 @@ var EntityFactory = {
 
 		var scale = 1;
 
-		var healthBarInside = this.createHealthBarInside(id+'inside', scale);
-		healthBarInside.setFather(entity, 0, 0, 0 );
+		var healthBarInside = this.createHealthBarInside(id+'-inside', scale);
+		healthBarInside.setBaseEntity(entity, 0, 0, 0 );
 		var healthBarInsideSprite = healthBarInside.components.get('sprite');
 
-		var healthBarOutside = this.createHealthBarOutside(id+'outside', scale);
-		healthBarOutside.setFather(entity, 0, 0, 0);
+		var healthBarOutside = this.createHealthBarOutside(id+'-outside', scale);
+		healthBarOutside.setBaseEntity(entity, 0, 0, 0);
 
 		return entity;
 	},
@@ -146,13 +143,13 @@ var EntityFactory = {
 		var xInterval = 15;
 		// Creating cannons subentitys
 		for( var i = 0; i < 3; i++ ){
-			var cannon = this.createCannon(id+'cannon'+(i+1), 'cannon'+(i+1));
-			cannon.setFather(entity, x0 + xInterval*i, -y0, -90);
+			var cannon = this.createCannon(id+'-cannon_'+(i+1), 'cannon_'+(i+1));
+			cannon.setBaseEntity(entity, x0 + xInterval*i, -y0, -90);
 			cannonsManagerController.addLeft(cannon);
 		}
 		for( var i = 0; i < 3; i++ ){
-			var cannon = this.createCannon(id+'cannon'+(i+4), 'cannon'+(i+4));
-			cannon.setFather(entity, x0 + xInterval*i, y0, 90);
+			var cannon = this.createCannon(id+'-cannon_'+(i+4), 'cannon_'+(i+4));
+			cannon.setBaseEntity(entity, x0 + xInterval*i, y0, 90);
 			cannonsManagerController.addRight(cannon);
 		}
 
@@ -169,8 +166,8 @@ var EntityFactory = {
 		entity.components.add(new CannonController());
 
 		// Creating bulletInitialTransform subentity
-		var bulletStart = this.createEmptyEntity(id+'bullet_start', 'bullet_start');
-		bulletStart.setFather(entity, 15, 0, 0);
+		var bulletStart = this.createEmptyEntity(id+'-bullet_start', 'bullet_start');
+		bulletStart.setBaseEntity(entity, 15, 0, 0);
 
 		return entity;
 	},
@@ -183,7 +180,7 @@ var EntityFactory = {
 	createRemotePlayer : function(data) {
 		// console.log("inside entity factory createRemotePlayer");
 		
-		var entity = new Entity(data.id, "player");
+		var entity = new Entity(data.id, "remote_player");
 
 		var sprite = this.game.add.sprite(100, 100, 'boat_0');
 		sprite.anchor.setTo(0.5, 0.5);
@@ -212,11 +209,10 @@ var EntityFactory = {
 		entity.components.add(new SpriteComponent(sprite));
 		entity.components.add(new SyncComponent());
 		entity.components.add(new PlayerControllerComponent());
-		entity.components.add(new CreatorComponent());
 
 		// Subentitys
-		var cannonsManager = this.createCannonsManager(data.id+'cannons_manager')
-		cannonsManager.setFather(entity, 0, 0, 0);
+		var cannonsManager = this.createCannonsManager(data.id+'-cannons_manager')
+		cannonsManager.setBaseEntity(entity, 0, 0, 0);
 
 		return entity;
 	},
@@ -253,4 +249,4 @@ var EntityFactory = {
 	}
 };
 
-module.exports = EntityFactory;
+module.exports = PlayerFactory;

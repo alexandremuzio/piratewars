@@ -24,7 +24,7 @@ var STRONGHOLD = Math.pow(2,2);
 
 
 //static class
-var EntityFactory = {
+var PlayerFactory = {
 	createPlayer : function(data) {
 		var id = UUID();
 		var entity = new Entity(id, 'player');
@@ -55,11 +55,11 @@ var EntityFactory = {
 		// Subentitys
 		// Creating HealthBar subentity
 		// var healthBar = this.createHealthBar(id+'health_bar');
-		// healthBar.setFather(entity, 0, -30, 0);
+		// healthBar.setBaseEntity(entity, 0, -30, 0);
 		// healthBar.setFollowFatherAngle(false);
 
-		var cannonsManager = this.createCannonsManager(id+'cannons_manager')
-		cannonsManager.setFather(entity, 0, 0, 0);
+		var cannonsManager = this.createCannonsManager(id+'-cannons_manager')
+		cannonsManager.setBaseEntity(entity, 0, 0, 0);
 
 		return entity;
 	},
@@ -68,11 +68,11 @@ var EntityFactory = {
 	// 	var entity = new Entity(id, 'health_bar');
 
 	// 	var healthBarInside = this.createHealthBarInside(id+'inside');
-	// 	healthBarInside.setFather(entity, 0, 0, 0 );
+	// 	healthBarInside.setBaseEntity(entity, 0, 0, 0 );
 	// 	var healthBarInsideSprite = healthBarInside.components.get('sprite');
 
 	// 	var healthBarOutside = this.createHealthBarOutside(id+'outside');
-	// 	healthBarOutside.setFather(entity, 0, 0, 0);
+	// 	healthBarOutside.setBaseEntity(entity, 0, 0, 0);
 
 	// 	return entity;
 	// },
@@ -113,13 +113,13 @@ var EntityFactory = {
 		var xInterval = 15;
 		// Creating cannons subentitys
 		for( var i = 0; i < 3; i++ ){
-			var cannon = this.createCannon(id+'cannon'+(i+1), 'cannon'+(i+1));
-			cannon.setFather(entity, x0 + xInterval*i, -y0, -90);
+			var cannon = this.createCannon(id+'-cannon_'+(i+1), 'cannon_'+(i+1));
+			cannon.setBaseEntity(entity, x0 + xInterval*i, -y0, -90);
 			cannonsManagerController.addLeft(cannon);
 		}
 		for( var i = 0; i < 3; i++ ){
-			var cannon = this.createCannon(id+'cannon'+(i+4), 'cannon'+(i+4));
-			cannon.setFather(entity, x0 + xInterval*i, y0, 90);
+			var cannon = this.createCannon(id+'-cannon_'+(i+4), 'cannon_'+(i+4));
+			cannon.setBaseEntity(entity, x0 + xInterval*i, y0, 90);
 			cannonsManagerController.addRight(cannon);
 		}
 
@@ -132,8 +132,8 @@ var EntityFactory = {
 		entity.components.add(new CannonController());
 
 		// Creating bulletStart subentity
-		var bulletStart = this.createEmptyEntity(id+'bullet_start', 'bullet_start');
-		bulletStart.setFather(entity, 15, 0, 0);
+		var bulletStart = this.createEmptyEntity(id+'-bullet_start', 'bullet_start');
+		bulletStart.setBaseEntity(entity, 15, 0, 0);
 
 		return entity;
 	},
@@ -169,4 +169,4 @@ var EntityFactory = {
 	}
 }
 
-module.exports = EntityFactory;
+module.exports = PlayerFactory;

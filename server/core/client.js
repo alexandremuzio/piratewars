@@ -2,7 +2,7 @@
 
 var _ = require('underscore');
 var UUID = require('node-uuid');
-var EntityFactory = require('./entity_factory.js');
+var PlayerFactory = require('./player_factory.js');
 var SnapshotManager = require('../../shared/core/snapshot_manager.js');
 var GameEngine = require('../../shared/game_engine.js');
 
@@ -40,7 +40,7 @@ Client.prototype.createPlayer = function() {
 	var data = {};
 	data.socket = this._socket;
 	data.snapshots = this._snapshots;
-	var entity = EntityFactory.createPlayer(data);
+	var entity = PlayerFactory.createPlayer(data);
 	this._socket.emit('player.create', { id: entity.id });
 	return entity;
 }

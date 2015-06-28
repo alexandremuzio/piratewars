@@ -74,11 +74,11 @@ Transform.prototype.setPositionWithoutUpdateBody = function( position ){
 	this.updateLocalPosition();
 
 	// Update children position
-	if( this._owner.childrenManager.hasChildren() && ( deltaPosition.dx !== 0 || deltaPosition.dy !== 0 ) ){
-		// console.log(' nChildren = ' + this._owner.childrenManager.nChildren());
-		_.each( this._owner.childrenManager.getChildrenArray(), function( childEntity ){
+	if( this._owner.subentityManager.hasSubentity() && ( deltaPosition.dx !== 0 || deltaPosition.dy !== 0 ) ){
+		// console.log(' nSubentitys = ' + this._owner.subentityManager.nSubentitys());
+		_.each( this._owner.subentityManager.getAll(), function( subentity ){
 			// console.error(deltaPosition);
-			childEntity.transform.setDeltaPosition(deltaPosition);
+			subentity.transform.setDeltaPosition(deltaPosition);
 		});
 	}
 
@@ -87,11 +87,11 @@ Transform.prototype.setPositionWithoutUpdateBody = function( position ){
 };
 
 Transform.prototype.updateLocalPosition = function(){
-	if( this._owner.father ){
-		var fatherPosition = this._owner.father.transform.getPositionWithoutSyncBody();
+	if( this._owner.baseEntity ){
+		var basePosition = this._owner.baseEntity.transform.getPositionWithoutSyncBody();
 		this._localPosition = {
-			"x": this._position.x - fatherPosition.x,
-			"y": this._position.y - fatherPosition.y
+			"x": this._position.x - basePosition.x,
+			"y": this._position.y - basePosition.y
 		}
 	}
 };
@@ -150,15 +150,15 @@ Transform.prototype.setAngleWithoutUpdateBody = function(angle){
 	this.updateLocalAngle()
 
 	// Update children angle
-	if( this._owner.childrenManager.hasChildren() && deltaAngle !== 0 ){
-		_.each( this._owner.childrenManager.getChildrenArray(), function( childEntity ){
-			if( childEntity.getFollowFatherAngle() ){
-				var localPosition = childEntity.transform.getLocalPosition();
+	if( this._owner.subentityManager.hasSubentity() && deltaAngle !== 0 ){
+		_.each( this._owner.subentityManager.getAll(), function( subentity ){
+			if( subentity.getFollowBaseEntityAngle() ){
+				var localPosition = subentity.transform.getLocalPosition();
 				var radius = MathUtils.module(localPosition);
 				var angle = MathUtils.getAngleFromVector(localPosition) + deltaAngle;
 				if( radius > 0 )
-					childEntity.transform.setLocalPosition(MathUtils.vector(radius, angle));
-				childEntity.transform.setDeltaAngle(deltaAngle);
+					subentity.transform.setLocalPosition(MathUtils.vector(radius, angle));
+				subentity.transform.setDeltaAngle(deltaAngle);
 			}
 			
 		});
@@ -166,9 +166,9 @@ Transform.prototype.setAngleWithoutUpdateBody = function(angle){
 };
 
 Transform.prototype.updateLocalAngle = function(){
-	if( this._owner.father ){
-		var fatherAngle = this._owner.father.transform.getAngleWithoutSyncBody();
-		this._localAngle = this._angle - fatherAngle;
+	if( this._owner.baseEntity ){
+		var baseEntityAngle = this._owner.baseEntity.transform.getAngleWithoutSyncBody();
+		this._localAngle = this._angle - baseEntityAngle;
 	}
 };
 
@@ -282,10 +282,10 @@ Transform.prototype.setTransform = function(transform){ // remove this
 
 Transform.prototype.setLocalPosition = function(localPosition){
 	this._localPosition = localPosition;
-	var fatherPosition = this._owner.father.transform.getPosition();
+	var basePosition = this._owner.baseEntity.transform.getPosition();
 	var newPosition = {
-		"x": fatherPosition.x + localPosition.x,
-		"y": fatherPosition.y + localPosition.y
+		"x": basePosition.x + localPosition.x,
+		"y": basePosition.y + localPosition.y
 	};
 	this.setPosition(newPosition);
 }
@@ -305,7 +305,7 @@ Transform.prototype.getLocalPosition = function(){
 
 Transform.prototype.setLocalAngle = function(localAngle){
 	this._localAngle = localAngle;
-	this.setAngle(this._owner.father.transform.getAngle() + localAngle);
+	this.setAngle(this._owner.baseEntity.transform.getAngle() + localAngle);
 }
 
 Transform.prototype.initLocalVariables = function(x0, y0, alpha0){

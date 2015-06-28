@@ -20,14 +20,14 @@ var GameEngine = (function () {
 				});
 				_scheduledForDeletion = [];
 		};
-		var _printEntityAndChildren = function( nTabs, entity, function_printEntityAndChildren ) {
+		var _printEntityAndSubentitys = function( nTabs, entity, function_printEntityAndSubentitys ) {
 			var s = '';
 			for( var i = 0; i < nTabs; i++ )
 				s += '	';
 			console.log(s + '->' + entity.key);
 
-			_.each(entity.childrenManager.getChildrenArray(), function(childEntity){
-				function_printEntityAndChildren(nTabs+1, childEntity, function_printEntityAndChildren);
+			_.each(entity.subentityManager.getAll(), function(subentity){
+				function_printEntityAndSubentitys(nTabs+1, subentity, function_printEntityAndSubentitys);
 			}.bind(this));
 		};
 
@@ -70,7 +70,7 @@ var GameEngine = (function () {
 				console.log('-------- Printing Entity Hierarchy --------');
 				_.each(_entities, function(entity){
 					if( !entity.father )
-						_printEntityAndChildren(0, entity, _printEntityAndChildren);
+						_printEntityAndSubentitys(0, entity, _printEntityAndSubentitys);
 				});
 			}
 		};

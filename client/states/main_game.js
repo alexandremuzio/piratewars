@@ -2,8 +2,7 @@
 
 var _ = require('underscore');
 var GameEngine = require('../../shared/game_engine.js');
-var EntityFactory = require('../core/entity_factory.js');
-var EntityCreator = require('../core/entity_creator.js');
+var PlayerFactory = require('../core/player_factory.js');
 var BulletFactory = require('../core/bullet_factory.js');
 var GameComponent = require('../../shared/core/component.js');
 var SnapshotManager = require('../../shared/core/snapshot_manager.js');
@@ -23,8 +22,7 @@ function PlayState(game, socket) {
     var data = { game:      this.game,
                  socket:    this.socket };
 
-    EntityFactory.init(data);
-    EntityCreator.init(data);
+    PlayerFactory.init(data);
     BulletFactory.init(data);
 };
 
@@ -84,13 +82,13 @@ PlayState.prototype.applySyncFromServer = function() {
             // console.log("for var key in snapshot", key);
             if (!GameEngine.getInstance().entities[key]) {
                 // console.log("creating remote player");
-                EntityFactory.createRemotePlayer({ id: key });
+                PlayerFactory.createRemotePlayer({ id: key });
             }
             GameEngine.getInstance().entities[key].sync(lastSnapshot.players[key]);
         }
         for (var key in lastSnapshot.bullets) {
             if (!GameEngine.getInstance().entities[key]) {
-                EntityCreator.createRemoteBullet(lastSnapshot.bullets[key]);
+                BulletFactory.createRemoteBullet(lastSnapshot.bullets[key]);
             }
             else {
                 GameEngine.getInstance().entities[key].sync(lastSnapshot.bullets[key]);
@@ -113,8 +111,8 @@ PlayState.prototype.assignNetworkCallbacks = function() {
 
 PlayState.prototype.createInitialEntities = function() {
     // Create turrets, bases, creeps...
-    EntityFactory.createStronghold(0);
-    EntityFactory.createStronghold(1);
+    PlayerFactory.createStronghold(0);
+    PlayerFactory.createStronghold(1);
 }
 
 PlayState.prototype.createTexts = function() {
@@ -157,11 +155,9 @@ PlayState.prototype.onGameSync = function(snapshot) {
 
 PlayState.prototype.onPlayerCreate = function(data) {    
     console.log("Creating a new player!");
-    this.selfPlayer = EntityFactory.createLocalPlayer({ id: data.id });
-    // MPTemp
-    // this.temp = EntityFactory.createTemp();
-    // this.temp.setFather(this.selfPlayer, -30, 0, 90);
+    this.selfPlayer = PlayerFactory.createLocalPlayer({ id: data.id });
     this.game.camera.follow(this.selfPlayer.components.get("sprite").sprite);
+    
     // MPTest
     GameEngine.getInstance().printEntityHierarchy();
 }

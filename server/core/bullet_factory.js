@@ -17,7 +17,7 @@ var bulletMass = 0.2;
 var PLAYER = Math.pow(2,0);
 var BULLET = Math.pow(2,1);
 
-var EntityCreator = {
+var BulletFactory = {
 	init : function (data) {
 		this.game = data.game;
 	},
@@ -52,4 +52,4 @@ var EntityCreator = {
 	},
 };
 
-module.exports = EntityCreator;
+module.exports = BulletFactory;

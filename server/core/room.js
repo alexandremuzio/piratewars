@@ -4,7 +4,7 @@ var _ = require('underscore');
 var Client = require('./client.js');
 var SnapshotManager = require('../../shared/core/snapshot_manager');
 var GameEngine = require('../../shared/game_engine.js');
-var EntityFactory = require('./entity_factory');
+var PlayerFactory = require('./player_factory.js');
 
 function Room(socket) {
 	this.clients = [];
@@ -20,8 +20,8 @@ Room.prototype.init = function() {
 }
 
 Room.prototype.createInitialEntities = function() {
-	EntityFactory.createStronghold(0);
-	EntityFactory.createStronghold(1);
+	PlayerFactory.createStronghold(0);
+	PlayerFactory.createStronghold(1);
 }
 
 Room.prototype.onConnection = function(socket) {

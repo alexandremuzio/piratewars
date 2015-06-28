@@ -50,14 +50,14 @@ InputComponent.prototype.processCommand = function(command) {
 InputComponent.prototype.processAttack = function(command) {
     if( command.qKey  ){
         if (this.owner.components.get("cooldown").activate()) {
-            var cannonsManager = this.owner.childrenManager.getChild('cannons_manager');
+            var cannonsManager = this.owner.subentityManager.get('cannons_manager');
             var cannonsManagerController = cannonsManager.components.get("cannons_manager_controller");
             cannonsManagerController.shootLeft();
         }
     }
     if( command.eKey ){
         if (this.owner.components.get("cooldown").activate()) {
-            var cannonsManager = this.owner.childrenManager.getChild('cannons_manager');
+            var cannonsManager = this.owner.subentityManager.get('cannons_manager');
             var cannonsManagerController = cannonsManager.components.get("cannons_manager_controller");
             cannonsManagerController.shootRight();
         }

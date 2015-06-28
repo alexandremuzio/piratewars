@@ -3,7 +3,7 @@
 var GameEngine = require('../game_engine.js');
 var ComponentManager = require('./component_manager.js');
 var Transform = require('../components/transform.js');
-var ChildrenManager = require('./children_manager.js');
+var SubentityManager = require('./subentity_manager.js');
 var _ = require('underscore');
 
 function Entity(id, key) {
@@ -11,12 +11,12 @@ function Entity(id, key) {
 	GameEngine.getInstance().addEntity(this, id);
     this.key = key;
     this.id = id;
-    this.father;
+    this.baseEntity;
 	this.transform = new Transform(this);
 	this.components = new ComponentManager(this);
-	this.childrenManager = new ChildrenManager(this);
+	this.subentityManager = new SubentityManager(this);
     this._eventHandlers = {};
-    this._followFatherAngle = true;
+    this._followBaseEntityAngle = true;
 };
 
 /**
@@ -30,32 +30,35 @@ Entity.prototype.updateAfterWorldStep = function() {
     this.components.updateAfterWorldStep();
 }
 
-// father must be an reference to an entity
+// base must be an reference to an entity
 // x0, y0, alpha0 are initial transform local variables
-Entity.prototype.setFather = function( father, x0, y0, alpha0 ) {
-    if( this.father ){
-        console.error('Entity ' + this.id + ' already has a father');
+Entity.prototype.setBaseEntity = function( baseEntity, x0, y0, alpha0 ) {
+    if( this.baseEntity ){
+        console.error('Entity ' + this.id + ' already has a baseEntity');
     }
     else{
-        this.father = father;
+        this.baseEntity = baseEntity;
         this.transform.initLocalVariables(x0, y0, alpha0);
-        father.childrenManager.add(this);
+        baseEntity.subentityManager.add(this);
     }
 }
 
-Entity.prototype.setFollowFatherAngle = function(value) {
-    this._followFatherAngle = value;
+Entity.prototype.setFollowBaseEntityAngle = function(value) {
+    this._followBaseEntityAngle = value;
 }
 
-Entity.prototype.getFollowFatherAngle = function(value) {
-    return this._followFatherAngle;
+Entity.prototype.getFollowBaseEntityAngle = function(value) {
+    return this._followBaseEntityAngle;
 }
 
 Entity.prototype.destroy = function() {
-    // Destroy children first
-    _.each(this.childrenManager.getChildrenArray(), function(subentity){
+    // Destroy subentitys first
+    _.each(this.subentityManager.getAll(), function(subentity){
         subentity.destroy();
     });
+
+    if( this.baseEntity )
+        this.baseEntity.subentityManager.remove(this);
 
     this.trigger('entity.destroy', this);    
     GameEngine.getInstance().deleteEntity(this);

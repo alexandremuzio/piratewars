@@ -2,7 +2,7 @@
 
 var _ = require('underscore');
 var GameEngine = require('../../shared/game_engine.js');
-var EntityFactory = require('../core/entity_factory.js');
+var PlayerFactory = require('../core/player_factory.js');
 var GameComponent = require('../../shared/core/component.js');
 var SnapshotManager = require('../../shared/core/snapshot_manager.js');
 

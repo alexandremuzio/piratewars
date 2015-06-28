@@ -3,7 +3,7 @@
 var Game = require('./game.js');
 var $ = require('jquery');
 var socket = io.connect();
-var EntityFactory = require('./core/entity_factory.js');
+var PlayerFactory = require('./core/player_factory.js');
 var id;
 var gameInstance;
 

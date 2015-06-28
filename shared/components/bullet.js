@@ -3,12 +3,12 @@
 var GameComponent = require('../core/component');
 var GameEngine = require('../game_engine');
 
-///////////////////// Send these to a data file /////////////////////////////
-var bulletSurvivalTime = 2000;
+var bullet_settings = require('../settings/bullet.json');
+
 
 function BulletComponent() {
 	this.key = "bullet";
-	this.bulletSurvivalTime = bulletSurvivalTime;
+	this.bulletSurvivalTime = bullet_settings.survival_time;
 	this.currentAliveTime = 0;
 }
 

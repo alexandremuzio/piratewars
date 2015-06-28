@@ -19,5 +19,18 @@
 		    "turn_ratio": 0.01
 		},
 	"width": 90,
-	"height" : 30
+	"height" : 30,
+
+	"healthbar" :
+	{
+		"scale" : 0.2
+	},
+
+	"text" : 
+	{
+		"scale" : 0.2,
+		"font" : "12px Arial",
+		"fill": "#ff0044",
+		"align": "center"
+	}
 }

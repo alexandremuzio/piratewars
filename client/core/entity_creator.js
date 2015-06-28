@@ -39,12 +39,13 @@ var EntityCreator = {
 
 		var sprite = this.game.add.sprite(x, y, 'bullet');
 		sprite.anchor.setTo(0.5, 0.5); // Default anchor at the center
-		sprite.scale.setTo(bulletSpriteScale);
+		sprite.width = 8;
+		sprite.height = 8;
 
 		var body = new p2.Body({
 	            name: "bullet",
-	            // type: p2.Body.KINEMATIC,
-	            mass : 0,
+	            type: p2.Body.KINEMATIC,
+	            // mass : 0,
 	            position: [x, y],
 	            velocity: [bulletVelocity *  Math.cos(angle *  Math.PI/ 180.0),
 	            		   bulletVelocity *  Math.sin(angle *  Math.PI/ 180.0)],
@@ -73,12 +74,14 @@ var EntityCreator = {
 
 		var sprite = this.game.add.sprite(transform.x, transform.y, 'bullet');
 		sprite.anchor.setTo(0.5, 0.5); // Default anchor at the center
-		sprite.scale.setTo(bulletSpriteScale);
+		sprite.width = 8;
+		sprite.height = 8;
+
 
 		var body = new p2.Body({
 	            name: "bullet",
-	            // type: p2.Body.KINEMATIC,
-	            mass : bulletMass,
+	            type: p2.Body.KINEMATIC,
+	            // mass : bulletMass,
 	            position: [transform.position.x,
 	            		   transform.position.y],
 	            velocity: [transform.velocity.x,

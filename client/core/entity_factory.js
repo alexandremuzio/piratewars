@@ -19,10 +19,6 @@ var FollowComponent = require('../components/follow.js');
 
 var stronghold_settings = require('../../shared/settings/stronghold.json');
 var player_settings = require('../../shared/settings/player.json');
-///////////////////// Send these to a data file /////////////////////////////
-var playerSpriteSize = 0.2;
-var textSize = 0.2;
-var healthBarSpriteSize = 0.2;
 
 //collision groups
 var PLAYER = Math.pow(2,0);
@@ -38,19 +34,19 @@ var EntityFactory = {
 
 	createLocalPlayer : function(data) {
 		console.log("inside entity factory createLocalPlayer")
-		var entity = new Entity(data.id);
+		var entity = new Entity(data.id, "player");
 
 		var sprite = this.game.add.sprite(100, 100, 'boat_0');
-		sprite.anchor.setTo(0.5, 0.5); // Default anchor at the center
+		sprite.anchor.setTo(0.5, 0.5);
 	    sprite.width = player_settings.width;
 	    sprite.height = player_settings.height;
 	    // sprite.tint = 0xff6600;
 	    
 	    /* Player name, must be set by the user (MUST FIX) */
 	    var text = this.game.add.text(0, 0, ".", {
-		        font: "12px Arial",
-		        fill: "#ff0044",
-		        align: "center"
+		        font: player_settings.text.font,
+		        fill: player_settings.text.fill,
+		        align: player_settings.text.allign
 		    });
 		text.anchor.setTo(0.5, 0.5);
 
@@ -87,15 +83,13 @@ var EntityFactory = {
 	createRemotePlayer : function(data) {
 		// console.log("inside entity factory createRemotePlayer");
 		
-		var entity = new Entity(data.id);
+		var entity = new Entity(data.id, "player");
 
 		var sprite = this.game.add.sprite(100, 100, 'boat_0');
-		sprite.anchor.setTo(0.5, 0.5); // Default anchor at the center
+		sprite.anchor.setTo(0.5, 0.5);
 	    sprite.width = player_settings.width;
 	    sprite.height = player_settings.height;
-
-	    console.log(sprite.width, sprite.height);
-	    // sprite.tint = 0xff6600;
+	    // sprite.tint = 0xff6600; --get color from team
 
 		var body = new p2.Body({
 	            name: "player",
@@ -126,7 +120,7 @@ var EntityFactory = {
 
 	createHealthBar: function(player) {
 		/* GameEngine needs an ID, now is set randomly */
-		var entityInside = new Entity(17); //MUST FIX IT
+		var entityInside = new Entity(UUID(), "healthBarInside"); //MUST FIX IT
 
 		var referenceBody = player.components.get("physics").body;
 		var referenceSprite = player.components.get("sprite").sprite;
@@ -134,14 +128,16 @@ var EntityFactory = {
 
 		var redBarSprite = this.game.add.sprite(205, 100, 'redbar');
 		redBarSprite.anchor.setTo(0.0, 0.0);
-	    redBarSprite.scale.setTo(healthBarSpriteSize, healthBarSpriteSize);
+	    redBarSprite.scale.setTo(player_settings.health_bar.scale, 
+	    						 player_settings.health_bar.scale);
 		
 	    var bodyInside = new p2.Body({
 				name: "healthBarInside",
 				mass: 0, /* STATIC body */
 				
 				//Position must be in the right distance from reference (player)
-				position: [referenceBody.position[0] - redBarSprite.width/2.0, referenceBody.position[1] - 0.5*referenceHeight]
+				position: [referenceBody.position[0] - redBarSprite.width/2.0,
+							 referenceBody.position[1] - 0.5*referenceHeight]
 			});
 	    bodyInside.angle = 0;
 		
@@ -151,18 +147,20 @@ var EntityFactory = {
 		entityInside.components.add(new FollowComponent(referenceSprite));
 
 	    /* GameEngine needs an ID, now is set randomly */
-		var entityOutline = new Entity(18); //MUST FIX IT
+		var entityOutline = new Entity(UUID(), "healthBarOutline");
 
 		var blackBoxSprite = this.game.add.sprite(205, 100, 'blackbox');
 		blackBoxSprite.anchor.setTo(0.0, 0.0);
-		blackBoxSprite.scale.setTo(healthBarSpriteSize, healthBarSpriteSize);
+		blackBoxSprite.scale.setTo(player_settings.health_bar.scale,
+									 player_settings.health_bar.scale);
 	    
 	    var bodyOutline = new p2.Body({
 				name: "healthBarOutline",
 				mass: 0, /* STATIC body */
 
 				//Position must be in the right distance from reference (player)
-				position: [referenceBody.position[0] - blackBoxSprite.width/2.0, referenceBody.position[1] - 0.5*referenceHeight]
+				position: [referenceBody.position[0] - blackBoxSprite.width/2.0,
+							 referenceBody.position[1] - 0.5*referenceHeight]
 			});
 		bodyOutline.angle = 0;
 	    
@@ -189,7 +187,7 @@ var EntityFactory = {
 	        });
 		body.entity = entity;
 
-	    var shape = new p2.Rectangle(data.width, data.height); ////change to correct size
+	    var shape = new p2.Rectangle(data.width, data.height);
 	    shape.collisionGroup = STRONGHOLD;
 		shape.collisionMask = PLAYER | BULLET;
 		body.addShape(shape);

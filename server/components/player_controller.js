@@ -25,7 +25,7 @@ Player.prototype.update = function() {}
 Player.prototype.onDamage = function(amount, attacker) {
 	this.playerHeath -= amount;
 	//check if player died;
-	// console.log("Player lost life!");
+	console.log("Player lost life!");
 }
 
 module.exports = Player;///////////////////// Send these to a data file /////////////////////////////

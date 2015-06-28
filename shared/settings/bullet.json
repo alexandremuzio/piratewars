@@ -1,0 +1,11 @@
+{
+	"key" : "bullet",
+	"physics" :
+		{
+			"mass": 0.0002,
+			"velocity" : 500
+		},
+	"radius" : 3,
+	"damage" : 30,
+	"survival_time" : 2000
+}

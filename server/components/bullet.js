@@ -3,12 +3,13 @@
 var BaseComponent = require('../../shared/components/bullet');
 var GameEngine = require('../../shared/game_engine');
 
-///////////////////// Send these to a data file /////////////////////////////
-var bulletDamage = 30;
+var bullet_settings = require('../../shared/settings/bullet.json');
 
 function BulletComponent() {
 	BaseComponent.apply(this);
 	this.sent = false;
+
+	this.bulletDamage = bullet_settings.damage;
 }
 
 ///
@@ -42,13 +43,13 @@ BulletComponent.prototype.createCollisionHandler = function() {
         var bodyA = event.bodyA;
         var bodyB = event.bodyB;
 
-        console.log("Colliding %s with %s", bodyA.entity.key, bodyB.entity.key);
+        // console.log("Colliding %s with %s", bodyA.entity.key, bodyB.entity.key);
 
         // console.log("Impacting!!");
         if((bodyA.id == body.id || bodyB.id == body.id)){
         	var playerEntity = (bodyA.id != body.id ) ? bodyA.entity : bodyB.entity;
-        	playerEntity.damage(bulletDamage, this.owner);
-        	console.log("Bullet collided");
+        	playerEntity.damage(this.bulletDamage, this.owner);
+        	// console.log("Bullet collided");
         }
     });
 };

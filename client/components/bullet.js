@@ -14,7 +14,7 @@ BulletComponent.prototype.constructor = BulletComponent;
 
 BulletComponent.prototype.init = function() {
 	this.currentTime = new Date();
-	this.createCollisionHandler();
+	// this.createCollisionHandler();
 }
 
 BulletComponent.prototype.update = function() {
@@ -30,22 +30,22 @@ BulletComponent.prototype.update = function() {
 	}
 };
 
-BulletComponent.prototype.createCollisionHandler = function() {
-	var body = this.owner.components.get("physics").body;
-	var world = GameEngine.getInstance().world;
+// BulletComponent.prototype.createCollisionHandler = function() {
+// 	var body = this.owner.components.get("physics").body;
+// 	var world = GameEngine.getInstance().world;
 
-	world.on("beginContact", function(event){
-        var bodyA = event.bodyA;
-        var bodyB = event.bodyB;
+// 	world.on("beginContact", function(event){
+//         var bodyA = event.bodyA;
+//         var bodyB = event.bodyB;
 
-        console.log("Colliding %s with %s", bodyA.entity.key, bodyB.entity.key);
+//         console.log("Colliding %s with %s", bodyA.entity.key, bodyB.entity.key);
 
-        // console.log("Impacting!!");
-        if((bodyA.id == body.id || bodyB.id == body.id)){
-        	var playerEntity = (bodyA.id != body.id ) ? bodyA.entity : bodyB.entity;
-        	// playerEntity.damage(bulletDamage, this.owner);
-        	console.log("Bullet collided");
-        }
-    });
-};
+//         // console.log("Impacting!!");
+//         if((bodyA.id == body.id || bodyB.id == body.id)){
+//         	var playerEntity = (bodyA.id != body.id ) ? bodyA.entity : bodyB.entity;
+//         	// playerEntity.damage(bulletDamage, this.owner);
+//         	console.log("Bullet collided");
+//         }
+//     });
+// };
 module.exports = BulletComponent;

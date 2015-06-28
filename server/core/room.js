@@ -4,6 +4,7 @@ var _ = require('underscore');
 var Client = require('./client.js');
 var SnapshotManager = require('../../shared/core/snapshot_manager');
 var GameEngine = require('../../shared/game_engine.js');
+var EntityFactory = require('./entity_factory');
 
 function Room(socket) {
 	this.clients = [];
@@ -13,8 +14,14 @@ function Room(socket) {
 
 Room.prototype.init = function() {
 	this._socket.sockets.on('connect', this.onConnection.bind(this));
+	this.createInitialEntities();
     setInterval(this.gameLoop.bind(this), 1000/60);
     setInterval(this.sendSyncToClients.bind(this), 1000/20);
+}
+
+Room.prototype.createInitialEntities = function() {
+	EntityFactory.createStronghold(0);
+	EntityFactory.createStronghold(1);
 }
 
 Room.prototype.onConnection = function(socket) {

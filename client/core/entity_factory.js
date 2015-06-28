@@ -17,6 +17,7 @@ var HealthBarComponent = require('../components/health_bar.js');
 var TextComponent = require('../components/text.js');
 var FollowComponent = require('../components/follow.js');
 
+var stronghold_settings = require('../../shared/settings/stronghold.json');
 var physics_settings = require('../../shared/settings/boats/default_boat/physics.json');
 ///////////////////// Send these to a data file /////////////////////////////
 var playerSpriteSize = 0.2;
@@ -26,6 +27,8 @@ var healthBarSpriteSize = 0.2;
 //collision groups
 var PLAYER = Math.pow(2,0);
 var BULLET = Math.pow(2,1);
+var STRONGHOLD = Math.pow(2,2);
+
 
 var EntityFactory = {
 	init : function (data) {
@@ -59,7 +62,7 @@ var EntityFactory = {
 
 		var shape = new p2.Rectangle(sprite.width, sprite.height);
 		shape.collisionGroup = PLAYER;
-		shape.collisionMask = PLAYER;
+		shape.collisionMask = PLAYER | STRONGHOLD;
 	    body.addShape(shape);
 	    body.damping = physics_settings.linear_damping;
     	body.angularDamping = physics_settings.angular_damping
@@ -99,7 +102,7 @@ var EntityFactory = {
 
 		var shape = new p2.Rectangle(sprite.width, sprite.height);
 		shape.collisionGroup = PLAYER;
-		shape.collisionMask = PLAYER;
+		shape.collisionMask = PLAYER | STRONGHOLD;
 	    body.addShape(shape);
 	    body.damping = physics_settings.linear_damping;
     	body.angularDamping = physics_settings.angular_damping
@@ -163,7 +166,38 @@ var EntityFactory = {
 		entityOutline.components.add(new PhysicsComponent(bodyOutline));
 		entityOutline.components.add(new SpriteComponent(blackBoxSprite));
 		entityOutline.components.add(new FollowComponent(referenceSprite));
-	}
+	},
+
+	createStronghold : function(index) {
+		var data = stronghold_settings.bases[index];
+
+		var entity = new Entity(data.id, 'stronghold');
+
+		var sprite = this.game.add.sprite(data.initialPos.x, data.initialPos.x, 'stronghold');
+		sprite.anchor.setTo(0.5, 0.5); // Default anchor at the center
+		sprite.width = data.width;
+		sprite.height = data.height;
+	    sprite.tint = data.color;
+
+		var body = new p2.Body({
+	            name: "stronghold",
+	            type: p2.Body.STATIC,
+	            position: [data.initialPos.x, data.initialPos.y]
+	        });
+		body.entity = entity;
+
+	    var shape = new p2.Rectangle(data.width, data.height); ////change to correct size
+	    shape.collisionGroup = STRONGHOLD;
+		shape.collisionMask = PLAYER | BULLET;
+		body.addShape(shape);
+
+		entity.components.add(new NetworkComponent(this.socket));
+		entity.components.add(new SyncComponent());
+		entity.components.add(new PhysicsComponent(body));
+		entity.components.add(new SpriteComponent(sprite));
+
+		return entity;
+	},
 };
 
 module.exports = EntityFactory;

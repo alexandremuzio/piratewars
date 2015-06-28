@@ -15,6 +15,7 @@ var bulletMass = 0.2;
 //collision groups
 var PLAYER = Math.pow(2,0);
 var BULLET = Math.pow(2,1);
+var STRONGHOLD = Math.pow(2,2);
 
 var EntityCreator = {
 	init : function (game) {
@@ -48,7 +49,7 @@ var EntityCreator = {
 
 		var shape = new p2.Circle(5); //////set radius!!
 		shape.collisionGroup = BULLET;
-		shape.collisionMask = PLAYER;
+		shape.collisionMask = PLAYER | STRONGHOLD;
 		body.addShape(shape);
 
 		body.angle = angle;

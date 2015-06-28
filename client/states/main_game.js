@@ -116,6 +116,8 @@ PlayState.prototype.assignNetworkCallbacks = function() {
 
 PlayState.prototype.createInitialEntities = function() {
     // Create turrets, bases, creeps...
+    EntityFactory.createStronghold(0);
+    EntityFactory.createStronghold(1);
 }
 
 PlayState.prototype.createTexts = function() {

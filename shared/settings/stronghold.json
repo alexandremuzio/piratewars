@@ -1,0 +1,21 @@
+{
+	"bases" : [
+		{
+			"id" : 1,
+			"name" : "A",
+			"initialPos" : {"x": 100, "y": 1900},
+			"width": 200,
+			"height" : 200,
+			"color" : "0xff0000"
+		},
+
+		{
+			"id" : 2,
+			"name" : "B",
+			"initialPos" : {"x": 1900, "y": 100},
+			"width": 200,
+			"height" : 200,
+			"color" : "0x0000ff"
+		}
+	]
+}

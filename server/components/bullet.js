@@ -41,7 +41,7 @@ BulletComponent.prototype.createCollisionHandler = function() {
 	world.on("impact", function(event){
         var bodyA = event.bodyA;
         var bodyB = event.bodyB;
-        // console.log("Impacting!!");
+        console.log("Impacting!!");
         if((bodyA.id == body.id || bodyB.id == body.id)){
         	var playerEntity = (bodyA.id != body.id ) ? bodyA.entity : bodyB.entity;
         	playerEntity.damage(bulletDamage, this.owner);

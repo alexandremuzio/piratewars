@@ -33,6 +33,7 @@ var PlayerFactory = {
 		this.socket = data.socket;
 	},
 
+	//TODO pass the start position to the player
 	createLocalPlayer : function(data) {
 		console.log("inside entity factory createLocalPlayer")
 		var entity = new Entity(data.id, "player"),
@@ -100,10 +101,13 @@ var PlayerFactory = {
 		// Subentitys
 		// Creating HealthBar subentity
 		var healthBar = this.createHealthBar(data.id+'-health_bar');
-		healthBar.setBaseEntity(entity, 0, -30, 0);
+		healthBar.setBaseEntity(entity, 0,
+								-player_settings.height 
+									- player_settings.health_bar.relativeYtoTop,
+								0);
 		healthBar.setFollowBaseEntityAngle(false);
 
-		var cannonsManager = this.createCannonsManager(data.id+'-cannons_manager');
+		var cannonsManager = this.createCannonsManager(data.id+'-cannons_manager')
 		cannonsManager.setBaseEntity(entity, 0, 0, 0);
 
 		return entity;
@@ -121,8 +125,8 @@ var PlayerFactory = {
 			blood: {
         		sprite: entityGroup.create(205, 205, 'redbar'),
 				scale: { 
-	        		x: player_settings.health_bar.scale,
-	        		y: player_settings.health_bar.scale
+	        		x: player_settings.health_bar.scale.x,
+	        		y: player_settings.health_bar.scale.y
         		},
 	        	anchor: {
 	        		x: 0.0,
@@ -133,8 +137,8 @@ var PlayerFactory = {
 			outline: {
         		sprite: entityGroup.create(205, 205, 'blackbox'),
 				scale: { 
-	        		x: player_settings.health_bar.scale,
-	        		y: player_settings.health_bar.scale
+	        		x: player_settings.health_bar.scale.x,
+	        		y: player_settings.health_bar.scale.y
         		},
 	        	anchor: {
 	        		x: 0.0,
@@ -163,20 +167,28 @@ var PlayerFactory = {
 		// Creating cannons subentitys
 		for( var i = 0; i < 3; i++ ){
 			var cannon = this.createCannon(id+'-cannon_'+(i+1), 'cannon_'+(i+1));
-			cannon.setBaseEntity(entity, x0 + xInterval*i, -y0, -90);
+			cannon.setBaseEntity(entity,
+									player_settings.cannon.x0
+									+ player_settings.cannon.xInterval*i,
+									-player_settings.cannon.y0,
+									-90);
 			cannonsManagerController.addLeft(cannon);
 		}
 		for( var i = 0; i < 3; i++ ){
 			var cannon = this.createCannon(id+'-cannon_'+(i+4), 'cannon_'+(i+4));
-			cannon.setBaseEntity(entity, x0 + xInterval*i, y0, 90);
+			cannon.setBaseEntity(entity,
+							  		player_settings.cannon.x0
+							  		+ player_settings.cannon.xInterval*i,
+							  		player_settings.cannon.y0,
+							  		90);
 			cannonsManagerController.addRight(cannon);
 		}
+
 		return entity;
 	},
 
 	createCannon : function(id, key) {
-		var entity = new Entity(id, key),
-		    entityGroup, sprites_info;
+		var entity = new Entity(id, key);
 
 		entityGroup = this.game.add.group();
 
@@ -184,8 +196,8 @@ var PlayerFactory = {
 			boat: {
 				sprite: entityGroup.create(205, 100, 'cannon_0'),
 				scale: { 
-	        		x: 0.15,
-	        		y: 0.15
+	        		x: player_settings.cannon.scale.x,
+	        		y: player_settings.cannon.scale.y
         		},
 	        	anchor: {
 	        		x: 0.5,
@@ -200,7 +212,8 @@ var PlayerFactory = {
 
 		// Creating bulletInitialTransform subentity
 		var bulletStart = this.createEmptyEntity(id+'-bullet_start', 'bullet_start');
-		bulletStart.setBaseEntity(entity, 15, 0, 0);
+		bulletStart.setBaseEntity(entity,
+								 player_settings.cannon.distFromCannon, 0, 0);
 
 		return entity;
 	},

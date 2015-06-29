@@ -24,7 +24,17 @@
 
 	"health_bar" :
 	{
-		"scale" : 0.2
+		"scale" : 0.2,
+		"relativeYtoTop" : 5
+	},
+
+	"cannon" :
+	{
+		"scale" : 0.15,
+		"x0" : -20,
+		"y0" : 8,
+		"xInterval" : 15,
+		"distFromCannon" : 15
 	},
 
 	"text" : 

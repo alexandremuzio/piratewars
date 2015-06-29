@@ -51,6 +51,16 @@ var PlayerFactory = {
 	        		y: 0.5
 	        	},
         		//tint: 0xff6600
+			},
+			dead_boat: {
+				sprite: entityGroup.create(100, 100, 'dead_boat'),
+				width: player_settings.width,
+	        	height: player_settings.height,
+	        	anchor: {
+	        		x: 0.5,
+	        		y: 0.5
+	        	},
+        		//tint: 0xff6600
 			}
 		};
 	    /* Player name, must be set by the user (MUST FIX) */

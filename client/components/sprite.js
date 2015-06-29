@@ -85,6 +85,13 @@ SpriteComponent.prototype.revive = function(key) {
 	}
 }
 
+SpriteComponent.prototype.play = function(key, animation, framesPerSec, loop) {
+    var sprite = this._sprites[key];
+    if (sprite) {
+        sprite.animations.play(animation, framesPerSec, loop);
+    }
+}
+
 SpriteComponent.prototype.onEntityDestroy = function() {
 	_.each(this._sprites, function(sprite) {
         sprite.destroy();

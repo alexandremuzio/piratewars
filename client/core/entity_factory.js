@@ -55,6 +55,18 @@ var EntityFactory = {
 	        		y: 0.5
 	        	},
         		tint: 0xff6600
+			},
+			dead_boat: {
+				sprite: entityGroup.create(100, 100, 'dead_boat'),
+				scale: { 
+	        		x: playerSpriteSize,
+	        		y: playerSpriteSize
+        		},
+	        	anchor: {
+	        		x: 0.5,
+	        		y: 0.5
+	        	},
+        		tint: 0xff6600
 			}
 		};
 		console.log(sprites_info);
@@ -77,8 +89,7 @@ var EntityFactory = {
 	        });
 		body.entity = entity;
 
-		/// FIX IT !!!
-		var shape = new p2.Rectangle(1.0, 1.0);
+		var shape = new p2.Rectangle(sprites_info.boat.sprite.width, sprites_info.boat.sprite.height);
 		//var shape = new p2.Rectangle(sprite.width, sprite.height);
 		shape.collisionGroup = PLAYER;
 		shape.collisionMask = PLAYER;
@@ -135,7 +146,7 @@ var EntityFactory = {
 		body.entity = entity;
 
 		/// FIX IT !!!
-		var shape = new p2.Rectangle(1.0, 1.0);
+		var shape = new p2.Rectangle(sprites_info.boat.sprite.width, sprites_info.boat.sprite.height);
 		//var shape = new p2.Rectangle(sprite.width, sprite.height);
 		shape.collisionGroup = PLAYER;
 		shape.collisionMask = PLAYER;
@@ -150,7 +161,7 @@ var EntityFactory = {
 		entity.components.add(new PhysicsComponent(body));
 		entity.components.add(new SpriteComponent(sprites_info));
 		entity.components.add(new SyncComponent());
-		entity.components.add(new PlayerControllerComponent());
+		//entity.components.add(new PlayerControllerComponent());
 		entity.components.add(new CannonComponent());
 		entity.components.add(new CreatorComponent());
 		entity.components.add(new LifeComponent());

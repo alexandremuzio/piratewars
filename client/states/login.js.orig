@@ -68,14 +68,25 @@ LoginState.prototype.loadAssets = function() {
     thisGame.load.image('redbar', 'assets/redbar.png');
     /* ------------------------------------------------ */
 
+<<<<<<< HEAD
+=======
+    /* ------------- base asset ----------------------- */
+    thisGame.load.image('base', 'assets/base.png');
+    /* ------------------------------------------------ */    
+    
     //Spritesheet (name, directory, width of each sprite, height of each, how many sprites)
     thisGame.load.spritesheet('dead_boat', 'assets/dead_boat.png', 306, 107, 2);
-
+    
+>>>>>>> Adding EZGUI
     thisGame.load.tilemap('backgroundmap', 'assets/map.json', null, Phaser.Tilemap.TILED_JSON);
     thisGame.load.image('gameTiles', 'assets/watertile.png');
     thisGame.load.image('boat_0', 'assets/boat_0.png');
     thisGame.load.image('bullet', 'assets/bullet.png');
     thisGame.load.image('red_arrow', 'assets/red_arrow.png');
+<<<<<<< HEAD
+    thisGame.load.image('stronghold', 'assets/stronghold.png');
+	thisGame.load.image('cannon_0', 'assets/cannon_0.png');
+=======
     thisGame.load.image('/gui/assets/img/lvlcomplete.png', '/gui/assets/img/lvlcomplete.png');
     thisGame.load.image('respawnDialogBox', '/gui/assets/img/respawnDialogBox.png');
     thisGame.load.image("/gui/assets/img/star2.png", "/gui/assets/img/star2.png");
@@ -89,6 +100,7 @@ LoginState.prototype.loadTheme = function() {
     
         //EZGUI.components.respawnTime.text = '9';
     });
+>>>>>>> Adding EZGUI
 };
 
 LoginState.prototype.setupGUI = function() {

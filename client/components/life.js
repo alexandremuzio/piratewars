@@ -14,6 +14,17 @@ LifeComponent.prototype.constructor = LifeComponent;
 ///
 
 LifeComponent.prototype.init = function() {
+	this_.tick = 0;//Just for tests
+}
+
+//Update just for tests
+LifeComponent.prototype.update = function() {
+	this._tick++;
+	if(this._tick > 200) {
+		this._value -= 0.2*this._maxValue;
+		this._tick = 0;
+		if(this._value < 0) this._value = 0;
+	}
 }
 
 LifeComponent.prototype.getLife = function() {

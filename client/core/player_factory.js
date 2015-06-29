@@ -40,7 +40,6 @@ var PlayerFactory = {
 
 		entityGroup = this.game.add.group();
 
-		console.log('Antes de sprites_info');
 		sprites_info = {
 			boat: {
         		sprite: entityGroup.create(100, 100, 'boat_0'),
@@ -51,7 +50,7 @@ var PlayerFactory = {
 	        		y: 0.5
 	        	},
         		//tint: 0xff6600
-			},
+			}/*,
 			dead_boat: {
 				sprite: entityGroup.create(100, 100, 'dead_boat'),
 				width: player_settings.width,
@@ -61,7 +60,7 @@ var PlayerFactory = {
 	        		y: 0.5
 	        	},
         		//tint: 0xff6600
-			}
+			}*/
 		};
 	    /* Player name, must be set by the user (MUST FIX) */
 	    var text = this.game.add.text(0, 0, "Edgard Yano", {
@@ -172,7 +171,6 @@ var PlayerFactory = {
 			cannon.setBaseEntity(entity, x0 + xInterval*i, y0, 90);
 			cannonsManagerController.addRight(cannon);
 		}
-
 		return entity;
 	},
 

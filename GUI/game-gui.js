@@ -2,7 +2,7 @@ var respawnJSON = {
     id: "respawnDialogBox",
 	component: "Window",
 	image: "respawnDialogBox",
-	header: { position: { x: 0, y: -40 }, height: 100, image: "/gui/assets/img/lvlcomplete.png", },
+	header: { position: { x: 0, y: -40 }, height: 100, image: 'lvlcomplete', },
 	padding: 4,
 	position: { x: 200, y: 200 },
 	anchor: { x: 0.5, y: 0.5 },

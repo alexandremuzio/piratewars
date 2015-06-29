@@ -5,14 +5,13 @@ var GameEngine = require('../../shared/game_engine.js');
 var PlayerFactory = require('../core/player_factory.js');
 var GameComponent = require('../../shared/core/component.js');
 var SnapshotManager = require('../../shared/core/snapshot_manager.js');
-var RespawnJSON = require('../../gui/game-gui.js');
+var RespawnJSON = require('../../GUI/game-gui.js');
 
 //Private variables
-var thisGame;
 var nextState;
 
 function LoginState(game, state) {
-    thisGame = game;
+    this.game = game;
     nextState = state;
 };
 
@@ -40,10 +39,11 @@ LoginState.prototype.create = function() {
 
 //Add next state functions to Enter Key or Login button
 LoginState.prototype.addNextStateEvents = function() {
+    var that = this.game;
     document.getElementById("loginbtn").addEventListener("click", function() {
         document.getElementById("initialScreen").style.display = "none";
         var nickname = document.getElementById("nickname").value;
-        thisGame.state.start(nextState, true, false, nickname);
+        that.state.start(nextState, true, false, nickname);
     });
 
     document.getElementById('nickname').addEventListener('keydown', function(event) {
@@ -51,7 +51,7 @@ LoginState.prototype.addNextStateEvents = function() {
             console.log('Pressed enter');
             document.getElementById("initialScreen").style.display = "none";
             var nickname = document.getElementById("nickname").value;
-            thisGame.state.start(nextState, true, false, nickname);
+            that.state.start(nextState, true, false, nickname);
         }
     });
 };
@@ -59,31 +59,36 @@ LoginState.prototype.addNextStateEvents = function() {
 //Switch to next state
 LoginState.prototype.switchState = function(param) {
     console.log('Going to ' + nextState);
-    thisGame.state.start(nextState, true, false, param);
+    this.game.state.start(nextState, true, false, param);
 }
 
 LoginState.prototype.loadAssets = function() {
     /* ------------- health bar assets -----------------*/
-    thisGame.load.image('blackbox', 'assets/blackbox.png');
-    thisGame.load.image('redbar', 'assets/redbar.png');
+    this.game.load.image('blackbox', 'assets/blackbox.png');
+    this.game.load.image('redbar', 'assets/redbar.png');
     /* ------------------------------------------------ */
 
     //Spritesheet (name, directory, width of each sprite, height of each, how many sprites)
-    thisGame.load.spritesheet('dead_boat', 'assets/dead_boat.png', 306, 107, 2);
+    this.game.load.spritesheet('dead_boat', 'assets/dead_boat.png', 306, 107, 2);
 
-    thisGame.load.tilemap('backgroundmap', 'assets/map.json', null, Phaser.Tilemap.TILED_JSON);
-    thisGame.load.image('gameTiles', 'assets/watertile.png');
-    thisGame.load.image('boat_0', 'assets/boat_0.png');
-    thisGame.load.image('bullet', 'assets/bullet.png');
-    thisGame.load.image('red_arrow', 'assets/red_arrow.png');
-    thisGame.load.image('/gui/assets/img/lvlcomplete.png', '/gui/assets/img/lvlcomplete.png');
-    thisGame.load.image('respawnDialogBox', '/gui/assets/img/respawnDialogBox.png');
-    thisGame.load.image("/gui/assets/img/star2.png", "/gui/assets/img/star2.png");
-    thisGame.load.image("/gui/assets/img/orange-btn.png", "/gui/assets/img/orange-btn.png");
+    this.game.load.tilemap('backgroundmap', 'assets/map.json', null, Phaser.Tilemap.TILED_JSON);
+    this.game.load.image('gameTiles', 'assets/watertile.png');
+    this.game.load.image('boat_0', 'assets/boat_0.png');
+    this.game.load.image('bullet', 'assets/bullet.png');
+    this.game.load.image('red_arrow', 'assets/red_arrow.png');
+    this.game.load.image('stronghold', 'assets/stronghold.png');
+    this.game.load.image('cannon_0', 'assets/cannon_0.png');
+    
+    /* ----------------- GUI assets --------------------*/
+    this.game.load.image('lvlcomplete', 'assets/GUI/img/lvlcomplete.png');
+    this.game.load.image('respawnDialogBox', 'assets/GUI/img/respawnDialogBox.png');
+    this.game.load.image('star2', "assets/GUI/img/star2.png");
+    this.game.load.image('orange-btn', "assets/GUI/img/orange-btn.png");
+    /* ------------------------------------------------ */
 };
 
 LoginState.prototype.loadTheme = function() {
-    EZGUI.Theme.load(['/gui/assets/metalworks-theme/metalworks-theme.json'], function () {
+    EZGUI.Theme.load(['assets/GUI/metalworks-theme/metalworks-theme.json'], function () {
         var dlg1  = EZGUI.create(RespawnJSON, 'metalworks');
         dlg1.visible=false;
     

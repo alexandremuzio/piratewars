@@ -44,7 +44,7 @@ SyncComponent.prototype.sendSyncToServer = function() {//update = function() {
 SyncComponent.prototype.onSyncronization = function(message) {
 	// MPTest
 	// console.log('--- onSyncronization called --- #############################');
-	// console.log(transform);
+	// console.log(message.transform);
 	this.owner.transform.setTransform(message.transform);
 	this.owner.components.get("health").setHealth(message.health); //TO DO
 }

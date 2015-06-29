@@ -23,7 +23,6 @@ LifeComponent.prototype.getMaxHealth = function() {
 }
 
 LifeComponent.prototype.setHealth = function(newHealth) {
-	console.log(this.currentHealth);
 	this.currentHealth = newHealth;
 }
 module.exports = LifeComponent;

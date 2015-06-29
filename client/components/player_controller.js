@@ -7,7 +7,7 @@ function Player() {
 	this.key = "player";
 	this._state = null; // States: PREGAME: 0, ALIVE: 1, DEAD: 2
 	this._lastState = null;
-	tihs._respawnTime = null;
+	this._respawnTime = null;
 };
 
 ///
@@ -16,11 +16,10 @@ Player.prototype.constructor = Player;
 ///
 
 Player.prototype.init = function() {
-	var deadPlayerSprite = this.owner.components.get('sprite').getSprite('dead_boat');
+	//var deadPlayerSprite = this.owner.components.get('sprite').getSprite('dead_boat');
 
-	deadPlayerSprite.animations.add('deadBoatAnim');
-	deadPlayerSprite.kill();
-
+	//deadPlayerSprite.animations.add('deadBoatAnim');
+	//deadPlayerSprite.kill();
 	this._state = PlayerEnum.PREGAME;
 }
 

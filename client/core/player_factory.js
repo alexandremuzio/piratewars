@@ -44,7 +44,7 @@ var PlayerFactory = {
 	    // sprite.tint = 0xff6600;
 	    
 	    /* Player name, must be set by the user (MUST FIX) */
-	    var text = this.game.add.text(0, 0, ".", {
+	    var text = this.game.add.text(0, 0, "Edgard Yano", {
 		        font: player_settings.text.font,
 		        fill: player_settings.text.fill,
 		        align: player_settings.text.allign

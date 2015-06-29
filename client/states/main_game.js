@@ -84,6 +84,8 @@ PlayState.prototype.applySyncFromServer = function() {
                 // console.log("creating remote player");
                 PlayerFactory.createRemotePlayer({ id: key });
             }
+
+            // console.log(lastSnapshot.players[key].health);
             GameEngine.getInstance().entities[key].sync(lastSnapshot.players[key]);
         }
         for (var key in lastSnapshot.bullets) {

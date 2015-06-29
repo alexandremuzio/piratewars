@@ -14,15 +14,16 @@ LifeComponent.prototype.constructor = LifeComponent;
 LifeComponent.prototype.init = function() {
 }
 
-LifeComponent.prototype.getLife = function() {
-	return this._value;
+LifeComponent.prototype.getHealth = function() {
+	return this.currentHealth;
 }
 
-LifeComponent.prototype.getMaxLife = function() {
-	return this._maxHealth;
+LifeComponent.prototype.getMaxHealth = function() {
+	return this.maxHealth;
 }
 
-LifeComponent.prototype.setLife = function(value) {
-	this._value = value;
+LifeComponent.prototype.setHealth = function(newHealth) {
+	console.log(this.currentHealth);
+	this.currentHealth = newHealth;
 }
 module.exports = LifeComponent;

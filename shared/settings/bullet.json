@@ -6,6 +6,6 @@
 			"velocity" : 50
 		},
 	"radius" : 5,
-	"damage" : 30,
+	"damage" : 15,
 	"survival_time" : 2000
 }

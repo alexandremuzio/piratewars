@@ -32,7 +32,9 @@ var PlayerFactory = {
 		var body = new p2.Body({
 	            name: "player",
 	            mass: player_settings.physics.mass,
-	            position: [100, 100]
+	            position: [100, 100],
+	            damping: player_settings.physics.linear_damping,
+	            angularDamping: player_settings.physics.angular_damping
 	        });
 		body.entity = entity;
 

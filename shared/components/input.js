@@ -17,6 +17,7 @@ function InputComponent() {
     this._clickedPointInCycle = false;
     this._centerToClickedPointVector;
     this.initNewTrajectoryCalled = false;
+    this._actualForce = 0;
 };
 
 ///
@@ -30,21 +31,21 @@ InputComponent.prototype.processCommand = function(command) {
 
     this.processAttack(command);
 
-    if( this.hasArrowCommand(command)){
-        if( this.followingTrajectory ){ // Move by arrows => destroy current trajectory
-            this.followingTrajectory = false;
-        }
+    // if( this.hasArrowCommand(command)){
+    //     if( this.followingTrajectory ){ // Move by arrows => destroy current trajectory
+    //         this.followingTrajectory = false;
+    //     }
         this.processArrowCommand(command);
-    }
+    // }
     // else if( command.mouseLeftButtonDown ){ // Mouse click
     //     this.initNewTrajectory(command); /////////////////////////////////////////////////////////////
     // }
 
-    if( this.followingTrajectory ){
-        this.followTrajectoryUpdate();
-    }
+    // if( this.followingTrajectory ){
+    //     this.followTrajectoryUpdate();
+    // }
 
-    this.correctVelocity();
+    // this.correctVelocity();
 };
 
 InputComponent.prototype.processAttack = function(command) {
@@ -84,8 +85,8 @@ InputComponent.prototype.hasArrowCommand = function(command) {
 };
 
 InputComponent.prototype.processArrowCommand = function(command) {
-    var velocity = this.getVelocity();
-    var velAngle = this.getAngleFromVector(this.getVelocityVector);
+    // var velocity = this.getVelocity();
+    // var velAngle = this.getAngleFromVector(this.getVelocityVector);
 
     // if( Math.abs(this.getDeltaAngleFromAngles( velAngle, this._body.angle)) > 90 ) // Reverse gear on
     //     velocity *= -1;
@@ -97,28 +98,30 @@ InputComponent.prototype.processArrowCommand = function(command) {
     if (command.arrowUp) {
         // this._body.force[0] = physics_settings.linear_force*Math.cos(this._body.angle*Math.PI/180);
         // this._body.force[1] = physics_settings.linear_force*Math.sin(this._body.angle*Math.PI/180);
-        velocity += physics_settings.velocity_step; 
+        this._actualForce += physics_settings.velocity_step; 
     }
     if(command.arrowDown){
         // this._body.force[0] = -physics_settings.linear_force*Math.cos(this._body.angle*Math.PI/180);
         // this._body.force[1] = -physics_settings.linear_force*Math.sin(this._body.angle*Math.PI/180);
-        velocity -= physics_settings.velocity_step; 
+        this._actualForce -= physics_settings.velocity_step; 
     }
     
-    if (velocity < physics_settings.min_velocity) { velocity = physics_settings.min_velocity; }
-    if (velocity > physics_settings.max_velocity) { velocity = physics_settings.max_velocity; }
+    if (this._actualForce < physics_settings.min_velocity) { this._actualForce = physics_settings.min_velocity; }
+    if (this._actualForce > physics_settings.max_velocity) { this._actualForce = physics_settings.max_velocity; }
 
     if (command.arrowLeft && curveOn) {
         // Temp
-        this._body.angle += -(physics_settings.angle_step + velocity*physics_settings.turn_ratio);
+        // this._body.angle += -(physics_settings.angle_step + velocity*physics_settings.turn_ratio);
+        this._body.angularForce = -physics_settings.angular_force;
     }
     if (command.arrowRight && curveOn) {
         // Temp
-        this._body.angle += (physics_settings.angle_step + velocity*physics_settings.turn_ratio);
+        // this._body.angle += (physics_settings.angle_step + velocity*physics_settings.turn_ratio);        
+        this._body.angularForce = physics_settings.angular_force;
     }
         
-    this._body.velocity[0] = velocity*Math.cos(this._body.angle);
-    this._body.velocity[1] = velocity*Math.sin(this._body.angle);
+    this._body.force[0] = this._actualForce*Math.cos(this._body.angle);
+    this._body.force[1] = this._actualForce*Math.sin(this._body.angle);
     // console.log(this._body.getAABB().lowerBound)
 };
 

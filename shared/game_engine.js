@@ -45,6 +45,30 @@ var GameEngine = (function () {
 	        }
    	 	});
 
+		// Adding boundary lines to the map
+	 	var top = new p2.Body({
+	        angle: 0
+	    });
+	    var left = new p2.Body({
+	        angle: Math.PI * 3 / 2
+	    });
+	    var bottom = new p2.Body({
+	        position: [0, 2000],
+	        angle: Math.PI
+	    });
+	    var right = new p2.Body({
+	        position: [2000, 0],
+	        angle: Math.PI / 2
+	    });
+	    top.addShape(new p2.Plane());
+	    left.addShape(new p2.Plane());
+	    bottom.addShape(new p2.Plane());
+	    right.addShape(new p2.Plane());
+	    _world.addBody(top);
+	    _world.addBody(left);
+	    _world.addBody(bottom);
+	    _world.addBody(right);
+
 
 		return {
 			// Public properties and functions

@@ -50,7 +50,6 @@ PlayState.prototype.create = function() {
     this.assignAssets();
     //this.game.map.setCollisionBetween(1, 100000, true, 'islandsLayer');
     this.createTexts();
-    this.createBoundaryLines();
     this.createInitialEntities(); 
     this.assignNetworkCallbacks();
     
@@ -114,31 +113,6 @@ PlayState.prototype.assignAssets = function() {
 PlayState.prototype.assignNetworkCallbacks = function() {    
     this.socket.on('game.sync', this.onGameSync.bind(this));
     this.socket.on('player.create', this.onPlayerCreate.bind(this));
-}
-
-PlayState.prototype.createBoundaryLines = function() {
-    var top = new p2.Body({
-        angle: 0
-    });
-    var left = new p2.Body({
-        angle: Math.PI * 3 / 2
-    });
-    var bottom = new p2.Body({
-        position: [0, 2000],
-        angle: Math.PI
-    });
-    var right = new p2.Body({
-        position: [2000, 0],
-        angle: Math.PI / 2
-    });
-    top.addShape(new p2.Plane());
-    left.addShape(new p2.Plane());
-    bottom.addShape(new p2.Plane());
-    right.addShape(new p2.Plane());
-    GameEngine.getInstance().world.addBody(top);
-    GameEngine.getInstance().world.addBody(left);
-    GameEngine.getInstance().world.addBody(bottom);
-    GameEngine.getInstance().world.addBody(right);
 }
 
 PlayState.prototype.createInitialEntities = function() {

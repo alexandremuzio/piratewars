@@ -37,8 +37,12 @@ var GameEngine = (function () {
 	        // console.log("Colliding %s %s with %s %s", bodyA.entity.key, bodyA.entity.id, bodyB.entity.id, bodyB.entity.key);
 
 	        // console.log("Impacting!!");
-	        bodyA.entity.collision(bodyB.entity);
-	        bodyB.entity.collision(bodyA.entity);
+	        if (bodyA.entity) {
+	        	bodyA.entity.collision(bodyB.entity);
+	        }
+	        if (bodyB.entity) {
+	        	bodyB.entity.collision(bodyA.entity);
+	        }
    	 	});
 
 

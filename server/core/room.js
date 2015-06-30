@@ -25,8 +25,8 @@ Room.prototype.init = function() {
 }
 
 Room.prototype.createInitialEntities = function() {
-	PlayerFactory.createStronghold(0);
-	PlayerFactory.createStronghold(1);
+	this._stronghold0 = PlayerFactory.createStronghold(0);
+	this._stronghold1 = PlayerFactory.createStronghold(1);
 }
 
 Room.prototype.onConnection = function(socket) {
@@ -41,7 +41,7 @@ Room.prototype.gameLoop = function() {
 
 Room.prototype.preGameStateInit = function() {   
 	this.sendChangedStateToClients('preGame');
-	console.log("%d seconds: changed state to preGame!", this._preGameDuration/1000);
+	console.log("Changed state to preGame!");
 	this._startTime = new Date();
 }
 Room.prototype.preGameStateLoop = function() {
@@ -55,12 +55,13 @@ Room.prototype.preGameStateLoop = function() {
 Room.prototype.playingStateInit = function() {
 	this.sendChangedStateToClients('playing');
     this._sendSyncInterval = setInterval(this.sendSyncToClients.bind(this), 1000/20);
-	console.log("%d seconds: changed state to playing!", this._preGameDuration/1000);
+	console.log("Changed state to playing!");
 	this._startTime = new Date();
 }
 Room.prototype.playingStateLoop = function() {
 	var currentTime = new Date();
-	if (currentTime - this._startTime > this._preGameDuration) {
+	if (this._stronghold0.components.get('health').currentHealth <= 0 ||
+			this._stronghold1.components.get('health').currentHealth <= 0) {
 		this._gameState = this.endGameStateLoop;
 		clearInterval(this._sendSyncInterval);
 		this.endGameStateInit();
@@ -70,7 +71,7 @@ Room.prototype.playingStateLoop = function() {
 
 Room.prototype.endGameStateInit = function() {
 	this.sendChangedStateToClients('endGame');
-	console.log("%d seconds: changed state to endGame!", this._endGameDuration/1000);
+	console.log("Changed state to endGame!");
 	this._startTime = new Date();
 }
 Room.prototype.endGameStateLoop = function() {

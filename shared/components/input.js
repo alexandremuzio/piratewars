@@ -48,7 +48,7 @@ InputComponent.prototype.processCommand = function(command) {
 };
 
 InputComponent.prototype.processAttack = function(command) {
-    if( command.qKey  ){
+    if( command.qKey ){
         if (this.owner.components.get("cooldown").activate()) {
             var cannonsManager = this.owner.subentityManager.get('cannons_manager');
             var cannonsManagerController = cannonsManager.components.get("cannons_manager_controller");
@@ -60,6 +60,16 @@ InputComponent.prototype.processAttack = function(command) {
             var cannonsManager = this.owner.subentityManager.get('cannons_manager');
             var cannonsManagerController = cannonsManager.components.get("cannons_manager_controller");
             cannonsManagerController.shootRight();
+        }
+    }
+    if( command.spaceKey ){
+        // remove && this.owner.components.get('sprite')
+        if( this.owner.components.get("cooldown").mineActivate() && this.owner.components.get('sprite')){
+            var mineStartTransform = this.owner.subentityManager.get('mine_start').transform;
+            var mineStartPosition = mineStartTransform.getPosition();
+            var boatAngle = mineStartTransform.getAngle();
+            var boatVelocityArray = this.owner.components.get('physics').body.velocity;
+            this.owner.components.get('mine_generator').createMines(mineStartPosition, boatAngle, boatVelocityArray);
         }
     }
 };

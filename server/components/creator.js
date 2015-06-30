@@ -1,7 +1,7 @@
 'use strict'
 
 var BaseComponent = require('../../shared/core/component.js');
-var BulletFactory = require('../core/bullet_factory.js');
+var ProjectileFactory = require('../core/projectile_factory.js');
 
 function CreatorComponent() {
 	// console.log("inside CreatorComponent constr");

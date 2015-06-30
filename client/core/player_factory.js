@@ -18,6 +18,7 @@ var CannonsManagerController = require('../components/cannons_manager_controller
 var CannonController = require('../components/cannon_controller.js');
 var HealthComponent = require('../components/health');
 var StrongholdComponent = require('../components/stronghold');
+var MineGeneratorComponent = require('../components/mine_generator.js');
 
 var stronghold_settings = require('../../shared/settings/stronghold.json');
 var player_settings = require('../../shared/settings/player.json');
@@ -95,6 +96,7 @@ var PlayerFactory = {
 		entity.components.add(new SpriteComponent(sprites_info));
 		entity.components.add(new PlayerControllerComponent());
 		entity.components.add(new TextComponent(text));
+		entity.components.add(new MineGeneratorComponent());
 
 		// Subentitys
 		// Creating HealthBar subentity
@@ -108,6 +110,9 @@ var PlayerFactory = {
 
 		var cannonsManager = this.createCannonsManager(data.id+'-cannons_manager')
 		cannonsManager.setBaseEntity(entity, 0, 0, 0);
+
+		var mineStart = this.createEmptyEntity(data.id+'-mine_start', 'mine_start');
+		mineStart.setBaseEntity(entity, -40, 0, 0);
 
 		return entity;
 	},
@@ -149,6 +154,17 @@ var PlayerFactory = {
 				
 	    entity.components.add(new SpriteComponent(sprites_info));
 		entity.components.add(new HealthBarComponent());
+	   
+		return entity;
+	},
+
+	createHealthBarOutside: function(id, scale) {
+		var entity = new Entity(id, 'health_bar_outside');
+
+		var blackBoxSprite = this.game.add.sprite(205, 100, 'blackbox');
+		blackBoxSprite.anchor.setTo(0.5, 0.5);
+		blackBoxSprite.scale.setTo(healthBarSpriteSize, healthBarSpriteSize);
+		entity.components.add(new SpriteComponent(blackBoxSprite));
 
 		return entity;
 	},
@@ -159,6 +175,11 @@ var PlayerFactory = {
 		var cannonsManagerController = new CannonsManagerController();
 		entity.components.add(cannonsManagerController);
 
+		// Cannons parameters
+		var x0 = -20;
+		var y0 = 8;
+		var xInterval = 15;
+		// Creating cannons subentitys
 		for( var i = 0; i < 3; i++ ){
 			var cannon = this.createCannon(id+'-cannon_'+(i+1), 'cannon_'+(i+1));
 			cannon.setBaseEntity(entity,

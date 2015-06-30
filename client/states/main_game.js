@@ -3,7 +3,7 @@
 var _ = require('underscore');
 var GameEngine = require('../../shared/game_engine.js');
 var PlayerFactory = require('../core/player_factory.js');
-var BulletFactory = require('../core/bullet_factory.js');
+var ProjectileFactory = require('../core/projectile_factory.js');
 var GameComponent = require('../../shared/core/component.js');
 var SnapshotManager = require('../../shared/core/snapshot_manager.js');
 
@@ -23,7 +23,7 @@ function PlayState(game, socket) {
                  socket:    this.socket };
 
     PlayerFactory.init(data);
-    BulletFactory.init(data);
+    ProjectileFactory.init(data);
 };
 
 
@@ -89,7 +89,7 @@ PlayState.prototype.applySyncFromServer = function() {
         for (var key in lastSnapshot.bullets) {
             if (!GameEngine.getInstance().entities[key]) {
                 // console.log("creating remoteBullet");
-                BulletFactory.createRemoteBullet(lastSnapshot.bullets[key]);
+                ProjectileFactory.createRemoteBullet(lastSnapshot.bullets[key]);
             }
             else {
                 // console.log("syncing localBullet");

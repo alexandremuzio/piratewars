@@ -7,15 +7,18 @@ var PhysicsComponent = require('../../shared/components/physics.js');
 var SpriteComponent = require('../components/sprite.js');
 var UUID = require('node-uuid');
 var MathUtils = require('../../shared/utils/math.js');
+var MineController = require('../components/mine_controller.js');
 
+var mine_settings = require('../../shared/settings/mine.json');
 var bullet_settings = require('../../shared/settings/bullet.json');
 
 //collision groups
 var PLAYER = Math.pow(2,0);
 var BULLET = Math.pow(2,1);
 var STRONGHOLD = Math.pow(2,2);
+var MINE = Math.pow(2,3);
 
-var BulletFactory = {
+var ProjectileFactory = {
 	init : function (data) {
 		this.game = data.game;
 	},
@@ -110,7 +113,51 @@ var BulletFactory = {
 		entity.components.add(new BulletComponent());
 		
         return entity;
+	},
+
+	createMine : function(id, initialPosition, initialAngle, initialVelocity) {
+		var entity = new Entity(id, 'mine'),
+        	entityGroup, sprites_info;
+
+        // console.log(this);
+        // console.log(this.game);
+
+		entityGroup = this.game.add.group();
+
+		sprites_info = {
+			mine: {
+				sprite: entityGroup.create(initialPosition.x, initialPosition.y, 'bullet'),
+				width: mine_settings.radius,
+				height: mine_settings.radius,
+	        	anchor: {
+	        		x: 0.5,
+	        		y: 0.5
+	        	},
+        		//tint: 0xff6600
+			}
+		};
+
+		var body = new p2.Body({
+	            name: "mine",
+	            type: p2.Body.KINEMATIC,
+	            /*mass : bulletMass,*/
+	            position: [initialPosition.x, initialPosition.y],
+	            velocity: [initialVelocity.x, initialVelocity.y],
+	            damping: mine_settings.damping
+	    });
+	    body.entity = entity;
+	    
+	    var shape = new p2.Circle(mine_settings.radius); //////set radius!!
+		shape.collisionGroup = MINE;
+		// shape.collisionMask = PLAYER;
+	    body.addShape(shape);
+
+		entity.components.add(new PhysicsComponent(body));
+		entity.components.add(new MineController());
+		entity.components.add(new SpriteComponent(sprites_info));
+		// console.log("End of entity");
+		return entity;
 	}
 };
 
-module.exports = BulletFactory;
+module.exports = ProjectileFactory;

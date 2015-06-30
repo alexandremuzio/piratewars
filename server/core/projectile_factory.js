@@ -15,7 +15,7 @@ var PLAYER = Math.pow(2,0);
 var BULLET = Math.pow(2,1);
 var STRONGHOLD = Math.pow(2,2);
 
-var BulletFactory = {
+var ProjectileFactory = {
 	init : function (data) {
 		this.game = data.game;
 	},
@@ -49,4 +49,4 @@ var BulletFactory = {
 	},
 };
 
-module.exports = BulletFactory;
+module.exports = ProjectileFactory;

@@ -35,7 +35,8 @@ PhaserInputComponent.prototype.constructor = PhaserInputComponent;
 PhaserInputComponent.prototype.init = function() {
 	this._cursorKeys = this._input.keyboard.createCursorKeys();
     this._leftAttackKey = this._input.keyboard.addKey(Phaser.Keyboard.Q);
-    this._rightAttackKey = this._input.keyboard.addKey(Phaser.Keyboard.E); 
+    this._rightAttackKey = this._input.keyboard.addKey(Phaser.Keyboard.E);
+    this._mineAttackKey = this._input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);  
     this._input.mouse.onMouseDown = this.onMouseDown.bind(this);
 
     this._snapshots = this.owner.components.get('outSync').snapshots;
@@ -88,6 +89,9 @@ PhaserInputComponent.prototype.captureInput = function() {
     }
     if (this._rightAttackKey.isDown) {
         command.eKey = true;
+    }
+    if( this._mineAttackKey.isDown ){
+        command.spaceKey = true;
     }
 
     // MPTemp

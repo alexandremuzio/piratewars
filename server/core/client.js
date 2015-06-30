@@ -53,10 +53,12 @@ Client.prototype.queueSyncFromClient = function(message) {
 	this._snapshots.add(message);
 }
 
-Client.prototype.syncGame = function(snapshot) {
-	// console.log("sending snapshot with pos x= ", snapshot.players[this._player.id].position.x);
-	// console.log("x3= ", this._player.components.get('physics').getTransform().position.x);
+Client.prototype.sendGameSync = function(snapshot) {
 	this._socket.emit('game.sync', snapshot);
+}
+
+Client.prototype.sendChangedState = function(newState) {
+	this._socket.emit('game.state', newState);
 }
 
 module.exports = Client;

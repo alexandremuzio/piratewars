@@ -108,7 +108,7 @@ var PlayerFactory = {
 								0);
 		healthBar.setFollowBaseEntityAngle(false);
 
-		var cannonsManager = this.createCannonsManager(data.id+'-cannons_manager')
+		var cannonsManager = this.createCannonsManager(data.id+'-cannons_manager');
 		cannonsManager.setBaseEntity(entity, 0, 0, 0);
 
 		var mineStart = this.createEmptyEntity(data.id+'-mine_start', 'mine_start');
@@ -175,10 +175,6 @@ var PlayerFactory = {
 		var cannonsManagerController = new CannonsManagerController();
 		entity.components.add(cannonsManagerController);
 
-		// Cannons parameters
-		var x0 = -20;
-		var y0 = 8;
-		var xInterval = 15;
 		// Creating cannons subentitys
 		for( var i = 0; i < 3; i++ ){
 			var cannon = this.createCannon(id+'-cannon_'+(i+1), 'cannon_'+(i+1));
@@ -311,9 +307,6 @@ var PlayerFactory = {
         		tint: data.color
 			}
 		};
-
-		console.log(sprites_info.stronghold.width);
-		console.log(sprites_info.stronghold.height);
 
 		var body = new p2.Body({
 	            name: "stronghold",

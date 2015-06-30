@@ -10,13 +10,18 @@ function Room(socket) {
 	this.clients = [];
 	this.snapshots = new SnapshotManager();
 	this._socket = socket;
+	this._gameState = null;
+	this._startTime = null;
+	this._preGameDuration = 1000;
+	this._endGameDuration = 500;
 }
 
 Room.prototype.init = function() {
 	this._socket.sockets.on('connect', this.onConnection.bind(this));
 	this.createInitialEntities();
-    setInterval(this.gameLoop.bind(this), 1000/60);
-    setInterval(this.sendSyncToClients.bind(this), 1000/20);
+	this._gameState = this.preGameStateLoop;
+	this.preGameStateInit();
+	this._gameLoopInterval = setInterval(this.gameLoop.bind(this), 1000/60);
 }
 
 Room.prototype.createInitialEntities = function() {
@@ -31,26 +36,50 @@ Room.prototype.onConnection = function(socket) {
 }
 
 Room.prototype.gameLoop = function() {
-	// console.log("");
-    // console.log("STARTING applySyncFromClient");
-	// this.applySyncFromClients(); // Now done inside input component
-    // console.log("ENDING applySyncFromclient");
-
-    // console.log("STARTING gameStep");
-    GameEngine.getInstance().gameStep();
-    // console.log("ENDING gameStep");
-
-    // console.log("STARTING emit");
-	//this.sendSyncToClients(); // Now done inside a setInterval function
-	// console.log("ENDING emit");
-	// console.log("");
+	this._gameState();
 }
 
-// Room.prototype.applySyncFromClients = function() {
-// 	_.each(this.clients, function(client) {
-// 		client.applySyncFromClient();
-// 	});
-// }
+Room.prototype.preGameStateInit = function() {   
+	this.sendChangedStateToClients('preGame');
+	console.log("%d seconds: changed state to preGame!", this._preGameDuration/1000);
+	this._startTime = new Date();
+}
+Room.prototype.preGameStateLoop = function() {
+	var currentTime = new Date();
+	if (currentTime - this._startTime > this._preGameDuration) {
+		this._gameState = this.playingStateLoop;
+		this.playingStateInit();
+	}
+}
+
+Room.prototype.playingStateInit = function() {
+	this.sendChangedStateToClients('playing');
+    this._sendSyncInterval = setInterval(this.sendSyncToClients.bind(this), 1000/20);
+	console.log("%d seconds: changed state to playing!", this._preGameDuration/1000);
+	this._startTime = new Date();
+}
+Room.prototype.playingStateLoop = function() {
+	var currentTime = new Date();
+	if (currentTime - this._startTime > this._preGameDuration) {
+		this._gameState = this.endGameStateLoop;
+		clearInterval(this._sendSyncInterval);
+		this.endGameStateInit();
+	}
+	GameEngine.getInstance().gameStep();
+}
+
+Room.prototype.endGameStateInit = function() {
+	this.sendChangedStateToClients('endGame');
+	console.log("%d seconds: changed state to endGame!", this._endGameDuration/1000);
+	this._startTime = new Date();
+}
+Room.prototype.endGameStateLoop = function() {
+	var currentTime = new Date();
+	if (currentTime - this._startTime > this._endGameDuration) {
+		this._gameState = this.preGameStateLoop;
+		this.preGameStateInit();
+	}
+}
 
 Room.prototype.sendSyncToClients = function() {
 	var clientSnapshot = {};
@@ -72,12 +101,18 @@ Room.prototype.sendSyncToClients = function() {
 			clientSnapshot.strongholds[entity.id].health = entity.components.get('health').currentHealth;
 		}
 	});
-	this.syncClients(clientSnapshot);
+	this.sendGameSyncToClients(clientSnapshot);
 }
 
-Room.prototype.syncClients = function(snapshot) {
+Room.prototype.sendGameSyncToClients = function(snapshot) {
 	_.each(this.clients, function(client) {
-			client.syncGame(snapshot);
+			client.sendGameSync(snapshot);
+	});
+}
+
+Room.prototype.sendChangedStateToClients = function(newState) {
+	_.each(this.clients, function(client) {
+			client.sendChangedState(newState);
 	});
 }
 

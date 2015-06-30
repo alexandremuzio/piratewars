@@ -44,7 +44,6 @@ SyncComponent.prototype.sendSyncToServer = function() {//update = function() {
 SyncComponent.prototype.onSyncronization = function(message) {
 	// MPTest
 	// console.log('--- onSyncronization called --- #############################');
-	// console.log(transform);
 	if (message.transform) {
 		this.owner.transform.setTransform(message.transform);
 	}

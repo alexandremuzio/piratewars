@@ -16,9 +16,9 @@ var HealthBarComponent = require('../components/health_bar.js');
 var TextComponent = require('../components/text.js');
 var CannonsManagerController = require('../components/cannons_manager_controller.js');
 var CannonController = require('../components/cannon_controller.js');
-var HealthComponent = require('../components/health');
+var HealthComponent = require('../components/health.js');
 var StrongholdComponent = require('../components/stronghold');
-var MineGeneratorComponent = require('../components/mine_generator.js');
+var SelfPlayerStatesManagerComponent = require('../components/self_player_states_manager.js');
 
 var stronghold_settings = require('../../shared/settings/stronghold.json');
 var player_settings = require('../../shared/settings/player.json');
@@ -52,7 +52,7 @@ var PlayerFactory = {
 	        		y: 0.5
 	        	},
         		//tint: 0xff6600
-			}/*,
+			},
 			dead_boat: {
 				sprite: entityGroup.create(100, 100, 'dead_boat'),
 				width: player_settings.width,
@@ -62,7 +62,7 @@ var PlayerFactory = {
 	        		y: 0.5
 	        	},
         		//tint: 0xff6600
-			}*/
+			}
 		};
 	    /* Player name, must be set by the user (MUST FIX) */
 	    var text = this.game.add.text(0, 0, "Edgard Yano", {
@@ -99,6 +99,7 @@ var PlayerFactory = {
 		entity.components.add(new PlayerControllerComponent());
 		entity.components.add(new TextComponent(text));
 		entity.components.add(new MineGeneratorComponent());
+		entity.components.add(new SelfPlayerStatesManagerComponent());
 
 		// Subentitys
 		// Creating HealthBar subentity
@@ -112,9 +113,6 @@ var PlayerFactory = {
 
 		var cannonsManager = this.createCannonsManager(data.id+'-cannons_manager');
 		cannonsManager.setBaseEntity(entity, 0, 0, 0);
-
-		var mineStart = this.createEmptyEntity(data.id+'-mine_start', 'mine_start');
-		mineStart.setBaseEntity(entity, -40, 0, 0);
 
 		return entity;
 	},
@@ -156,17 +154,6 @@ var PlayerFactory = {
 				
 	    entity.components.add(new SpriteComponent(sprites_info));
 		entity.components.add(new HealthBarComponent());
-	   
-		return entity;
-	},
-
-	createHealthBarOutside: function(id, scale) {
-		var entity = new Entity(id, 'health_bar_outside');
-
-		var blackBoxSprite = this.game.add.sprite(205, 100, 'blackbox');
-		blackBoxSprite.anchor.setTo(0.5, 0.5);
-		blackBoxSprite.scale.setTo(healthBarSpriteSize, healthBarSpriteSize);
-		entity.components.add(new SpriteComponent(blackBoxSprite));
 
 		return entity;
 	},
@@ -204,14 +191,14 @@ var PlayerFactory = {
 		var entity = new Entity(id, key),
 		    entityGroup, sprites_info;
 
-		var entityGroup = this.game.add.group();
+		entityGroup = this.game.add.group();
 
 		sprites_info = {
-			boat: {
+			cannon: {
 				sprite: entityGroup.create(205, 100, 'cannon_0'),
 				scale: { 
-	        		x: player_settings.cannon.scale.x,
-	        		y: player_settings.cannon.scale.y
+	        		x: 0.15,
+	        		y: 0.15
         		},
 	        	anchor: {
 	        		x: 0.5,
@@ -226,8 +213,7 @@ var PlayerFactory = {
 
 		// Creating bulletInitialTransform subentity
 		var bulletStart = this.createEmptyEntity(id+'-bullet_start', 'bullet_start');
-		bulletStart.setBaseEntity(entity,
-								 player_settings.cannon.distFromCannon, 0, 0);
+		bulletStart.setBaseEntity(entity, 15, 0, 0);
 
 		return entity;
 	},
@@ -261,9 +247,7 @@ var PlayerFactory = {
 		var body = new p2.Body({
 	            name: "player",
 	            mass: player_settings.physics.mass,
-	            position: [100, 100],
-	            damping: player_settings.physics.linear_damping,
-	            angularDamping: player_settings.physics.angular_damping
+	            position: [100, 100]
 	        });
 		body.entity = entity;
 
@@ -300,7 +284,7 @@ var PlayerFactory = {
 		entityGroup = this.game.add.group();
 
 		sprites_info = {
-			stronghold: {
+			boat: {
 				sprite: entityGroup.create(data.initialPos.x, data.initialPos.y, 'stronghold'),
 				width: stronghold_settings.width,
 	        	height: stronghold_settings.height,

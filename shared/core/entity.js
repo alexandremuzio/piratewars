@@ -78,10 +78,17 @@ Entity.prototype.collision = function(collider) {
 }
 
 Entity.prototype.die = function() {
+    _.each(this.subentityManager.getAll(), function(subentity){
+        subentity.die();
+    });
     this.trigger('entity.die', this);
 }
 
 Entity.prototype.revive = function() {
+    _.each(this.subentityManager.getAll(), function(subentity){
+        subentity.revive();
+    });
+
     this.trigger('entity.revive', this);
 }
 
@@ -93,6 +100,11 @@ Entity.prototype.on = function(event, handler) {
 
 Entity.prototype.trigger = function(event) {
     var params = Array.prototype.slice.call(arguments, 1);
+    if(this.key == 'entity.die') {
+        console.log(event);
+        console.log(this.key);
+        console.log(this._eventHandlers);
+    }
     if (this._eventHandlers[event]) {
         for (var i = 0; i < this._eventHandlers[event].length; i++) {
             this._eventHandlers[event][i].apply(this, params);

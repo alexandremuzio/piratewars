@@ -2,7 +2,6 @@ var respawnJSON = {
     id: "respawnDialogBox",
 	component: "Window",
 	image: "respawnDialogBox",
-	header: { position: { x: 0, y: -40 }, height: 100, image: 'lvlcomplete', },
 	padding: 4,
 	position: { x: 200, y: 200 },
 	anchor: { x: 0.5, y: 0.5 },
@@ -10,6 +9,7 @@ var respawnJSON = {
 	height: 300,
 	layout: [1, 4],
 	children: [
+	    null,
 		{
 			position: "center",
 			text: "Respawns in",
@@ -18,6 +18,7 @@ var respawnJSON = {
 				family: "Skranji",
 				color: "white"
 			},
+	        anchor: { x: 0.5, y: 0.5 },
 			width: 1,
 			height: 1
 		},
@@ -30,7 +31,8 @@ var respawnJSON = {
 				family: "Skranji",
 				color: "white"
 			},
-			width: 1,
+			anchor: { x: 0.5, y: 0.5 },
+	        width: 1,
 			height: 1
 		},
 		null

@@ -3,7 +3,7 @@
 	"physics" :
 		{
 			"mass": 0.0002,
-			"velocity" : 50
+			"velocity" : 90
 		},
 	"radius" : 7,
 	"damage" : 15,

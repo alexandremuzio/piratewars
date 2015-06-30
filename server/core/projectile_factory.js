@@ -20,19 +20,20 @@ var ProjectileFactory = {
 		this.game = data.game;
 	},
 
-	createBullet : function(initialPosition, angle, id) {
+	createBullet : function(initialPosition, initialVelocity, angle, id) {
 		// console.log("createBullet");
 		var bulletId = id;
 		var entity = new Entity(bulletId, 'bullet');
 
-		var velocity = MathUtils.vector(bullet_settings.physics.velocity, angle);
+		var bulletVelocity = MathUtils.vector(bullet_settings.physics.velocity, angle);
 
 		var body = new p2.Body({
 	            name: "bullet",
 	            type: p2.Body.KINEMATIC,
 	            /*mass : bulletMass,*/
 	            position: [initialPosition.x, initialPosition.y],
-	            velocity: [ velocity.x, velocity.y ],
+	            velocity: [ bulletVelocity.x + initialVelocity[0],
+	            			bulletVelocity.y + initialVelocity[1]],
 	    });
 	    body.entity = entity;
 	    

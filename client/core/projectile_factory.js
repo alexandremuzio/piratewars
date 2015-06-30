@@ -23,7 +23,7 @@ var ProjectileFactory = {
 		this.game = data.game;
 	},
 
-	createBullet : function(initialPosition, angle) {
+	createBullet : function(initialPosition, initialVelocity, angle) {
 		// console.log("createBullet");
 		var bulletId = UUID();
 		var entity = new Entity(bulletId, 'bullet'),
@@ -44,14 +44,15 @@ var ProjectileFactory = {
 			}
 		};
 		
-        var velocity = MathUtils.vector(bullet_settings.physics.velocity, angle);
-		
+        var bulletVelocity = MathUtils.vector(bullet_settings.physics.velocity, angle);
+
 		var body = new p2.Body({
 	            name: "bullet",
 	            type: p2.Body.KINEMATIC,
 	            /*mass : bulletMass,*/
 	            position: [initialPosition.x, initialPosition.y],
-	            velocity: [ velocity.x, velocity.y ],
+	            velocity: [ bulletVelocity.x + initialVelocity[0],
+	            		    bulletVelocity.y + initialVelocity[1]],
 	    });
 	    body.entity = entity;
 	    

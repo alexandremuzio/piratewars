@@ -4,8 +4,8 @@ var MathUtils = {
 	// angle in degree
 	vector : function(norm, angle) {
 		return {
-			"x" : norm * Math.cos(angle*Math.PI/180),
-			"y" : norm * Math.sin(angle*Math.PI/180)
+			"x" : norm * Math.cos(angle),
+			"y" : norm * Math.sin(angle)
 		}
 	},
 
@@ -13,9 +13,9 @@ var MathUtils = {
 	// The returned angle is positive in the clock-wise direction because of the world coordinate system
 	// The returned angle is in degree
 	getAngleFromVector : function(v) {
-		var angle = Math.asin(this.normalize(v).y)*180/Math.PI;
+		var angle = Math.asin(this.normalize(v).y);
 	    if( v.x < 0 )
-	        angle = 180 - angle;
+	        angle = Math.PI - angle;
 	    return angle;
 	},
 

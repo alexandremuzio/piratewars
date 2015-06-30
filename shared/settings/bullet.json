@@ -5,7 +5,7 @@
 			"mass": 0.0002,
 			"velocity" : 50
 		},
-	"radius" : 5,
+	"radius" : 7,
 	"damage" : 15,
 	"survival_time" : 2000
 }

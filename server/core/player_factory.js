@@ -71,22 +71,24 @@ var PlayerFactory = {
 		var cannonsManagerController = new CannonsManagerController();
 		entity.components.add(cannonsManagerController);
 
-		// Cannons parameters
-		var x0 = -20;
-		var y0 = 8;
-		var xInterval = 15;
-		// Creating cannons subentitys
 		for( var i = 0; i < 3; i++ ){
 			var cannon = this.createCannon(id+'-cannon_'+(i+1), 'cannon_'+(i+1));
-			cannon.setBaseEntity(entity, x0 + xInterval*i, -y0, -90);
+			cannon.setBaseEntity(entity,
+									player_settings.cannon.x0
+									+ player_settings.cannon.xInterval*i,
+									-player_settings.cannon.y0,
+									-Math.PI/2);
 			cannonsManagerController.addLeft(cannon);
 		}
 		for( var i = 0; i < 3; i++ ){
 			var cannon = this.createCannon(id+'-cannon_'+(i+4), 'cannon_'+(i+4));
-			cannon.setBaseEntity(entity, x0 + xInterval*i, y0, 90);
+			cannon.setBaseEntity(entity,
+							  		player_settings.cannon.x0
+							  		+ player_settings.cannon.xInterval*i,
+							  		player_settings.cannon.y0,
+							  		Math.PI/2);
 			cannonsManagerController.addRight(cannon);
 		}
-
 		return entity;
 	},
 
@@ -97,7 +99,8 @@ var PlayerFactory = {
 
 		// Creating bulletStart subentity
 		var bulletStart = this.createEmptyEntity(id+'-bullet_start', 'bullet_start');
-		bulletStart.setBaseEntity(entity, 15, 0, 0);
+		bulletStart.setBaseEntity(entity,
+								 player_settings.cannon.distFromCannon, 0, 0);
 
 		return entity;
 	},

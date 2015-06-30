@@ -160,6 +160,14 @@ var PlayerFactory = {
 		var cannonsManagerController = new CannonsManagerController();
 		entity.components.add(cannonsManagerController);
 
+<<<<<<< HEAD
+		// Cannons parameters
+		var x0 = -20;
+		var y0 = 8;
+		var xInterval = 15;
+		// Creating cannons subentitys
+=======
+>>>>>>> Fixed Infamous Collision bug - All collisions are correct
 		for( var i = 0; i < 3; i++ ){
 			var cannon = this.createCannon(id+'-cannon_'+(i+1), 'cannon_'+(i+1));
 			cannon.setBaseEntity(entity,
@@ -221,13 +229,23 @@ var PlayerFactory = {
 	createRemotePlayer : function(data) {
 		// console.log("inside entity factory createRemotePlayer");
 		
-		var entity = new Entity(data.id, "remote_player");
+		var entity = new Entity(data.id, "remote_player"),
+		    entityGroup, sprites_info;
 
-		var sprite = this.game.add.sprite(100, 100, 'boat_0');
-		sprite.anchor.setTo(0.5, 0.5);
-	    sprite.width = player_settings.width;
-	    sprite.height = player_settings.height;
-	    // sprite.tint = 0xff6600; --get color from team
+		entityGroup = this.game.add.group();
+
+		sprites_info = {
+			boat: {
+				sprite: entityGroup.create(100, 100, 'boat_0'),
+				width: player_settings.width,
+	        	height: player_settings.height,
+	        	anchor: {
+	        		x: 0.5,
+	        		y: 0.5
+	        	},
+        		//tint: 0xff6600
+			}
+		};
 
 		var body = new p2.Body({
 	            name: "player",

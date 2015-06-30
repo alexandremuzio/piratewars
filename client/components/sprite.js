@@ -6,7 +6,7 @@ var _ = require('underscore')
 
 
 function SpriteComponent(sprites_info) {
-	console.log("inside SpriteComponent constr");
+	//console.log("inside SpriteComponent constr");
 	this.key = "sprite";
 	this._sprites_info = sprites_info;
 	this._sprites = {};

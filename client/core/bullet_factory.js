@@ -101,6 +101,7 @@ var BulletFactory = {
 	    var shape = new p2.Circle(bullet_settings.radius);
 		shape.collisionGroup = BULLET;
 		shape.collisionMask = PLAYER | STRONGHOLD;
+		shape.sensor = true;
 	    body.addShape(shape);
 
 		entity.components.add(new PhysicsComponent(body));

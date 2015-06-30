@@ -18,7 +18,6 @@ SpriteComponent.prototype.constructor = SpriteComponent;
 ///
 
 SpriteComponent.prototype.init = function() {
-
 	this.owner.on('entity.destroy', this.onEntityDestroy.bind(this));
 
 	console.log("inside SpriteComponent init");
@@ -30,6 +29,10 @@ SpriteComponent.prototype.init = function() {
         if(sprite_i.anchor) { sprite_i.sprite.anchor.setTo(sprite_i.anchor.x, sprite_i.anchor.y); }
         
         if(sprite_i.tint) { sprite_i.sprite.tint = sprite_i.tint; }
+        
+        if(sprite_i.width) { sprite_i.sprite.width = sprite_i.width; }
+
+        if(sprite_i.height) { sprite_i.sprite.height = sprite_i.height; }
 
         sprite_i.originalTexture = new Phaser.Rectangle(0, 0, sprite_i.sprite.texture.width, sprite_i.sprite.texture.height);
         sprite_i.sprite.crop(new Phaser.Rectangle(0, 0, sprite_i.sprite.texture.width, sprite_i.sprite.texture.height), false);
@@ -45,36 +48,37 @@ SpriteComponent.prototype.init = function() {
 }
 
 SpriteComponent.prototype.update = function() {
+	var transform = this.owner.transform.getTransform();
 <<<<<<< HEAD
-	// MPTest
+	
+    // MPTest
 	if( this.owner.key != 'test' ){
-		var transform = this.owner.transform.getTransform();
 		if( typeof transform.position.x === 'number' && typeof transform.position.y === 'number' && typeof transform.angle === 'number' ){
-			this.sprite.position.x = transform.position.x;
-			this.sprite.position.y = transform.position.y;
-			this.sprite.angle = transform.angle;
+		    _.each(this._sprites, function(sprite) {
+		        sprite.position.x = transform.position.x;
+		        sprite.position.y = transform.position.y;
+		        sprite.angle = transform.angle;
+	        });
 		}
 	}
 	else{
-		var transform = this.owner.transform.getTransform();
-		// console.log("transform.position.x = " + transform.position.x);
-		// console.log("transform.position.y = " + transform.position.y);
-		// console.log("transform.angle = " + transform.angle);
 		if( typeof transform.position.x === 'number' && typeof transform.position.y === 'number' && typeof transform.angle === 'number' ){
-			this.sprite.position.x = transform.position.x;
-			this.sprite.position.y = transform.position.y;
-			this.sprite.angle = transform.angle;
+		    _.each(this._sprites, function(sprite) {
+		        sprite.position.x = transform.position.x;
+		        sprite.position.y = transform.position.y;
+		        sprite.angle = transform.angle;
+	        });
 		}
-	}
 =======
-	var transform = this.owner.components.get("physics").getTransform();
-		
-	_.each(this._sprites, function(sprite) {
-		sprite.position.x = transform.position.x;
-		sprite.position.y = transform.position.y;
-		sprite.angle = transform.angle;
-	}); 
->>>>>>> Changing sprites to map of sprites
+	// console.log("transform.position.x = " + transform.position.x);
+	// console.log("transform.position.y = " + transform.position.y);
+	// console.log("transform.angle = " + transform.angle);
+	if( typeof transform.position.x === 'number' && typeof transform.position.y === 'number' && typeof transform.angle === 'number' ){
+		this.sprite.position.x = transform.position.x;
+		this.sprite.position.y = transform.position.y;
+		this.sprite.rotation = transform.angle;
+>>>>>>> Fixed Infamous Collision bug - All collisions are correct
+	}
 }
 
 SpriteComponent.prototype.kill = function(key) {
@@ -89,6 +93,13 @@ SpriteComponent.prototype.revive = function(key) {
 	if(sprite) {
 		sprite.revive();
 	}
+}
+
+SpriteComponent.prototype.play = function(key, animation, framesPerSec, loop) {
+    var sprite = this._sprites[key];
+    if (sprite) {
+        sprite.animations.play(animation, framesPerSec, loop);
+    }
 }
 
 SpriteComponent.prototype.onEntityDestroy = function() {

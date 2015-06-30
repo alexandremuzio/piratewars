@@ -15,8 +15,8 @@
 			"max_velocity": 160,
 			"min_velocity": 20,
 		    "velocity_step": 1,
-		    "angle_step": 0.7,
-		    "turn_ratio": 0.01
+		    "angle_step": 0.0122,
+		    "turn_ratio": 0.0001745
 		},
 	"width": 90,
 	"height" : 30,

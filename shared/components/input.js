@@ -3,7 +3,7 @@
 var GameEngine = require('../game_engine');
 var GameComponent = require('../core/component');
 
-var physics_settings = require('../settings/boats/default_boat/physics.json');
+var physics_settings = require('../settings/player.json').physics;
 
 function InputComponent() {
 	// console.log("inside InputComp constr");
@@ -36,9 +36,9 @@ InputComponent.prototype.processCommand = function(command) {
         }
         this.processArrowCommand(command);
     }
-    else if( command.mouseLeftButtonDown ){ // Mouse click
-        this.initNewTrajectory(command);
-    }
+    // else if( command.mouseLeftButtonDown ){ // Mouse click
+    //     this.initNewTrajectory(command); /////////////////////////////////////////////////////////////
+    // }
 
     if( this.followingTrajectory ){
         this.followTrajectoryUpdate();
@@ -77,12 +77,12 @@ InputComponent.prototype.processArrowCommand = function(command) {
     var velocity = this.getVelocity();
     var velAngle = this.getAngleFromVector(this.getVelocityVector);
 
-    if( Math.abs(this.getDeltaAngleFromAngles( velAngle, this._body.angle)) > 90 ) // Reverse gear on
-        velocity *= -1;
+    // if( Math.abs(this.getDeltaAngleFromAngles( velAngle, this._body.angle)) > 90 ) // Reverse gear on
+    //     velocity *= -1;
 
-    var curveOn = false;
-    if( velocity > physics_settings.min_velocity_to_curve )
-        curveOn = true;
+    // var curveOn = false;
+    // if( velocity > physics_settings.min_velocity_to_curve )
+        var curveOn = true; //////////////////////////////////////////////////
 
     if (command.arrowUp) {
         // this._body.force[0] = physics_settings.linear_force*Math.cos(this._body.angle*Math.PI/180);
@@ -104,11 +104,12 @@ InputComponent.prototype.processArrowCommand = function(command) {
     }
     if (command.arrowRight && curveOn) {
         // Temp
-        this._body.angle += physics_settings.angle_step + velocity*physics_settings.turn_ratio;
+        this._body.angle += (physics_settings.angle_step + velocity*physics_settings.turn_ratio);
     }
         
-    this._body.velocity[0] = velocity*Math.cos(this._body.angle*Math.PI/180);
-    this._body.velocity[1] = velocity*Math.sin(this._body.angle*Math.PI/180);
+    this._body.velocity[0] = velocity*Math.cos(this._body.angle);
+    this._body.velocity[1] = velocity*Math.sin(this._body.angle);
+    // console.log(this._body.getAABB().lowerBound)
 };
 
 InputComponent.prototype.initNewTrajectory = function(command){
@@ -227,8 +228,8 @@ InputComponent.prototype.followTrajectoryUpdate = function(command) {
 
     var velocity = this.getVelocity();
 
-    this._body.velocity[0] = velocity*Math.cos(this._body.angle*Math.PI/180);
-    this._body.velocity[1] = velocity*Math.sin(this._body.angle*Math.PI/180);
+    this._body.velocity[0] = velocity*Math.cos(this._body.angle);
+    this._body.velocity[1] = velocity*Math.sin(this._body.angle);
 };
 
 InputComponent.prototype.correctVelocity = function() {
@@ -237,8 +238,8 @@ InputComponent.prototype.correctVelocity = function() {
     if (velocity < physics_settings.min_velocity) { velocity = physics_settings.min_velocity; }
     if (velocity > physics_settings.max_velocity) { velocity = physics_settings.max_velocity; }
 
-    this._body.velocity[0] = velocity*Math.cos(this._body.angle*Math.PI/180);
-    this._body.velocity[1] = velocity*Math.sin(this._body.angle*Math.PI/180);
+    this._body.velocity[0] = velocity*Math.cos(this._body.angle);
+    this._body.velocity[1] = velocity*Math.sin(this._body.angle);
 };
 
 InputComponent.prototype.getVelocityVector = function(){
@@ -289,8 +290,8 @@ InputComponent.prototype.rotate90CW = function(v){
 // Boat direction vector in normal coordinates ( y in correct direction )
 InputComponent.prototype.getBoatDirectionVector = function(command){
     var boat_vector = {
-        "x": Math.cos(this._body.angle*Math.PI/180),
-        "y": -Math.sin(this._body.angle*Math.PI/180)
+        "x": Math.cos(this._body.angle),
+        "y": -Math.sin(this._body.angle)
     };
     return boat_vector;
 }
@@ -317,14 +318,14 @@ InputComponent.prototype.crossProduct = function(v1, v2){
 // Return diference angle(degree) between finalAngle(degree) and currentAngle(degree)
 // Return value is greater than zero: currentAngle reach finalAngle on clockWise direction
 // Return value is less than zero: currentAngle reach finalAngle on counterClockWise direction
-InputComponent.prototype.getDeltaAngleFromAngles = function( finalAngle, currentAngle ){
-    var delta = (finalAngle - currentAngle)%360;
-    if( delta > 180 )
-        delta -= 360;
-    if( delta < -180 )
-        delta += 360;
-    return delta;
-};
+// InputComponent.prototype.getDeltaAngleFromAngles = function( finalAngle, currentAngle ){
+//     var delta = (finalAngle - currentAngle)%360;
+//     if( delta > 180 )
+//         delta -= 360;
+//     if( delta < -180 )
+//         delta += 360;
+//     return delta;
+// };
 
 // Input vectors in world coordinates
 // Return diference angle(degree) between finalVector and currentVector
@@ -333,11 +334,11 @@ InputComponent.prototype.getDeltaAngleFromAngles = function( finalAngle, current
 InputComponent.prototype.getDeltaAngleFromVectors = function( finalVector, currentVector ){
     var finalAngle = this.getAngleFromVector(finalVector);
     var currentAngle = this.getAngleFromVector(currentVector);
-    var delta = (finalAngle - currentAngle)%360;
-    if( delta > 180 )
-        delta -= 360;
-    if( delta < -180 )
-        delta += 360;
+    var delta = (finalAngle - currentAngle)%(2*Math.PI);
+    if( delta > Math.PI )
+        delta -= (2*Math.PI);
+    if( delta < -Math.PI )
+        delta += (2*Math.PI);
     return delta;
 };
 
@@ -345,9 +346,9 @@ InputComponent.prototype.getDeltaAngleFromVectors = function( finalVector, curre
 // The returned angle is positive in the clock-wise direction because of the world coordinate system
 // The returned angle is in degree
 InputComponent.prototype.getAngleFromVector = function(v){
-    var angle = Math.asin(this.normalize(v).y)*180/Math.PI;
+    var angle = Math.asin(this.normalize(v).y);
     if( v.x < 0 )
-        angle = 180 - angle;
+        angle = Math.PI - angle;
     return angle;
 };
 
@@ -355,8 +356,8 @@ InputComponent.prototype.getAngleFromVector = function(v){
 // The returned vector is in normal coordinates
 InputComponent.prototype.getVectorFromAngle = function(angle){
     var v = {
-        "x": Math.cos(angle*Math.PI/180),
-        "y": -Math.sin(angle*Math.PI/180)
+        "x": Math.cos(angle),
+        "y": -Math.sin(angle) ///////////////////////////////////////////////////////////////////////////
     }
     return v;
 };

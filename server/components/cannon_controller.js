@@ -1,16 +1,16 @@
 'use strict'
 
 var _ = require('underscore');
-var CannonController = require('../../shared/components/cannon_controller');
+var BaseComponent = require('../../shared/components/cannon_controller');
 var BulletFactory = require('../core/bullet_factory.js');
 
 function CannonController() {
 	// Call base constructor  
-    CannonController.call(this);
+    BaseComponent.call(this);
 };
 
 ///
-CannonController.prototype = Object.create(CannonController.prototype);
+CannonController.prototype = Object.create(BaseComponent.prototype);
 CannonController.prototype.constructor = CannonController;
 ///
 

@@ -47,6 +47,10 @@ SyncComponent.prototype.onSyncronization = function(message) {
 	// console.log(message.transform);
 	this.owner.transform.setTransform(message.transform);
 	this.owner.components.get("health").setHealth(message.health); //TO DO
+
+	if(message.state) {
+		this.owner.components.get("player_states").setState(message.state);
+	}
 }
 
 module.exports = SyncComponent;

@@ -6,6 +6,7 @@ function LifeComponent(maxHealth) {
 	this.key = "health";
 	this.currentHealth = maxHealth;
 	this.maxHealth = maxHealth;
+	this.alive = true;
 };
 
 ///

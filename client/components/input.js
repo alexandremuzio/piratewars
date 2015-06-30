@@ -3,6 +3,7 @@
 var _ = require('underscore');
 var InputComponent = require('../../shared/components/input.js');
 var NextPositionIndicatorConstructor = require('../next_position_indicator/next_position_indicator.js');
+var PlayerEnum = require('../../shared/utils/player_enum.js');
 
 function PhaserInputComponent(input) {
 	// console.log("inside PhaserInputComp constr");
@@ -93,7 +94,9 @@ PhaserInputComponent.prototype.captureInput = function() {
     // MPTemp
     command.id = this._commandId++;
 
-    this.processCommand(command);
+    if (this.owner.components.get('player_states').getState() != PlayerEnum.DEAD) {
+        this.processCommand(command);
+    }
     if (!_.isEmpty(command)) {
         this._snapshots.add(command);
     }

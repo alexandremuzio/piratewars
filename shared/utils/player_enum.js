@@ -11,9 +11,10 @@ function _enum(list) {
 }
 
 var PlayerEnum = _enum({
-	PREGAME: 0,
+	PRE_GAME: 0,
 	ALIVE: 1,
-	DEAD: 2
+	DEAD: 2,
+    END_GAME: 3
 });
 
 

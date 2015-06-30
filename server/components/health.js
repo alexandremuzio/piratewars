@@ -10,19 +10,20 @@ function LifeComponent(maxHealth) {
 LifeComponent.prototype = Object.create(BaseComponent.prototype);
 LifeComponent.prototype.constructor = LifeComponent;
 ///
-
 LifeComponent.prototype.init = function() {
 	this.owner.on('entity.damage', this.onEntityDamage.bind(this));
+	this.owner.on('entity.revive', this.onEntityRevive.bind(this));
+	this.owner.on('entity.die', this.onEntityDie.bind(this));
 }
 
 LifeComponent.prototype.update = function() {
-	if(this.currentHealth <= 0) {
-		// console.log("Entity died");
-	}
-		// this.owner.die();
+	if(this.currentHealth <= 0 && this.alive == true) {
+		this.owner.die();
+	}	
 }
 
-LifeComponent.prototype.die = function() {
+LifeComponent.prototype.onEntityDie = function() {
+	this.alive = false;
 }
 
 LifeComponent.prototype.onEntityDamage = function(value) {
@@ -30,4 +31,10 @@ LifeComponent.prototype.onEntityDamage = function(value) {
 	// console.log( this.owner.key + " has been damaged by " + value);
 	if(this.currentHealth < 0) this.currentHealth = 0;
 }
+
+LifeComponent.prototype.onEntityRevive = function() {
+	this.currentHealth = this.maxHealth;
+	this.alive = true;
+}
+
 module.exports = LifeComponent;

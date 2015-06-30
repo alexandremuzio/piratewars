@@ -12,6 +12,22 @@ LifeComponent.prototype.constructor = LifeComponent;
 ///
 
 LifeComponent.prototype.init = function() {
+	this.owner.on('entity.die', this.onEntityDie.bind(this));
+	this.owner.on('entity.revive', this.onEntityRevive.bind(this));
+}
+
+LifeComponent.prototype.update = function() {
+	if(this.currentHealth <= 0 && this.alive == true) {
+		this.owner.die();
+	}	
+}
+
+LifeComponent.prototype.onEntityDie = function() {
+	this.alive = false;
+}
+
+LifeComponent.prototype.onEntityRevive = function() {
+	this.alive = true;
 }
 
 LifeComponent.prototype.getHealth = function() {
@@ -25,4 +41,5 @@ LifeComponent.prototype.getMaxHealth = function() {
 LifeComponent.prototype.setHealth = function(newHealth) {
 	this.currentHealth = newHealth;
 }
+
 module.exports = LifeComponent;

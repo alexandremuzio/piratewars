@@ -40,7 +40,6 @@ SpriteComponent.prototype.init = function() {
         this._sprites[key] = sprite_i.sprite;
     }, this);
 
-	console.log("after SpriteComponent init");
 //	/* Crop is based on texture (must use texture width and height) */
 //	this.originalTextureRect = new Phaser.Rectangle(0, 0, this.sprite.texture.width, this.sprite.texture.height);
 //	/* Saved original texture rect because crop will modify texture properties */
@@ -72,7 +71,8 @@ SpriteComponent.prototype.update = function() {
 }
 
 SpriteComponent.prototype.kill = function(key) {
-    var sprite = this._sprites.get[key];
+    console.log('Inside kill sprite func');
+    var sprite = this._sprites[key];
     if(sprite) {
         sprite.kill();
     }

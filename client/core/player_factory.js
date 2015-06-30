@@ -83,8 +83,6 @@ var PlayerFactory = {
 		shape.collisionMask = PLAYER | STRONGHOLD | BULLET;
 	    body.addShape(shape);
 
-	    // body.damping = player_settings.physics.linear_damping;
-    	// body.angularDamping = player_settings.physics.angular_damping
 	    body.angle = 0;
 
 		entity.components.add(new HealthComponent(player_settings.maxHealth));
@@ -100,7 +98,8 @@ var PlayerFactory = {
 
 		// Subentitys
 		// Creating HealthBar subentity
-		var healthBar = this.createHealthBar(data.id+'-health_bar');
+		var healthBar = this.createHealthBar(data.id+'-health_bar',
+										player_settings.health_bar.scale);
 		healthBar.setBaseEntity(entity, 0,
 								-player_settings.height 
 									- player_settings.health_bar.relativeYtoTop,
@@ -113,11 +112,11 @@ var PlayerFactory = {
 		return entity;
 	},
 
-	createHealthBar: function(id) {
+	createHealthBar: function(id, scale) {
 		var entity = new Entity(id, 'health_bar'),
 		    entityGroup, sprites_info;
 
-		var scale = 1;
+		// var scale = 1;
 
 		entityGroup = this.game.add.group();
 
@@ -125,8 +124,8 @@ var PlayerFactory = {
 			blood: {
         		sprite: entityGroup.create(205, 205, 'redbar'),
 				scale: { 
-	        		x: player_settings.health_bar.scale.x,
-	        		y: player_settings.health_bar.scale.y
+	        		x: scale.x,
+	        		y: scale.y
         		},
 	        	anchor: {
 	        		x: 0.0,
@@ -137,8 +136,8 @@ var PlayerFactory = {
 			outline: {
         		sprite: entityGroup.create(205, 205, 'blackbox'),
 				scale: { 
-	        		x: player_settings.health_bar.scale.x,
-	        		y: player_settings.health_bar.scale.y
+	        		x: scale.x,
+	        		y: scale.y
         		},
 	        	anchor: {
 	        		x: 0.0,
@@ -183,9 +182,10 @@ var PlayerFactory = {
 	},
 
 	createCannon : function(id, key) {
-		var entity = new Entity(id, key);
+		var entity = new Entity(id, key),
+		    entityGroup, sprites_info;
 
-		entityGroup = this.game.add.group();
+		var entityGroup = this.game.add.group();
 
 		sprites_info = {
 			boat: {
@@ -221,13 +221,23 @@ var PlayerFactory = {
 	createRemotePlayer : function(data) {
 		// console.log("inside entity factory createRemotePlayer");
 		
-		var entity = new Entity(data.id, "remote_player");
+		var entity = new Entity(data.id, "remote_player"),
+		    entityGroup, sprites_info;
 
-		var sprite = this.game.add.sprite(100, 100, 'boat_0');
-		sprite.anchor.setTo(0.5, 0.5);
-	    sprite.width = player_settings.width;
-	    sprite.height = player_settings.height;
-	    // sprite.tint = 0xff6600; --get color from team
+		entityGroup = this.game.add.group();
+
+		sprites_info = {
+			boat: {
+				sprite: entityGroup.create(100, 100, 'boat_0'),
+				width: player_settings.width,
+	        	height: player_settings.height,
+	        	anchor: {
+	        		x: 0.5,
+	        		y: 0.5
+	        	},
+        		//tint: 0xff6600
+			}
+		};
 
 		var body = new p2.Body({
 	            name: "player",
@@ -269,10 +279,10 @@ var PlayerFactory = {
 		entityGroup = this.game.add.group();
 
 		sprites_info = {
-			boat: {
+			stronghold: {
 				sprite: entityGroup.create(data.initialPos.x, data.initialPos.y, 'stronghold'),
-				width: data.width,
-	        	height: data.height,
+				width: stronghold_settings.width,
+	        	height: stronghold_settings.height,
 	        	anchor: {
 	        		x: 0.5,
 	        		y: 0.5
@@ -281,14 +291,19 @@ var PlayerFactory = {
 			}
 		};
 
+		console.log(sprites_info.stronghold.width);
+		console.log(sprites_info.stronghold.height);
+
 		var body = new p2.Body({
 	            name: "stronghold",
-	            type: p2.Body.STATIC,
+	            mass: 99999999,
+	            // type: p2.Body.STATIC,
 	            position: [data.initialPos.x, data.initialPos.y]
 	        });
 		body.entity = entity;
 
-	    var shape = new p2.Rectangle(data.width, data.height);
+	    var shape = new p2.Rectangle(stronghold_settings.width,
+	    							 stronghold_settings.height);
 	    shape.collisionGroup = STRONGHOLD;
 		shape.collisionMask = PLAYER | BULLET;
 		body.addShape(shape);
@@ -299,6 +314,16 @@ var PlayerFactory = {
 		entity.components.add(new PhysicsComponent(body));
 		entity.components.add(new SpriteComponent(sprites_info));
 		entity.components.add(new StrongholdComponent());
+
+		// Subentitys
+		// Creating HealthBar subentity
+		var healthBar = this.createHealthBar(data.id+'-health_bar',
+		 								stronghold_settings.health_bar.scale);
+		healthBar.setBaseEntity(entity, 0,
+								-stronghold_settings.height / 2
+									- stronghold_settings.health_bar.relativeYtoTop,
+								0);
+		healthBar.setFollowBaseEntityAngle(false);
 
 		return entity;
 	}

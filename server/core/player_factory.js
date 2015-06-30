@@ -41,8 +41,6 @@ var PlayerFactory = {
 		shape.collisionMask = PLAYER | STRONGHOLD | BULLET;
 		body.addShape(shape);
 		
-	    // body.damping = player_settings.physics.linear_damping;
-    	// body.angularDamping = player_settings.physics.angular_damping;
 	    body.angle = 0;
 
 	    entity.components.add(new HealthComponent(player_settings.maxHealth));
@@ -117,12 +115,13 @@ var PlayerFactory = {
 
 		var body = new p2.Body({
 	            name: "stronghold",
-	            type: p2.Body.STATIC,
+	            mass: 99999999,
+	            // type: p2.Body.STATIC,
 	            position: [data.initialPos.x, data.initialPos.y]
 	        });
 		body.entity = entity;
 
-	    var shape = new p2.Rectangle(data.width, data.height);
+	    var shape = new p2.Rectangle(stronghold_settings.width, stronghold_settings.height);
 	    shape.collisionGroup = STRONGHOLD;
 		shape.collisionMask = PLAYER | BULLET;
 		body.addShape(shape);

@@ -24,13 +24,21 @@
 
 	"health_bar" :
 	{
-		"scale" : 0.2,
+		"scale" : 
+		{
+			"x" : 0.2,
+			"y" : 0.2
+		},
 		"relativeYtoTop" : 5
 	},
 
 	"cannon" :
 	{
-		"scale" : 0.15,
+		"scale" : 
+		{
+			"x" : 0.2,
+			"y" : 0.2
+		},
 		"x0" : -20,
 		"y0" : 8,
 		"xInterval" : 15,
@@ -39,7 +47,11 @@
 
 	"text" : 
 	{
-		"scale" : 0.2,
+		"scale" : 
+		{
+			"x" : 0.2,
+			"y" : 0.2
+		},
 		"font" : "12px Arial",
 		"fill": "#ff0044",
 		"align": "center"

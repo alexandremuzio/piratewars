@@ -96,6 +96,10 @@ PlayState.prototype.applySyncFromServer = function() {
                 GameEngine.getInstance().entities[key].sync(lastSnapshot.bullets[key]);
             }
         }
+
+        for (var key in lastSnapshot.strongholds) {
+            GameEngine.getInstance().entities[key].sync(lastSnapshot.strongholds[key]);
+        }
     }
 }
 

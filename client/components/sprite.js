@@ -56,7 +56,7 @@ SpriteComponent.prototype.update = function() {
 		    _.each(this._sprites, function(sprite) {
 		        sprite.position.x = transform.position.x;
 		        sprite.position.y = transform.position.y;
-		        sprite.angle = transform.angle;
+		        sprite.rotation = transform.angle;
 	        });
 		}
 	}
@@ -65,7 +65,7 @@ SpriteComponent.prototype.update = function() {
 		    _.each(this._sprites, function(sprite) {
 		        sprite.position.x = transform.position.x;
 		        sprite.position.y = transform.position.y;
-		        sprite.angle = transform.angle;
+		        sprite.rotation = transform.angle;
 	        });
 		}
 	}

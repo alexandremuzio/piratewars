@@ -44,6 +44,11 @@ SyncComponent.prototype.sendSyncToServer = function() {//update = function() {
 SyncComponent.prototype.onSyncronization = function(message) {
 	// MPTest
 	// console.log('--- onSyncronization called --- #############################');
+<<<<<<< HEAD
+	// console.log(message.transform);
+	this.owner.transform.setTransform(message.transform);
+	this.owner.components.get("health").setHealth(message.health); //TO DO
+=======
 	// console.log(transform);
 	if (message.transform) {
 		this.owner.transform.setTransform(message.transform);
@@ -52,6 +57,7 @@ SyncComponent.prototype.onSyncronization = function(message) {
 	if (message.health) {
 		this.owner.components.get("health").setHealth(message.health); //TO DO
 	}
+>>>>>>> Adding healthbar to stronhold
 }
 
 module.exports = SyncComponent;

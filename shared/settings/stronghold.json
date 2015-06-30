@@ -3,21 +3,30 @@
 		{
 			"id" : 1,
 			"name" : "A",
-			"initialPos" : {"x": 100, "y": 1900},
-			"width": 200,
-			"height" : 200,
+			"initialPos" : {"x": 200, "y": 1800},
 			"color" : "0xff0000"
 		},
 
 		{
 			"id" : 2,
 			"name" : "B",
-			"initialPos" : {"x": 1900, "y": 100},
-			"width": 200,
-			"height" : 200,
+			"initialPos" : {"x": 1800, "y": 200},
 			"color" : "0x0000ff"
 		}
 	],
 
-	"maxHealth" : 3000
+	"width": 200,
+	"height" : 200,
+
+	"health_bar" :
+	{
+		"scale" : 
+		{
+			"x" : 1,
+			"y" : 0.2
+		},
+		"relativeYtoTop" : 10
+	},
+
+	"maxHealth" : 600
 }

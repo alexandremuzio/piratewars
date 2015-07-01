@@ -21,19 +21,149 @@ function Room(socket) {
 	this._socket = socket;
 	this._gameState = null;
 	this._startTime = null;
+	// Send these to conf files
+	this._sendGameSyncTickRate = 1000/20;
+	this._lobbyInfoRate = 1000;
+	this._allReadyDuration = 1000;
 	this._preGameDuration = 1000;
 	this._endGameDuration = 500;
 }
 
 Room.prototype.init = function() {
-	PlayerFactory.init(this);
+	var testClient = new Client(null, this);
+	testClient.onName("nome do cliente1");
+	testClient.onChangeTeam("red");
+	testClient.onReady(true);
 
-	this._socket.sockets.on('connect', this.onConnection.bind(this));
+	testClient = new Client(null, this);
+	testClient.onName("nome do cliente2");
+	testClient.onChangeTeam("blue");
+	testClient.onReady(false);
+	testClient.onReady(true);
+
+	testClient = new Client(null, this);
+	testClient.onName("nome do cliente3");
+	testClient.onChangeTeam("blue");
+	testClient.onReady(true);
+
+	testClient = new Client(null, this);
+	testClient.onName("nome do cliente4");
+	testClient.onChangeTeam("blue");
+	testClient.onReady(true);
+
+	testClient = new Client(null, this);
+	testClient.onName("on weakest team");
+	testClient.onReady(true);
+
+	console.log(this.allClientsAreReady());
+
+	// this.sendLobbyInfoToClients();
+
+
+	PlayerFactory.init(this);
 	this.createInitialEntities();
 	this.createTeams();
-	this._gameState = this.preGameStateLoop;
-	this.preGameStateInit();
+	this._gameState = this.lobbyStateLoop;
+	this.lobbyStateInit();
+	this._socket.sockets.on('connect', this.onConnection.bind(this));
 	this._gameLoopInterval = setInterval(this.gameLoop.bind(this), game_config.game_tick_rate);
+}
+
+Room.prototype.gameLoop = function() {
+	this._gameState();
+}
+
+
+/********************************************/
+/****************** STATES ******************/
+/********************************************/
+Room.prototype.lobbyStateInit = function() {   
+	console.log("Changed state to lobby!");	
+	this.sendChangedStateToClients('lobby');
+	this._sendLobbyInfoInterval = setInterval(this.sendLobbyInfo.bind(this),
+												this._lobbyInfoRate);
+}
+Room.prototype.lobbyStateLoop = function() {
+	if (this.allClientsAreReady()) {
+		clearInterval(this._sendLobbyInfoInterval);
+		this.sendLobbyInfo();
+		this.sendCountdownToClients();
+		this._gameState = this.allReadyStateLoop;
+		this.allReadyStateInit();
+	}
+}
+
+Room.prototype.allReadyStateInit = function() {   
+	console.log("Changed state to allReady!");	
+	this.sendChangedStateToClients('countdown');
+	this._startTime = new Date();
+}
+Room.prototype.allReadyStateLoop = function() {
+	var currentTime = new Date();
+	if (currentTime - this._startTime > this._allReadyDuration) {
+		this._gameState = this.preGameStateLoop;
+		this.preGameStateInit();
+	}
+}
+
+Room.prototype.preGameStateInit = function() {   
+	console.log("Changed state to preGame!");
+	this.sendChangedStateToClients('preGame');
+	this.initializeGame();
+	this.sendFullInfoToClients();
+	this._startTime = new Date();
+}
+Room.prototype.preGameStateLoop = function() {
+	var currentTime = new Date();
+	if (currentTime - this._startTime > this._preGameDuration) {
+		this._gameState = this.playingStateLoop;
+		this.playingStateInit();
+	}
+}
+
+Room.prototype.playingStateInit = function() {
+	console.log("Changed state to playing!");
+	this.sendChangedStateToClients('playing');
+    this._sendSyncInterval = setInterval(this.sendGameSyncToClients.bind(this),
+    										this._sendGameSyncTickRate);
+	this._startTime = new Date();
+}
+Room.prototype.playingStateLoop = function() {
+	var currentTime = new Date();
+	if (checkEndGame()) {
+		this._gameState = this.endGameStateLoop;
+		this.endGameStateInit();
+	}
+	GameEngine.getInstance().gameStep();
+}
+
+Room.prototype.endGameStateInit = function() {
+	console.log("Changed state to endGame!");
+	clearInterval(this._sendSyncInterval);
+	this.sendChangedStateToClients('endGame');
+	this._startTime = new Date();
+}
+Room.prototype.endGameStateLoop = function() {
+	var currentTime = new Date();
+	if (currentTime - this._startTime > this._endGameDuration) {
+		this._gameState = this.lobbyStateLoop;
+		this.lobbyStateInit();
+	}
+}
+
+
+/******************************************************/
+/****************** HELPER FUNCTIONS ******************/
+/******************************************************/
+Room.prototype.allClientsAreReady = function() {
+	var allReady = true;
+	_.each(this.clients, function(client) {
+		if (!client.ready) {
+			allReady = false;
+			return;
+		}
+	});
+	return allReady;
 }
 
 Room.prototype.createInitialEntities = function() {
@@ -48,57 +178,68 @@ Room.prototype.createTeams = function() {
 	}, this);
 }
 
+Room.prototype.initializeGame = function() {
+	
+}
+
+Room.prototype.getWeakestChosenTeam = function() {
+	var teamSize = {};	
+	_.each(team_settings.teams, function(team) {
+		teamSize[team.name] = 0;
+	}, this);
+	_.each(this.clients, function(client) {
+		var team = client.chosenTeam;
+		if (this.validateTeam(team)) {
+			teamSize[team]++;
+		}
+	}.bind(this));
+	return _.min(_.keys(teamSize), function(team) {
+		return teamSize[team];
+	});
+}
+
+Room.prototype.validateTeam = function(name) {
+	var found = _.find(team_settings.teams, function(team){
+		return team.name === name;
+	});
+	return !_.isUndefined(found);
+}
+
+
+/*******************************************************/
+/****************** NETWORK CALLBACKS ******************/
+/*******************************************************/
 Room.prototype.onConnection = function(socket) {
 	// console.log("onconection");
 	var client = new Client(socket, this);
 	client.init();
 }
 
-Room.prototype.gameLoop = function() {
-	this._gameState();
+
+/****************************************************/
+/****************** SYNC FUNCTIONS ******************/
+/****************************************************/
+Room.prototype.sendFullInfoToClients = function() {
+
 }
 
-Room.prototype.preGameStateInit = function() {   
-	this.sendChangedStateToClients('preGame');
-	console.log("Changed state to preGame!");
-	this._startTime = new Date();
-}
-Room.prototype.preGameStateLoop = function() {
-	var currentTime = new Date();
-	if (currentTime - this._startTime > this._preGameDuration) {
-		this._gameState = this.playingStateLoop;
-		this.playingStateInit();
-	}
-}
-
-Room.prototype.playingStateInit = function() {
-	this.sendChangedStateToClients('playing');
-    this._sendSyncInterval = setInterval(this.sendSyncToClients.bind(this), game_config.network_tick_rate);
-	console.log("Changed state to playing!");
-	this._startTime = new Date();
-}
-Room.prototype.playingStateLoop = function() {
-	var currentTime = new Date();
-	if (this._stronghold0.components.get('health').currentHealth <= 0 ||
-			this._stronghold1.components.get('health').currentHealth <= 0) {
-		this._gameState = this.endGameStateLoop;
-		clearInterval(this._sendSyncInterval);
-		this.endGameStateInit();
-	}
-	GameEngine.getInstance().gameStep();
-}
-
-Room.prototype.endGameStateInit = function() {
-	this.sendChangedStateToClients('endGame');
-	console.log("Changed state to endGame!");
-	this._startTime = new Date();
-}
-Room.prototype.endGameStateLoop = function() {
-	var currentTime = new Date();
-	if (currentTime - this._startTime > this._endGameDuration) {
-		this._gameState = this.preGameStateLoop;
-		this.preGameStateInit();
-	}
+Room.prototype.sendLobbyInfoToClients = function() {
+	var lobbyInfo = {}
+	_.each(this.clients, function(client) {
+		var team = client.chosenTeam;
+		if (this.validateTeam(team)) {
+			if (!lobbyInfo[team]) {
+				lobbyInfo[team] = [];
+			}
+			lobbyInfo[team].push( { name: client.name,
+									ready: client.ready
+			});			
+		}
+	}.bind(this));
+	console.log(lobbyInfo);
+	_.each(this.clients, function(client) {
+		client.sendLobbyInfo(lobbyInfo);
+	});
 }
 
 Room.prototype.sendSyncToClients = function() {

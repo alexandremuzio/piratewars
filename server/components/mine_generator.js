@@ -15,25 +15,19 @@ MineGenerator.prototype.constructor = MineGenerator;
 ///
 
 MineGenerator.prototype.getId = function() {
-	return this.owner.id + '-mine_' + this._idCount++;
+	return this.getFirstAvailableID();
 }
 
 MineGenerator.prototype.createMine = function(mineId, minePosition, mineAngle, mineVelocity) {
 	ProjectileFactory.createMine(mineId, minePosition, mineAngle, mineVelocity)
 }
 
-MineGenerator.prototype.getTempEntities = function() {
-	if (this.temporaryEntitiesIDs.length > 0) {
-		// Cloning array before emptying it
-		var tempEntities = this.temporaryEntitiesIDs.slice(0);
-		this.temporaryEntitiesIDs = [];
-    	// console.log("GetTemp: this.tempEntities", this.temporaryEntitiesIDs);
-    	// console.log("GetTemp: var tempEntities", tempEntities);
-		return tempEntities;
+MineGenerator.prototype.getFirstAvailableID = function() {
+	if (this.temporaryEntitiesIDs.length === 0) {
+		console.log("ERROR: tried to get id from empty array (package loss)");		
 	}
-	else {
-		// console.log("Returning empty array");
-		return [];
+	else {		
+		return this.temporaryEntitiesIDs.shift();
 	}
 }
 

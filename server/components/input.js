@@ -24,6 +24,11 @@ ServerInputComponent.prototype.update = function() {
 		if (message.tempEntities) {
 			this.owner.subentityManager.get('cannons_manager').components.get('cannons_manager_controller').temporaryEntitiesIDs = message.tempEntities;
 		}
+
+		if (message.mineTempEntities) {
+			this.owner.components.get('mine_generator').temporaryEntitiesIDs = message.mineTempEntities;
+		}
+
 		this.processCommand(message.commands);
 	}
 	else if (this.followingTrajectory) {

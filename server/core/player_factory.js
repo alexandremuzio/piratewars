@@ -15,6 +15,7 @@ var StrongholdComponent = require('../components/stronghold');
 var CannonsManagerController = require('../components/cannons_manager_controller.js');
 var CannonController = require('../components/cannon_controller');
 var HealthComponent = require('../components/health');
+var MineGeneratorComponent = require('../components/mine_generator.js');
 
 var player_settings = require('../../shared/settings/player.json');
 var stronghold_settings = require('../../shared/settings/stronghold.json');
@@ -23,6 +24,7 @@ var stronghold_settings = require('../../shared/settings/stronghold.json');
 var PLAYER = Math.pow(2,0);
 var BULLET = Math.pow(2,1);
 var STRONGHOLD = Math.pow(2,2);
+var MINE = Math.pow(2,3);
 
 //static class
 var PlayerFactory = {
@@ -50,7 +52,7 @@ var PlayerFactory = {
 
 	    var shape = new p2.Rectangle(player_settings.width, player_settings.height);
 	    shape.collisionGroup = PLAYER;
-		shape.collisionMask = PLAYER | STRONGHOLD | BULLET;
+		shape.collisionMask = PLAYER | STRONGHOLD | BULLET | MINE;
 		body.addShape(shape);
 		
 	    body.angle = 0;
@@ -63,6 +65,7 @@ var PlayerFactory = {
 		entity.components.add(new ServerInputComponent(snapshots));
 		entity.components.add(new PlayerControllerComponent(team));
 		entity.components.add(new RespawnManagerComponent());
+		entity.components.add(new MineGeneratorComponent());
 
 		// Subentitys
 		// Creating HealthBar subentity
@@ -72,6 +75,9 @@ var PlayerFactory = {
 
 		var cannonsManager = this.createCannonsManager(id+'-cannons_manager')
 		cannonsManager.setBaseEntity(entity, 0, 0, 0);
+
+		var mineStart = this.createEmptyEntity(data.id+'-mine_start', 'mine_start');
+		mineStart.setBaseEntity(entity, -40, 0, 0);
 
 		return entity;
 	},

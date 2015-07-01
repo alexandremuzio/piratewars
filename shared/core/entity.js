@@ -58,6 +58,9 @@ Entity.prototype.getFollowBaseEntityAngle = function(value) {
 }
 
 Entity.prototype.destroy = function() {
+    // GameEngine.getInstance().printEntityHierarchy();
+    // console.log('entity.key = ' + this.key + ' detroyed ----------------------------------------');
+
     // Destroy subentitys first
     _.each(this.subentityManager.getAll(), function(subentity){
         subentity.destroy();

@@ -95,12 +95,14 @@ InputComponent.prototype.processAttack = function(command) {
     }
     if( command.spaceKey ){
         // remove && this.owner.components.get('sprite')
-        if( this.owner.components.get("cooldown").mineActivate() && this.owner.components.get('sprite')){
+        if( this.owner.components.get("cooldown").mineActivate()){
+            // console.log('SpaceKey clicked!!!!!!!!!!!!');
             var mineStartTransform = this.owner.subentityManager.get('mine_start').transform;
             var mineStartPosition = mineStartTransform.getPosition();
             var boatAngle = mineStartTransform.getAngle();
             var boatVelocityArray = this.owner.components.get('physics').body.velocity;
             this.owner.components.get('mine_generator').createMines(mineStartPosition, boatAngle, boatVelocityArray);
+            // GameEngine.getInstance().printEntityHierarchy();
         }
     }
 };

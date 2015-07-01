@@ -1,10 +1,11 @@
 'use strict'
 
+var _ = require('underscore');
 var GameEngine = require('../game_engine.js');
 var ComponentManager = require('./component_manager.js');
 var Transform = require('../components/transform.js');
 var SubentityManager = require('./subentity_manager.js');
-var _ = require('underscore');
+var EntityAttrs = require('./entity_attrs');
 
 function Entity(id, key) {
 	// console.log("inside entity constr");
@@ -12,9 +13,13 @@ function Entity(id, key) {
     this.key = key;
     this.id = id;
     this.baseEntity;
+
+    this.initialAttrs = new EntityAttrs();
+    this.attrs = new EntityAttrs();
 	this.transform = new Transform(this);
 	this.components = new ComponentManager(this);
 	this.subentityManager = new SubentityManager(this);
+
     this._eventHandlers = {};
     this._followBaseEntityAngle = true;
 };

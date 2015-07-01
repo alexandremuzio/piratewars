@@ -166,7 +166,7 @@ PlayState.prototype.onGameState = function() {
 
 PlayState.prototype.onPlayerCreate = function(data) {    
     console.log("Creating a new player!");
-    this.selfPlayer = PlayerFactory.createLocalPlayer({ id: data.id });
+    this.selfPlayer = PlayerFactory.createLocalPlayer(data);
     this.game.camera.follow(this.selfPlayer.components.get("sprite").getSprite('boat'));
 
     // MPTest

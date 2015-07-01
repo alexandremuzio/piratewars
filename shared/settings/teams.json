@@ -1,0 +1,13 @@
+{
+	"teams" : [
+		{
+			"name" : "red",
+			"color" : "0xAE2044"
+		},
+
+		{
+			"name" : "blue",
+			"color" : "0x4BDBE5"
+		}
+	]
+}

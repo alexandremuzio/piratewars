@@ -2,7 +2,7 @@
 
 var GameComponent = require('../../shared/core/component.js');
 
-function LifeComponent(maxHealth) {
+function HealthComponent(maxHealth) {
 	this.key = "health";
 	this.currentHealth = maxHealth;
 	this.maxHealth = maxHealth;
@@ -10,8 +10,8 @@ function LifeComponent(maxHealth) {
 };
 
 ///
-LifeComponent.prototype = Object.create(GameComponent.prototype);
-LifeComponent.prototype.constructor = LifeComponent;
+HealthComponent.prototype = Object.create(GameComponent.prototype);
+HealthComponent.prototype.constructor = HealthComponent;
 ///
 
-module.exports = LifeComponent;
+module.exports = HealthComponent;

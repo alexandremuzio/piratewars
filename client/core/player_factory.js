@@ -45,14 +45,14 @@ var PlayerFactory = {
 
 		sprites_info = {
 			boat: {
-        		sprite: entityGroup.create(100, 100, 'boat_0'),
+        		sprite: entityGroup.create(data.transform.x, data.transform.y, 'boat_0'),
 				width: player_settings.width,
 	        	height: player_settings.height,
 	        	anchor: {
 	        		x: 0.5,
 	        		y: 0.5
 	        	},
-        		//tint: 0xff6600
+        		tint: data.initialAttrs.teamColor
 			},
 			dead_boat: {
 				sprite: entityGroup.create(100, 100, 'dead_boat'),
@@ -76,7 +76,7 @@ var PlayerFactory = {
 		var body = new p2.Body({
 	            name: "player",
 	            mass: player_settings.physics.mass,
-	            position: [100, 100],
+	            position: [data.transform.x, data.transform.y],
 	            damping: player_settings.physics.linear_damping,
 	            angularDamping: player_settings.physics.angular_damping
 	        });
@@ -101,6 +101,7 @@ var PlayerFactory = {
 		entity.components.add(new TextComponent(text));
 		entity.components.add(new MineGeneratorComponent());
 		entity.components.add(new SelfPlayerStatesManagerComponent());
+
 		// Subentitys
 		// Creating HealthBar subentity
 		var healthBar = this.createHealthBar(data.id+'-health_bar',
@@ -111,8 +112,11 @@ var PlayerFactory = {
 								0);
 		healthBar.setFollowBaseEntityAngle(false);
 
-		var cannonsManager = this.createCannonsManager(data.id+'-cannons_manager');
+		var cannonsManager = this.createCannonsManager(data.id+'-cannons_manager')
 		cannonsManager.setBaseEntity(entity, 0, 0, 0);
+
+		var mineStart = this.createEmptyEntity(data.id+'-mine_start', 'mine_start');
+		mineStart.setBaseEntity(entity, -40, 0, 0);
 
 		return entity;
 	},
@@ -197,8 +201,8 @@ var PlayerFactory = {
 			cannon: {
 				sprite: entityGroup.create(205, 100, 'cannon_0'),
 				scale: { 
-	        		x: 0.15,
-	        		y: 0.15
+	        		x: player_settings.cannon.scale.x,
+	        		y: player_settings.cannon.scale.y
         		},
 	        	anchor: {
 	        		x: 0.5,
@@ -213,7 +217,8 @@ var PlayerFactory = {
 
 		// Creating bulletInitialTransform subentity
 		var bulletStart = this.createEmptyEntity(id+'-bullet_start', 'bullet_start');
-		bulletStart.setBaseEntity(entity, 15, 0, 0);
+		bulletStart.setBaseEntity(entity,
+								 player_settings.cannon.distFromCannon, 0, 0);
 
 		return entity;
 	},
@@ -294,7 +299,7 @@ var PlayerFactory = {
 		entityGroup = this.game.add.group();
 
 		sprites_info = {
-			boat: {
+			stronghold: {
 				sprite: entityGroup.create(data.initialPos.x, data.initialPos.y, 'stronghold'),
 				width: stronghold_settings.width,
 	        	height: stronghold_settings.height,

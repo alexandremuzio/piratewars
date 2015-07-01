@@ -1,0 +1,5 @@
+{
+	"key" : "game_config",
+ 	"network_tick_rate" : 50,
+ 	"game_tick_rate" : 15
+}

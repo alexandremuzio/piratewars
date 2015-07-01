@@ -5,8 +5,17 @@ var Client = require('./client.js');
 var SnapshotManager = require('../../shared/core/snapshot_manager');
 var GameEngine = require('../../shared/game_engine.js');
 var PlayerFactory = require('./player_factory.js');
+var TeamManager = require('./team_manager.js');
+var Team = require('./team');
+
+var game_config = require('../../shared/settings/game_config.json');
+var team_settings = require('../../shared/settings/teams.json');
 
 function Room(socket) {
+
+	this.teams = new TeamManager();
+	this.playerCount = 0;
+
 	this.clients = [];
 	this.snapshots = new SnapshotManager();
 	this._socket = socket;
@@ -17,16 +26,26 @@ function Room(socket) {
 }
 
 Room.prototype.init = function() {
+	PlayerFactory.init(this);
+
 	this._socket.sockets.on('connect', this.onConnection.bind(this));
 	this.createInitialEntities();
+	this.createTeams();
 	this._gameState = this.preGameStateLoop;
 	this.preGameStateInit();
-	this._gameLoopInterval = setInterval(this.gameLoop.bind(this), 1000/60);
+	this._gameLoopInterval = setInterval(this.gameLoop.bind(this), game_config.game_tick_rate);
 }
 
 Room.prototype.createInitialEntities = function() {
 	this._stronghold0 = PlayerFactory.createStronghold(0);
 	this._stronghold1 = PlayerFactory.createStronghold(1);
+}
+
+Room.prototype.createTeams = function() {
+	_.each(team_settings.teams, function(teamSetting) {
+		var newTeam = new Team(teamSetting, this);
+		this.teams.add(teamSetting.name, newTeam);
+	}, this);
 }
 
 Room.prototype.onConnection = function(socket) {
@@ -54,7 +73,7 @@ Room.prototype.preGameStateLoop = function() {
 
 Room.prototype.playingStateInit = function() {
 	this.sendChangedStateToClients('playing');
-    this._sendSyncInterval = setInterval(this.sendSyncToClients.bind(this), 1000/20);
+    this._sendSyncInterval = setInterval(this.sendSyncToClients.bind(this), game_config.network_tick_rate);
 	console.log("Changed state to playing!");
 	this._startTime = new Date();
 }

@@ -26,9 +26,18 @@ var STRONGHOLD = Math.pow(2,2);
 
 //static class
 var PlayerFactory = {
-	createPlayer : function(data) {
+	init : function (room) {
+		this.room = room
+	},
+
+	createPlayer : function(socket, snapshots) {
 		var id = UUID();
 		var entity = new Entity(id, 'player');
+		var team = this.room.teams.getWeakest();
+		// var initialPosition = this.room.teams. //get from spawn manager
+		
+		console.log("In player factory - Weakest team:");
+		console.log(team);
 
 		var body = new p2.Body({
 	            name: "player",
@@ -49,12 +58,12 @@ var PlayerFactory = {
 	    entity.components.add(new HealthComponent(player_settings.maxHealth));
 		entity.components.add(new CreatorComponent());
 		entity.components.add(new CooldownComponent());
-		entity.components.add(new NetworkComponent(data.socket));
+		entity.components.add(new NetworkComponent(socket));
 		entity.components.add(new PhysicsComponent(body));
-		entity.components.add(new ServerInputComponent(data.snapshots));
-		entity.components.add(new PlayerControllerComponent());
+		entity.components.add(new ServerInputComponent(snapshots));
+		entity.components.add(new PlayerControllerComponent(team));
 		entity.components.add(new RespawnManagerComponent());
-		
+
 		// Subentitys
 		// Creating HealthBar subentity
 		// var healthBar = this.createHealthBar(id+'health_bar');

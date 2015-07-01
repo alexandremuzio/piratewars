@@ -37,11 +37,13 @@ Client.prototype.onReady = function() {
 
 Client.prototype.createPlayer = function() {
 	// console.log("client createPlayer");
-	var data = {};
-	data.socket = this._socket;
-	data.snapshots = this._snapshots;
-	var entity = PlayerFactory.createPlayer(data);
-	this._socket.emit('player.create', { id: entity.id });
+	var entity = PlayerFactory.createPlayer(this._socket, this._snapshots);
+	this._socket.emit('player.create', 
+		{
+			id: entity.id,
+			transform: entity.transform.getPosition(),
+			initialAttrs: entity.initialAttrs.getAll()
+		});
 	return entity;
 }
 

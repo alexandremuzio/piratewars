@@ -20,6 +20,8 @@ SpriteComponent.prototype.constructor = SpriteComponent;
 SpriteComponent.prototype.init = function() {
 	this.owner.on('entity.destroy', this.onEntityDestroy.bind(this));
 
+	// console.log("inside SpriteComponent init");
+
 	_.each(this._sprites_info, function(sprite_i, key) {
 		
         if(sprite_i.scale) { sprite_i.sprite.scale.setTo(sprite_i.scale.x, sprite_i.scale.y); }
@@ -38,6 +40,7 @@ SpriteComponent.prototype.init = function() {
         this._sprites[key] = sprite_i.sprite;
     }, this);
 
+	// console.log("after SpriteComponent init");
 //	/* Crop is based on texture (must use texture width and height) */
 //	this.originalTextureRect = new Phaser.Rectangle(0, 0, this.sprite.texture.width, this.sprite.texture.height);
 //	/* Saved original texture rect because crop will modify texture properties */

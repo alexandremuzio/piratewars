@@ -1,6 +1,6 @@
 'use strict'
 
-var BaseComponent = require('../../shared/components/health.js');
+var BaseComponent = require('../../shared/components/health');
 
 function HealthComponent(maxHealth) {
 	BaseComponent.call(this, maxHealth);
@@ -10,6 +10,7 @@ function HealthComponent(maxHealth) {
 HealthComponent.prototype = Object.create(BaseComponent.prototype);
 HealthComponent.prototype.constructor = HealthComponent;
 ///
+
 HealthComponent.prototype.init = function() {
 	this.owner.on('entity.damage', this.onEntityDamage.bind(this));
 	this.owner.on('entity.revive', this.onEntityRevive.bind(this));
@@ -31,6 +32,7 @@ HealthComponent.prototype.onEntityDie = function() {
 
 HealthComponent.prototype.onEntityDamage = function(value) {
 	this.currentHealth -= value;
+	// console.log( this.owner.key + " has been damaged by " + value);
 	if(this.currentHealth < 0) this.currentHealth = 0;
 }
 

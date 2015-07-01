@@ -3,7 +3,6 @@
 var _ = require('underscore');
 var InputComponent = require('../../shared/components/input.js');
 var NextPositionIndicatorConstructor = require('../next_position_indicator/next_position_indicator.js');
-var PlayerEnum = require('../../shared/utils/player_enum.js');
 
 function PhaserInputComponent(input) {
 	// console.log("inside PhaserInputComp constr");
@@ -41,6 +40,10 @@ PhaserInputComponent.prototype.init = function() {
 
     this._snapshots = this.owner.components.get('outSync').snapshots;
     this._socket = this.owner.components.get('network').socket;
+
+    /* This is in Input Shared */
+    this.owner.on('entity.revive', this.onEntityRevive.bind(this));
+    this.owner.on('entity.die', this.onEntityDie.bind(this));
 }
 
 PhaserInputComponent.prototype.onMouseDown = function() {
@@ -94,9 +97,8 @@ PhaserInputComponent.prototype.captureInput = function() {
     // MPTemp
     command.id = this._commandId++;
 
-    if (this.owner.components.get('player_states').getState() != PlayerEnum.DEAD) {
-        this.processCommand(command);
-    }
+    this.processCommand(command);
+    
     if (!_.isEmpty(command)) {
         this._snapshots.add(command);
     }

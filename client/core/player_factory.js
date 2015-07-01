@@ -13,7 +13,6 @@ var PlayerControllerComponent = require('../components/player_controller.js');
 var SpriteComponent = require('../components/sprite.js');
 var SyncComponent = require('../components/sync.js');
 var HealthBarComponent = require('../components/health_bar.js');
-var PlayerStatesManagerComponent = require('../components/player_states_manager.js');
 var TextComponent = require('../components/text.js');
 var CannonsManagerController = require('../components/cannons_manager_controller.js');
 var CannonController = require('../components/cannon_controller.js');
@@ -98,7 +97,6 @@ var PlayerFactory = {
 		entity.components.add(new SpriteComponent(sprites_info));
 		entity.components.add(new PlayerControllerComponent());
 		entity.components.add(new TextComponent(text));
-		entity.components.add(new PlayerStatesManagerComponent());
 		entity.components.add(new SelfPlayerStatesManagerComponent());
 
 		// Subentitys
@@ -266,8 +264,7 @@ var PlayerFactory = {
 		entity.components.add(new SpriteComponent(sprites_info));
 		entity.components.add(new SyncComponent());
 		entity.components.add(new PlayerControllerComponent());
-		entity.components.add(new PlayerStatesManagerComponent());
-
+		
 		// Subentitys
 		var cannonsManager = this.createCannonsManager(data.id+'-cannons_manager')
 		cannonsManager.setBaseEntity(entity, 0, 0, 0);

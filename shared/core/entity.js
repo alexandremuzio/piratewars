@@ -100,11 +100,6 @@ Entity.prototype.on = function(event, handler) {
 
 Entity.prototype.trigger = function(event) {
     var params = Array.prototype.slice.call(arguments, 1);
-    if(this.key == 'entity.die') {
-        console.log(event);
-        console.log(this.key);
-        console.log(this._eventHandlers);
-    }
     if (this._eventHandlers[event]) {
         for (var i = 0; i < this._eventHandlers[event].length; i++) {
             this._eventHandlers[event][i].apply(this, params);

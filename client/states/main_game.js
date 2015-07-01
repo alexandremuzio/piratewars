@@ -108,6 +108,7 @@ PlayState.prototype.assignAssets = function() {
 
 PlayState.prototype.assignNetworkCallbacks = function() {    
     this.socket.on('game.sync', this.onGameSync.bind(this));
+    this.socket.on('game.state', this.onGameState.bind(this));
     this.socket.on('player.create', this.onPlayerCreate.bind(this));
 }
 
@@ -153,6 +154,10 @@ PlayState.prototype.debugUpdate = function() {
 
 PlayState.prototype.onGameSync = function(snapshot) {
     this.outSnapshotManager.add(snapshot);
+}
+
+PlayState.prototype.onGameState = function() {
+
 }
 
 PlayState.prototype.onPlayerCreate = function(data) {    

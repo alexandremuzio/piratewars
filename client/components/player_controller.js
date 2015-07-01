@@ -1,13 +1,9 @@
 'use strict'
 
 var BaseComponent = require('../../shared/components/player_controller');
-var PlayerEnum = require('../../shared/utils/player_enum.js');
 
 function Player() {
 	this.key = "player";
-	this._alive = null; // States: PREGAME: 0, ALIVE: 1, DEAD: 2
-	this._lastAlive = null;
-	this._respawnTime = null;
 };
 
 ///

@@ -19,7 +19,10 @@ LifeComponent.prototype.init = function() {
 LifeComponent.prototype.update = function() {
 	if(this.currentHealth <= 0 && this.alive == true) {
 		this.owner.die();
-	}	
+	}
+	else if(this.currentHealth > 0 && this.alive == false) {
+		this.owner.revive();
+	}
 }
 
 LifeComponent.prototype.onEntityDie = function() {

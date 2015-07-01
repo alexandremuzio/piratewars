@@ -11,6 +11,7 @@ var GameEngine = (function () {
 		// Private properties and functions
 		var _world = new p2.World({gravity:[0,0]});
 		var _entities = {};
+		var _state = null;
 		var _stepLength = 1/60; //in seconds
 		var _scheduledForDeletion = [];
 		var _deleteEntities = function() {

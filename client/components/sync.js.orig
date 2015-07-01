@@ -45,18 +45,22 @@ SyncComponent.prototype.onSyncronization = function(message) {
 	// MPTest
 	// console.log('--- onSyncronization called --- #############################');
 <<<<<<< HEAD
+	// console.log(transform);
 	if (message.transform) {
 		this.owner.transform.setTransform(message.transform);
 	}
 
 	if (message.health) {
 		this.owner.components.get("health").setHealth(message.health); //TO DO
-	}
 =======
 	// console.log(message.transform);
 	this.owner.transform.setTransform(message.transform);
 	this.owner.components.get("health").setHealth(message.health); //TO DO
->>>>>>> Refactoring code and respawn implemented
+
+	if(message.state) {
+		this.owner.components.get("player_states").setState(message.state);
+>>>>>>> Doing respawn and alive-dead logic
+	}
 }
 
 module.exports = SyncComponent;

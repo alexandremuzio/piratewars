@@ -8,7 +8,7 @@ var CreatorComponent = require('../components/creator');
 var PlayerControllerComponent = require('../components/player_controller');
 var NetworkComponent = require('../../shared/components/network.js');
 var ServerInputComponent = require('../components/input.js');
-var PlayerStatesManagerComponent = require('../components/player_states_manager.js');
+var RespawnManagerComponent = require('../components/respawn.js');
 var PhysicsComponent = require('../../shared/components/physics.js');
 var GameEngine = require('../../shared/game_engine.js');
 var StrongholdComponent = require('../components/stronghold');
@@ -53,7 +53,7 @@ var PlayerFactory = {
 		entity.components.add(new PhysicsComponent(body));
 		entity.components.add(new ServerInputComponent(data.snapshots));
 		entity.components.add(new PlayerControllerComponent());
-		entity.components.add(new PlayerStatesManagerComponent());
+		entity.components.add(new RespawnManagerComponent());
 		
 		// Subentitys
 		// Creating HealthBar subentity

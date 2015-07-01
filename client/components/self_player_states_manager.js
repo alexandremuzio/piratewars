@@ -2,12 +2,12 @@
 
 //var BaseComponent = require('../../shared/components/SelfPlayerStatesManager_controller');
 var GameComponent = require('../../shared/core/component.js');
-var PlayerEnum = require('../../shared/utils/player_enum.js');
-var game_states_settings = require('../../shared/settings/game_states.json');
+var game_time_settings = require('../../shared/settings/game_time.json');
 
 function SelfPlayerStatesManager() {
 	this.key = "self_player_states";
-	this._respawnTime = null;
+	this._currentRespawnTime = null;
+	this._currentTime = null;
 };
 
 ///
@@ -21,6 +21,19 @@ SelfPlayerStatesManager.prototype.init = function() {
 };
 
 SelfPlayerStatesManager.prototype.update = function() {
+	if (this._currentRespawnTime) {
+		var newCurrentTime = new Date();
+		var timestamp = this._currentRespawnTime/1000 | 0; //Seconds unit of currentRespawnTime
+		
+		this._currentRespawnTime -= (newCurrentTime - this._currentTime);
+		this._currentTime =  newCurrentTime;
+		
+		if(this._currentRespawnTime >= 0 && timestamp != (this._currentRespawnTime/1000 | 0)) {
+			console.log(timestamp);
+			console.log(this._currentRespawnTime/1000 | 0);
+	        EZGUI.components.respawnTime.text = (this._currentRespawnTime/1000 | 0).toString();
+	    }
+	}
 };
 
 SelfPlayerStatesManager.prototype.openRespawnDialogBox = function() {
@@ -28,19 +41,7 @@ SelfPlayerStatesManager.prototype.openRespawnDialogBox = function() {
 	rdb.visible = true;
 	rdb.alpha = 0;
 	rdb.animateFadeIn(1000, EZGUI.Easing.Linear.None);
-};
-
-SelfPlayerStatesManager.prototype.countRespawnTime = function() {
-	EZGUI.components.respawnTime.text = game_states_settings.respawn_time;
-    this._respawnTime = game_states_settings.respawn_time;
-    var that = this;
-    setInterval(function() {
-        that._respawnTime--;
-
-        if (that._respawnTime >= 0) {
-           EZGUI.components.respawnTime.text = that._respawnTime.toString();
-        }
-    }, 1000);
+    EZGUI.components.respawnTime.text = game_time_settings.respawn_time;
 };
 
 SelfPlayerStatesManager.prototype.closeRespawnDialogBox = function() {
@@ -49,11 +50,14 @@ SelfPlayerStatesManager.prototype.closeRespawnDialogBox = function() {
 };
 
 SelfPlayerStatesManager.prototype.onEntityDie = function() {
-	this.openRespawnDialogBox();
-	this.countRespawnTime();
+	this._currentRespawnTime = game_time_settings.respawn_time;
+	this._currentTime = new Date();
+    
+    this.openRespawnDialogBox();
 };
 
 SelfPlayerStatesManager.prototype.onEntityRevive = function() {
+	this._currentRespawnTime = null;
 	this.closeRespawnDialogBox();
 };
 

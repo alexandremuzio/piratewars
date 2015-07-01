@@ -16,6 +16,8 @@ function InputComponent() {
     this._rotateOnCounterClockWise;
     this._clickedPointInCycle = false;
     this._centerToClickedPointVector;
+    this._processCommandBoolean = true;
+    this._processAttackBoolean = true;
     this.initNewTrajectoryCalled = false;
     this._actualForce = 0;
 };
@@ -25,12 +27,37 @@ InputComponent.prototype = Object.create(GameComponent.prototype);
 InputComponent.prototype.constructor = InputComponent;
 ///
 
-InputComponent.prototype.processCommand = function(command) {
+InputComponent.prototype.init = function() {
+    this.owner.on('entity.revive', this.onEntityRevive.bind(this));
+    this.owner.on('entity.die', this.onEntityDie.bind(this));
+}
+
+InputComponent.prototype.onEntityDie = function() {
+    this._processCommandBoolean = false;
+    this._processAttackBoolean = false;
+}
+
+InputComponent.prototype.onEntityRevive = function() {
+    this._processCommandBoolean = true;
+    this._processAttackBoolean = true;
+    this.resetVelocity();
+}
+
+InputComponent.prototype.resetVelocity = function() {
     if( this._body == null )
         this._body = this.owner.components.get("physics").body;
 
-    this.processAttack(command);
+    this._body.velocity[0] = 0;
+    this._body.velocity[1] = 0;
+}
+InputComponent.prototype.processCommand = function(command) {
+    if(this._processCommandBoolean == true) {
+        if( this._body == null )
+            this._body = this.owner.components.get("physics").body;
 
+        this.processAttack(command);
+
+<<<<<<< HEAD
     // if( this.hasArrowCommand(command)){
     //     if( this.followingTrajectory ){ // Move by arrows => destroy current trajectory
     //         this.followingTrajectory = false;
@@ -54,13 +81,41 @@ InputComponent.prototype.processAttack = function(command) {
             var cannonsManager = this.owner.subentityManager.get('cannons_manager');
             var cannonsManagerController = cannonsManager.components.get("cannons_manager_controller");
             cannonsManagerController.shootLeft();
+=======
+        if( this.hasArrowCommand(command)){
+            if( this.followingTrajectory ){ // Move by arrows => destroy current trajectory
+                this.followingTrajectory = false;
+            }
+            this.processArrowCommand(command);
         }
+        else if( command.mouseLeftButtonDown ){ // Mouse click
+            this.initNewTrajectory(command);
+        }
+
+        if( this.followingTrajectory ){
+            this.followTrajectoryUpdate();
+        }
+
+        this.correctVelocity();
     }
-    if( command.eKey ){
-        if (this.owner.components.get("cooldown").activate()) {
-            var cannonsManager = this.owner.subentityManager.get('cannons_manager');
-            var cannonsManagerController = cannonsManager.components.get("cannons_manager_controller");
-            cannonsManagerController.shootRight();
+};
+
+InputComponent.prototype.processAttack = function(command) {
+    if(this._processAttackBoolean == true) {
+        if( command.qKey ){
+            if (this.owner.components.get("cooldown").activate()) {
+                var cannonsManager = this.owner.subentityManager.get('cannons_manager');
+                var cannonsManagerController = cannonsManager.components.get("cannons_manager_controller");
+                cannonsManagerController.shootLeft();
+            }
+>>>>>>> Refactoring code and respawn implemented
+        }
+        if( command.eKey ){
+            if (this.owner.components.get("cooldown").activate()) {
+                var cannonsManager = this.owner.subentityManager.get('cannons_manager');
+                var cannonsManagerController = cannonsManager.components.get("cannons_manager_controller");
+                cannonsManagerController.shootRight();
+            }
         }
     }
     if( command.spaceKey ){

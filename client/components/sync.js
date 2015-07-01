@@ -2,7 +2,7 @@
 
 var GameComponent = require('../../shared/core/component.js');
 var SnapshotManager = require('../../shared/core/snapshot_manager.js');
-
+var _ = require('underscore');
 function SyncComponent() {
 	// console.log("inside SyncComponent constr");
 	this.key = "outSync";
@@ -44,19 +44,13 @@ SyncComponent.prototype.sendSyncToServer = function() {//update = function() {
 SyncComponent.prototype.onSyncronization = function(message) {
 	// MPTest
 	// console.log('--- onSyncronization called --- #############################');
-<<<<<<< HEAD
-	if (message.transform) {
+	if (!_.isUndefined(message.transform) && !_.isNull(message.transform)) {
 		this.owner.transform.setTransform(message.transform);
 	}
 
-	if (message.health) {
+	if (!_.isUndefined(message.health) && !_.isNull(message.health)) {
 		this.owner.components.get("health").setHealth(message.health); //TO DO
 	}
-=======
-	// console.log(message.transform);
-	this.owner.transform.setTransform(message.transform);
-	this.owner.components.get("health").setHealth(message.health); //TO DO
->>>>>>> Refactoring code and respawn implemented
 }
 
 module.exports = SyncComponent;

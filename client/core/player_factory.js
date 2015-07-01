@@ -17,6 +17,7 @@ var TextComponent = require('../components/text.js');
 var CannonsManagerController = require('../components/cannons_manager_controller.js');
 var CannonController = require('../components/cannon_controller.js');
 var HealthComponent = require('../components/health.js');
+var MineGeneratorComponent = require('../components/mine_generator.js');
 var StrongholdComponent = require('../components/stronghold');
 var SelfPlayerStatesManagerComponent = require('../components/self_player_states_manager.js');
 
@@ -98,12 +99,8 @@ var PlayerFactory = {
 		entity.components.add(new SpriteComponent(sprites_info));
 		entity.components.add(new PlayerControllerComponent());
 		entity.components.add(new TextComponent(text));
-<<<<<<< HEAD
 		entity.components.add(new MineGeneratorComponent());
-=======
->>>>>>> Refactoring code and respawn implemented
 		entity.components.add(new SelfPlayerStatesManagerComponent());
-
 		// Subentitys
 		// Creating HealthBar subentity
 		var healthBar = this.createHealthBar(data.id+'-health_bar',
@@ -244,6 +241,16 @@ var PlayerFactory = {
 	        		y: 0.5
 	        	},
         		//tint: 0xff6600
+			},
+			dead_boat: {
+				sprite: entityGroup.create(100, 100, 'dead_boat'),
+				width: player_settings.width,
+	        	height: player_settings.height,
+	        	anchor: {
+	        		x: 0.5,
+	        		y: 0.5
+	        	},
+        		//tint: 0xff6600
 			}
 		};
 
@@ -270,11 +277,7 @@ var PlayerFactory = {
 		entity.components.add(new SpriteComponent(sprites_info));
 		entity.components.add(new SyncComponent());
 		entity.components.add(new PlayerControllerComponent());
-<<<<<<< HEAD
 
-=======
-		
->>>>>>> Refactoring code and respawn implemented
 		// Subentitys
 		var cannonsManager = this.createCannonsManager(data.id+'-cannons_manager')
 		cannonsManager.setBaseEntity(entity, 0, 0, 0);

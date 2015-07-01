@@ -33,6 +33,7 @@ InputComponent.prototype.init = function() {
 }
 
 InputComponent.prototype.onEntityDie = function() {
+    console.log('dying in input shared');
     this._processCommandBoolean = false;
     this._processAttackBoolean = false;
 }
@@ -50,53 +51,28 @@ InputComponent.prototype.resetVelocity = function() {
     this._body.velocity[0] = 0;
     this._body.velocity[1] = 0;
 }
+
 InputComponent.prototype.processCommand = function(command) {
     if(this._processCommandBoolean == true) {
         if( this._body == null )
             this._body = this.owner.components.get("physics").body;
 
         this.processAttack(command);
-
-<<<<<<< HEAD
-    // if( this.hasArrowCommand(command)){
-    //     if( this.followingTrajectory ){ // Move by arrows => destroy current trajectory
-    //         this.followingTrajectory = false;
-    //     }
+    //    if( this.hasArrowCommand(command)){
+    //        if( this.followingTrajectory ){ // Move by arrows => destroy current trajectory
+    //            this.followingTrajectory = false;
+    //        }
         this.processArrowCommand(command);
-    // }
-    // else if( command.mouseLeftButtonDown ){ // Mouse click
-    //     this.initNewTrajectory(command); /////////////////////////////////////////////////////////////
-    // }
+    //    }
+    //    else if( command.mouseLeftButtonDown ){ // Mouse click
+    //        this.initNewTrajectory(command);
+    //    }
 
-    // if( this.followingTrajectory ){
-    //     this.followTrajectoryUpdate();
-    // }
+    //    if( this.followingTrajectory ){
+    //        this.followTrajectoryUpdate();
+    //    }
 
-    // this.correctVelocity();
-};
-
-InputComponent.prototype.processAttack = function(command) {
-    if( command.qKey ){
-        if (this.owner.components.get("cooldown").activate()) {
-            var cannonsManager = this.owner.subentityManager.get('cannons_manager');
-            var cannonsManagerController = cannonsManager.components.get("cannons_manager_controller");
-            cannonsManagerController.shootLeft();
-=======
-        if( this.hasArrowCommand(command)){
-            if( this.followingTrajectory ){ // Move by arrows => destroy current trajectory
-                this.followingTrajectory = false;
-            }
-            this.processArrowCommand(command);
-        }
-        else if( command.mouseLeftButtonDown ){ // Mouse click
-            this.initNewTrajectory(command);
-        }
-
-        if( this.followingTrajectory ){
-            this.followTrajectoryUpdate();
-        }
-
-        this.correctVelocity();
+    //    this.correctVelocity();
     }
 };
 
@@ -108,7 +84,6 @@ InputComponent.prototype.processAttack = function(command) {
                 var cannonsManagerController = cannonsManager.components.get("cannons_manager_controller");
                 cannonsManagerController.shootLeft();
             }
->>>>>>> Refactoring code and respawn implemented
         }
         if( command.eKey ){
             if (this.owner.components.get("cooldown").activate()) {

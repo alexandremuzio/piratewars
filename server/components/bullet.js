@@ -36,7 +36,6 @@ BulletComponent.prototype.update = function() {
 };
 
 BulletComponent.prototype.onCollision = function(collider) {
-	console.log("IM here!!!")
 	if (collider.key == "player") {
 		collider.damage(this.damage, collider);
 		console.log("damaging player!");

@@ -20,8 +20,6 @@ SpriteComponent.prototype.constructor = SpriteComponent;
 SpriteComponent.prototype.init = function() {
 	this.owner.on('entity.destroy', this.onEntityDestroy.bind(this));
 
-	console.log("inside SpriteComponent init");
-
 	_.each(this._sprites_info, function(sprite_i, key) {
 		
         if(sprite_i.scale) { sprite_i.sprite.scale.setTo(sprite_i.scale.x, sprite_i.scale.y); }
@@ -71,7 +69,6 @@ SpriteComponent.prototype.update = function() {
 }
 
 SpriteComponent.prototype.kill = function(key) {
-    console.log('Inside kill sprite func');
     var sprite = this._sprites[key];
     if(sprite) {
         sprite.kill();

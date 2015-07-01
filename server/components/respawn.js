@@ -2,6 +2,7 @@
 
 var GameComponent = require('../../shared/core/component.js');
 var game_time_settings = require('../../shared/settings/game_time.json');
+var _ = require('underscore');
 
 function RespawnManager() {
 	this.key = "respawn";
@@ -20,7 +21,7 @@ RespawnManager.prototype.init = function() {
 };
 
 RespawnManager.prototype.update = function() {
-	if (this._currentRespawnTime) {
+	if (!_.isNull(this._currentRespawnTime) && !_.isUndefined(this._currentRespawnTime)) {
 		var newCurrentTime = new Date();
 		
 		this._currentRespawnTime -= (newCurrentTime - this._currentTime);

@@ -57,6 +57,7 @@ Room.prototype.sendSyncToClients = function() {
 	clientSnapshot.players = {};
 	clientSnapshot.bullets = {};
 	clientSnapshot.strongholds = {};
+	clientSnapshot.mines = {};
 	_.each(GameEngine.getInstance().entities, function(entity) {
 		if (entity.key === 'player') {
 			clientSnapshot.players[entity.id] = {};
@@ -70,6 +71,10 @@ Room.prototype.sendSyncToClients = function() {
 		else if (entity.key === 'stronghold') {
 			clientSnapshot.strongholds[entity.id] = {};
 			clientSnapshot.strongholds[entity.id].health = entity.components.get('health').currentHealth;
+		}
+		else if (entity.key === 'mine' && entity.components.get('mine_controller').sent === false) {
+			entity.components.get('mine_controller').sent = true
+			clientSnapshot.mines[entity.id] = entity.transform.getTransform();
 		}
 	});
 	this.syncClients(clientSnapshot);

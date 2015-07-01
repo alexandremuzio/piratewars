@@ -29,6 +29,8 @@ SyncComponent.prototype.sendSyncToServer = function() {//update = function() {
 		this.snapshots.clear();
 		// console.log(lastSnapshot);
 		var message = {commands: lastSnapshot};
+		
+		// Bullet ID's
 		// console.log(this.owner.subentityManager.get('cannons_manager').components.get('cannons_manager_controller'));
 		var tempEntities = this.owner.subentityManager.get('cannons_manager').components.get('cannons_manager_controller').getTempEntities();
 		// console.log("tempEntities inside sync", tempEntities);
@@ -36,6 +38,15 @@ SyncComponent.prototype.sendSyncToServer = function() {//update = function() {
 			message.tempEntities = tempEntities;
 			// console.log("Sending bullets, message= ", message);
 		}
+
+		// Mine ID's
+		var mineTempEntities = this.owner.components.get('mine_generator').getTempEntities();
+		// console.log("mineTempEntities inside sync", mineTempEntities);
+		if (mineTempEntities.length > 0) {
+			message.mineTempEntities = mineTempEntities;
+			// console.log("Sending mines, message= ", message);
+		}
+
 		message.step = this._stepCounter++;
 		this._socket.emit('client.sync', message);
 	}

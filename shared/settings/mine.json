@@ -2,14 +2,19 @@
 	"key" : "mine",
 	"physics" :
 		{
-			"initial_velocity": 12
+			"mass": 0.001,
+			"initial_velocity": 30,
+			"angular_velocity": 0.5,
+			"damping": 0.1,
+			"angular_damping": 0.3
 		},
-	"radius" : 15,
-	"time_to_sink" : 3000,
+	"radius" : 30,
+	"sink_time" : 12000,
 	"n_mines": 3,
 	"angle_spacement": 0.5,
 	"initial_distance": 12,
 	"boat_velocity_factor": 0.5,
 	"charge_time": 1500,
-	"damping": 1
+	"damage": 20,
+	"auto_damage_time": 3000
 }

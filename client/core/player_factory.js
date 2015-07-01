@@ -27,6 +27,7 @@ var player_settings = require('../../shared/settings/player.json');
 var PLAYER = Math.pow(2,0);
 var BULLET = Math.pow(2,1);
 var STRONGHOLD = Math.pow(2,2);
+var MINE = Math.pow(2,3);
 
 var PlayerFactory = {
 	init : function (data) {
@@ -81,7 +82,7 @@ var PlayerFactory = {
 
 		var shape = new p2.Rectangle(player_settings.width, player_settings.height);
 		shape.collisionGroup = PLAYER;
-		shape.collisionMask = PLAYER | STRONGHOLD | BULLET;
+		shape.collisionMask = PLAYER | STRONGHOLD | BULLET | MINE;
 	    body.addShape(shape);
 
 	    body.angle = 0;
@@ -269,7 +270,7 @@ var PlayerFactory = {
 
 		var shape = new p2.Rectangle(player_settings.width, player_settings.height);
 		shape.collisionGroup = PLAYER;
-		shape.collisionMask = PLAYER | STRONGHOLD | BULLET;
+		shape.collisionMask = PLAYER | STRONGHOLD | BULLET | MINE;
 	    body.addShape(shape);
 
 	    // body.damping = player_settings.physics.linear_damping;

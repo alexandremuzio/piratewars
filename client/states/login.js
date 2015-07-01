@@ -78,6 +78,7 @@ LoginState.prototype.loadAssets = function() {
     this.game.load.image('red_arrow', 'assets/red_arrow.png');
     this.game.load.image('stronghold', 'assets/stronghold.png');
     this.game.load.image('cannon_0', 'assets/cannon_0.png');
+    this.game.load.image('mine', 'assets/mine.png');
     
     /* ----------------- GUI assets --------------------*/
     this.game.load.image('lvlcomplete', 'assets/GUI/img/lvlcomplete.png');

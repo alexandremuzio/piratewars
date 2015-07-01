@@ -6,6 +6,7 @@ var mine_settings = require('../../shared/settings/mine.json');
 
 function MineController(shape) {
 	BaseComponent.call(this, shape);
+	this.sent = false;
 };
 
 ///
@@ -14,7 +15,6 @@ MineController.prototype.constructor = MineController;
 ///
 
 MineController.prototype.update = function(){ 
-	// console.log(this.owner.components.get('physics').body);
 	BaseComponent.prototype.update.call(this);
 }
 

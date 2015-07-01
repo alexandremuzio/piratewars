@@ -126,7 +126,7 @@ var ProjectileFactory = {
 
 		sprites_info = {
 			mine: {
-				sprite: entityGroup.create(initialPosition.x, initialPosition.y, 'bullet'),
+				sprite: entityGroup.create(initialPosition.x, initialPosition.y, 'mine'),
 				width: mine_settings.radius,
 				height: mine_settings.radius,
 	        	anchor: {
@@ -139,21 +139,75 @@ var ProjectileFactory = {
 
 		var body = new p2.Body({
 	            name: "mine",
-	            type: p2.Body.KINEMATIC,
-	            /*mass : bulletMass,*/
+	            mass : mine_settings.physics.mass,
 	            position: [initialPosition.x, initialPosition.y],
 	            velocity: [initialVelocity.x, initialVelocity.y],
-	            damping: mine_settings.damping
+	            damping: mine_settings.physics.damping,
+	            angularDamping: mine_settings.physics.angular_damping,
+	            angularVelocity: mine_settings.physics.angular_velocity*( Math.random() > 0.5 ? 1 : -1),
 	    });
 	    body.entity = entity;
+	    // body.collisionResponse = false;
+
+	    // console.log('Created body of mine:');
+	    // console.log(body);
 	    
 	    var shape = new p2.Circle(mine_settings.radius); //////set radius!!
 		shape.collisionGroup = MINE;
-		// shape.collisionMask = PLAYER;
-	    body.addShape(shape);
+		shape.collisionMask = PLAYER;
+		shape.sensor = true;
+	    // body.addShape(shape);
 
 		entity.components.add(new PhysicsComponent(body));
-		entity.components.add(new MineController());
+		entity.components.add(new MineController(shape));
+		entity.components.add(new SpriteComponent(sprites_info));
+		// console.log("End of entity");
+		return entity;
+	},
+
+	createRemoteMine : function(transform) {
+		var id = UUID();
+		var entity = new Entity(id, 'mine'),
+        	entityGroup, sprites_info;
+
+        // console.log(this);
+        // console.log(this.game);
+
+		entityGroup = this.game.add.group();
+
+		sprites_info = {
+			mine: {
+				sprite: entityGroup.create(transform.position.x, transform.position.y, 'mine'),
+				width: mine_settings.radius,
+				height: mine_settings.radius,
+	        	anchor: {
+	        		x: 0.5,
+	        		y: 0.5
+	        	},
+        		//tint: 0xff6600
+			}
+		};
+
+		var body = new p2.Body({
+	            name: "mine",
+	            mass : mine_settings.physics.mass,
+	            position: [transform.position.x, transform.position.y],
+	            velocity: [transform.velocity.x, transform.velocity.y],
+	            damping: mine_settings.physics.damping,
+	            angularDamping: mine_settings.physics.angular_damping,
+	            angularVelocity: mine_settings.physics.angular_velocity*( Math.random() > 0.5 ? 1 : -1),
+	    });
+	    body.entity = entity;
+	    // body.collisionResponse = false;
+
+	    var shape = new p2.Circle(mine_settings.radius); //////set radius!!
+		shape.collisionGroup = MINE;
+		shape.collisionMask = PLAYER;
+		shape.sensor = true;
+	    // body.addShape(shape);
+
+		entity.components.add(new PhysicsComponent(body));
+		entity.components.add(new MineController(shape));
 		entity.components.add(new SpriteComponent(sprites_info));
 		// console.log("End of entity");
 		return entity;

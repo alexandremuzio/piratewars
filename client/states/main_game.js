@@ -59,9 +59,9 @@ PlayState.prototype.create = function() {
 
 //update loop - runs at 60fps
 PlayState.prototype.update = function() {
-    // GameEngine.getInstance().printEntityHierarchy();
     this.applySyncFromServer();
     GameEngine.getInstance().gameStep();
+    // GameEngine.getInstance().printEntityHierarchy();
 };
 
 PlayState.prototype.render = function() {
@@ -96,6 +96,21 @@ PlayState.prototype.applySyncFromServer = function() {
                 GameEngine.getInstance().entities[key].sync(lastSnapshot.bullets[key]);
             }
         }
+
+        ///////////////
+        for (var key in lastSnapshot.mines) {
+            if (!GameEngine.getInstance().entities[key]) {
+                // console.log("creating remoteBullet");
+                ProjectileFactory.createRemoteMine(lastSnapshot.mines[key]);
+                // console.log('mine ' + key + ' created');
+                // GameEngine.getInstance().printEntityHierarchy();
+            }
+            else {
+                // console.log("syncing localBullet");
+                GameEngine.getInstance().entities[key].sync(lastSnapshot.mines[key]);
+            }
+        }
+        ///////////////////
 
         for (var key in lastSnapshot.strongholds) {
             GameEngine.getInstance().entities[key].sync(lastSnapshot.strongholds[key]);
@@ -164,7 +179,7 @@ PlayState.prototype.onPlayerCreate = function(data) {
     this.selfPlayer = PlayerFactory.createLocalPlayer({ id: data.id });
     this.game.camera.follow(this.selfPlayer.components.get("sprite").getSprite('boat'));
 
-    // MPTest
+    console.log('On player created');
     GameEngine.getInstance().printEntityHierarchy();
 }
 

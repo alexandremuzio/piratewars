@@ -234,7 +234,7 @@ var PlayerFactory = {
 	createEmptyEntity : function(id, key) {
 		var entity = new Entity(id, key);
 		return entity;
-	}
+	},
 
 	createRemotePlayer : function(data) {
 		// console.log("inside entity factory createRemotePlayer");

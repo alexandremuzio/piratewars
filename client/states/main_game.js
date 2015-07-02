@@ -68,7 +68,7 @@ PlayState.prototype.create = function() {
 PlayState.prototype.update = function() {
     var lastSnapshot = this.outSnapshotManager.getLast();
     this.applySyncFromServer(lastSnapshot);
-    
+
     //Go back to lobby
     if (this._currentState == 'lobby'){
         // this.game.state.start(this._nextState, true, false); ////////////////////////
@@ -226,7 +226,6 @@ PlayState.prototype.onGameResults = function(results) {
     this._gameResults = results;
 }
 
-<<<<<<< HEAD
 PlayState.prototype.onGameState = function(state) {
     if(this._state != state) {
         if(state == 'preGame') this.preGame();
@@ -256,10 +255,10 @@ PlayState.prototype.endGame = function() {
     egt.visible = true;
     egt.alpha = 0;
     egt.animateFadeIn(500, EZGUI.Easing.Linear.None);
-=======
+}
+
 PlayState.prototype.onGameSync = function(snapshot) {
     this.outSnapshotManager.add(snapshot);
->>>>>>> Ignoring return to lobby bug for now
 }
 
 PlayState.prototype.onGameStart = function(initialGameInfo) {

@@ -5,7 +5,7 @@ var GameEngine = require('../../shared/game_engine.js');
 var PlayerFactory = require('../core/player_factory.js');
 var GameComponent = require('../../shared/core/component.js');
 var SnapshotManager = require('../../shared/core/snapshot_manager.js');
-var RespawnJSON = require('../../GUI/game-gui.js');
+var RespawnJSON = require('../../GUI/game-gui.json');
 var LobbyJSON = require('../../GUI/lobby-gui.js');
 
 

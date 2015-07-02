@@ -153,21 +153,36 @@ Room.prototype.playingStateInit = function() {
 Room.prototype.playingStateLoop = function() {
 	var currentTime = new Date();
 	if (checkEndGame()) {
+		this._gameState = this.transitionState2Loop;
+		this.transitionState2Init();
+	}
+	GameEngine.getInstance().gameStep();
+}
+
+Room.prototype.transitionState2Init = function() {   
+	console.log("Changed state to transition2!");
+	this.sendChangedStateToClients('endGame');
+	this._startTime = new Date();
+}
+Room.prototype.transitionState2Loop = function() {
+	var currentTime = new Date();
+	if (currentTime - this._startTime > this._transitionDuration) {
 		this._gameState = this.endGameStateLoop;
 		this.endGameStateInit();
 	}
-	GameEngine.getInstance().gameStep();
 }
 
 Room.prototype.endGameStateInit = function() {
 	console.log("Changed state to endGame!");
 	clearInterval(this._sendSyncInterval);
-	this.sendChangedStateToClients('endGame');
+	this.sendMatchResultsToClients();
 	this._startTime = new Date();
 }
 Room.prototype.endGameStateLoop = function() {
 	var currentTime = new Date();
 	if (currentTime - this._startTime > this._endGameDuration) {
+		this.clearPlayers();///////////////////////////////////////////////
+		this.initializeClients();		
 		this._gameState = this.lobbyStateLoop;
 		this.lobbyStateInit();
 	}
@@ -188,6 +203,13 @@ Room.prototype.allClientsAreReady = function() {
 	return allReady;
 }
 
+Room.prototype.clearPlayers = function() {
+	_.each(this.clients, function(client) {
+		client.player = null;
+		client.team = null;
+	});
+}
+
 Room.prototype.createInitialEntities = function() {
 	this._stronghold0 = PlayerFactory.createStronghold(0);
 	this._stronghold1 = PlayerFactory.createStronghold(1);
@@ -200,10 +222,16 @@ Room.prototype.createTeams = function() {
 	}, this);
 }
 
+Room.prototype.initializeClients = function() {
+	_.each(this.clients, function(client) {
+		client.initialize();
+	});
+}
+
 Room.prototype.initializeGame = function() {
 	this.createInitialEntities();
 	_.each(this.clients, function(client) {
-			client.createPlayer();
+		client.createPlayer();
 	});	
 }
 
@@ -256,6 +284,18 @@ Room.prototype.onConnection = function(socket) {
 /****************************************************/
 /****************** SYNC FUNCTIONS ******************/
 /****************************************************/
+Room.prototype.sendChangedStateToClients = function(newState) {
+	_.each(this.clients, function(client) {
+			client.sendChangedState(newState);
+	});
+}
+
+Room.prototype.sendGameSyncToClients = function(snapshot) {
+	_.each(this.clients, function(client) {
+			client.sendGameSync(snapshot);
+	});
+}
+
 Room.prototype.sendInitialMatchInfoToClients = function() {
 	var info = null;
 	var currentClient = null;
@@ -286,13 +326,32 @@ Room.prototype.sendLobbyInfoToClients = function() {
 				lobbyInfo.teams[team] = [];
 			}
 			lobbyInfo.teams[team].push( { name: client.name,
-									ready: client.ready
+										  ready: client.ready
 			});			
 		}
 	}.bind(this));
 	console.log(lobbyInfo);
 	_.each(this.clients, function(client) {
 		client.sendLobbyInfo(lobbyInfo);
+	});
+}
+
+Room.prototype.sendMatchResultsToClients = function() {
+	var results = { teams: {} };
+	_.each(this.clients, function(client) {
+		var team = client.chosenTeam;
+		if (this.validateTeam(team)) {
+			if (!results.teams[team]) {
+				results.teams[team] = [];
+			}
+			results.teams[team].push( { name: client.name,
+									    kills: client.player.components.get('player').kills,
+									    deaths: client.player.components.get('player').deaths
+			});			
+		}
+	}.bind(this));
+	_.each(this.clients, function(client) {
+		client.sendMatchResults(results);
 	});
 }
 
@@ -317,18 +376,6 @@ Room.prototype.sendSyncToClients = function() {
 		}
 	});
 	this.sendGameSyncToClients(clientSnapshot);
-}
-
-Room.prototype.sendGameSyncToClients = function(snapshot) {
-	_.each(this.clients, function(client) {
-			client.sendGameSync(snapshot);
-	});
-}
-
-Room.prototype.sendChangedStateToClients = function(newState) {
-	_.each(this.clients, function(client) {
-			client.sendChangedState(newState);
-	});
 }
 
 module.exports = Room;

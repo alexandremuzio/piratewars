@@ -15,6 +15,10 @@ Team.prototype.addPlayer = function(player) {
 	this._players.push(player);
 };
 
+Team.prototype.getPlayers = function() {
+	return this._players;
+}
+
 Team.prototype.size = function() {
 	return this._players.length;
 };

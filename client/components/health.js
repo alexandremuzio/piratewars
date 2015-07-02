@@ -17,7 +17,7 @@ HealthComponent.prototype.init = function() {
 }
 
 HealthComponent.prototype.update = function() {
-	if(this.owner.key == 'player' && this.currentHealth == 0) console.log(this.alive + ' ' + this.currentHealth);
+	if(this.owner.key == 'player' && this.currentHealth == 0); //console.log(this.alive + ' ' + this.currentHealth);
 	if(this.currentHealth <= 0 && this.alive == true) {
 		this.owner.die();
 	}

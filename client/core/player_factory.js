@@ -23,6 +23,7 @@ var SelfPlayerStatesManagerComponent = require('../components/self_player_states
 
 var stronghold_settings = require('../../shared/settings/stronghold.json');
 var player_settings = require('../../shared/settings/player.json');
+var mine_settings = require('../../shared/settings/mine.json');
 
 //collision groups
 var PLAYER = Math.pow(2,0);
@@ -117,7 +118,7 @@ var PlayerFactory = {
 		cannonsManager.setBaseEntity(entity, 0, 0, 0);
 
 		var mineStart = this.createEmptyEntity(data.id+'-mine_start', 'mine_start');
-		mineStart.setBaseEntity(entity, -40, 0, 0);
+		mineStart.setBaseEntity(entity, mine_settings.launch_distance, 0, 0);
 
 		return entity;
 	},
@@ -232,7 +233,7 @@ var PlayerFactory = {
 	createRemotePlayer : function(data) {
 		// console.log("inside entity factory createRemotePlayer");
 		
-		var entity = new Entity(data.id, "remote_player"),
+		var entity = new Entity(data.id, "player"),
 		    entityGroup, sprites_info;
 
 		entityGroup = this.game.add.group();

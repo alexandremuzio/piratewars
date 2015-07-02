@@ -24,7 +24,6 @@ function Entity(id, key) {
     this._followBaseEntityAngle = true;
 };
 
-
 /**
  * @override
  */
@@ -77,6 +76,10 @@ Entity.prototype.sync = function(transform) {
 	this.trigger('entity.sync', transform, this);
 }
 
+Entity.prototype.syncAfter = function(transform) {
+    this.trigger('entity.syncAfter', transform, this);
+}
+
 Entity.prototype.damage = function(amount, attacker) {
     this.trigger('entity.damage', amount, attacker, this);
 }
@@ -86,6 +89,8 @@ Entity.prototype.collision = function(collider) {
 }
 
 Entity.prototype.die = function() {
+    // console.log('entity(' + this.key + ').die called');
+
     _.each(this.subentityManager.getAll(), function(subentity){
         subentity.die();
     });

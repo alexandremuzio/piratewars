@@ -11,6 +11,7 @@ function Transform(owner) {
 	// this._localPosition = {"x": 0, "y": 0}; 
 	// this._localAngle = 0;
 	this._owner = owner;
+	this._id = owner.id;
 };
 
 Transform.prototype.updateAfterWorldStep = function(){
@@ -235,6 +236,7 @@ Transform.prototype.getTransform = function(){ // remove this
 	transform.position = this.getPosition();
 	transform.velocity = this.getVelocity();
 	transform.angle = this.getAngle();
+	transform.id = this._id;
 	return transform;
 };
 
@@ -282,6 +284,8 @@ Transform.prototype.setTransform = function(transform){ // remove this
 
 Transform.prototype.setLocalPosition = function(localPosition){
 	this._localPosition = localPosition;
+	// console.log('this._owner = '+ this._owner);
+	// console.log('this._owner.baseEntity = ' + this._owner.baseEntity);
 	var basePosition = this._owner.baseEntity.transform.getPosition();
 	var newPosition = {
 		"x": basePosition.x + localPosition.x,
@@ -309,12 +313,12 @@ Transform.prototype.setLocalAngle = function(localAngle){
 }
 
 Transform.prototype.initLocalVariables = function(x0, y0, alpha0){
-	x0 =  typeof x0 === 'number' ? x0 : 0;
-	y0 =  typeof y0 === 'number' ? y0 : 0;
-	alpha0 = typeof alpha0 === 'number' ? alpha0 : 0;
+	var x_0 =  typeof x0 === 'number' ? x0 : 0;
+	var y_0 =  typeof y0 === 'number' ? y0 : 0;
+	var alpha_0 = typeof alpha0 === 'number' ? alpha0 : 0;
 
-	this.setLocalPosition({ "x": x0, "y": y0 });
-	this.setLocalAngle(alpha0);
+	this.setLocalPosition({ "x": x_0, "y": y_0 });
+	this.setLocalAngle(alpha_0);
 }
 
 module.exports = Transform;

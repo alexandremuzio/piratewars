@@ -17,6 +17,7 @@ SyncComponent.prototype.constructor = SyncComponent;
 
 SyncComponent.prototype.init = function() {
 	this.owner.on('entity.sync', this.onSyncronization.bind(this));
+	this.owner.on('entity.syncAfter', this.onSyncronizationAfter.bind(this));
     this._socket = this.owner.components.get('network').socket;
     setInterval(this.sendSyncToServer.bind(this), 1000/30);
 }
@@ -58,7 +59,9 @@ SyncComponent.prototype.onSyncronization = function(message) {
 	if (!_.isUndefined(message.transform) && !_.isNull(message.transform)) {
 		this.owner.transform.setTransform(message.transform);
 	}
+}
 
+SyncComponent.prototype.onSyncronizationAfter = function(message) {
 	if (!_.isUndefined(message.health) && !_.isNull(message.health)) {
 		this.owner.components.get("health").setHealth(message.health); //TO DO
 	}

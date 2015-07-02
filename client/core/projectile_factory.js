@@ -116,8 +116,8 @@ var ProjectileFactory = {
         return entity;
 	},
 
-	createMine : function(id, initialPosition, initialAngle, initialVelocity) {
-		var entity = new Entity(id, 'mine'),
+	createMine : function(id, mineKey,initialPosition, initialAngle, initialVelocity) {
+		var entity = new Entity(id, mineKey),
         	entityGroup, sprites_info;
 
         // console.log(this);
@@ -157,17 +157,17 @@ var ProjectileFactory = {
 		shape.collisionGroup = MINE;
 		shape.collisionMask = PLAYER;
 		shape.sensor = true;
-	    // body.addShape(shape);
+	    body.addShape(shape);
 
 		entity.components.add(new PhysicsComponent(body));
-		entity.components.add(new MineController(shape));
+		entity.components.add(new MineController());
 		entity.components.add(new SpriteComponent(sprites_info));
 		// console.log("End of entity");
 		return entity;
 	},
 
 	createRemoteMine : function(transform) {
-		var id = UUID();
+		var id = transform.id;
 		var entity = new Entity(id, 'mine'),
         	entityGroup, sprites_info;
 
@@ -205,12 +205,14 @@ var ProjectileFactory = {
 		shape.collisionGroup = MINE;
 		shape.collisionMask = PLAYER;
 		shape.sensor = true;
-	    // body.addShape(shape);
+	    body.addShape(shape);
 
 		entity.components.add(new PhysicsComponent(body));
-		entity.components.add(new MineController(shape));
+		entity.components.add(new MineController());
 		entity.components.add(new SpriteComponent(sprites_info));
 		// console.log("End of entity");
+		// console.log(entity);
+
 		return entity;
 	}
 };

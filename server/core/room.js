@@ -121,9 +121,23 @@ Room.prototype.sendSyncToClients = function() {
 			clientSnapshot.strongholds[entity.id] = {};
 			clientSnapshot.strongholds[entity.id].health = entity.components.get('health').currentHealth;
 		}
-		else if (entity.key === 'mine' && entity.components.get('mine_controller').sent === false) {
-			entity.components.get('mine_controller').sent = true
-			clientSnapshot.mines[entity.id] = entity.transform.getTransform();
+		else if( entity.key === 'mine_collision_manager' ){
+			// console.log(entity);
+			// console.log(entity.components);
+			var mineCollisionManager = entity.components.get('mine_collision_manager');
+			if(mineCollisionManager.hasCollision()){
+				// console.log('Server has new collision to send')
+				// console.log('mineCollisionManager.getCollisions() = ' + mineCollisionManager.getCollisions());
+				clientSnapshot.mineCollisions = mineCollisionManager.getCollisions();
+				mineCollisionManager.clearCollisions();
+			}
+
+			_.each( entity.subentityManager.getAll(), function(mine){
+				if(mine.components.get('mine_controller').sent === false){
+					mine.components.get('mine_controller').sent = true;
+					clientSnapshot.mines[mine.id] = mine.transform.getTransform();
+				}
+			});
 		}
 	});
 	this.sendGameSyncToClients(clientSnapshot);

@@ -8,6 +8,7 @@ var PhysicsComponent = require('../../shared/components/physics.js');
 var UUID = require('node-uuid');
 var MathUtils = require('../../shared/utils/math.js');
 var MineController = require('../components/mine_controller.js');
+var MineCollisionDetector = require('../components/mine_collision_manager.js');
 
 var mine_settings = require('../../shared/settings/mine.json');
 var bullet_settings = require('../../shared/settings/bullet.json');
@@ -52,13 +53,13 @@ var ProjectileFactory = {
 		return entity;
 	},
 
-	createMine : function(id, initialPosition, initialAngle, initialVelocity) {
-		var entity = new Entity(id, 'mine'),
-        	entityGroup, sprites_info;
+	createMine : function(id, mineKey,initialPosition, initialAngle, initialVelocity, base) {
+		var entity = new Entity(id, mineKey);
+		// console.log('base: ' + base);
+		entity.setBaseEntity(base);
 
 		var body = new p2.Body({
 	            name: "mine",
-	            type: p2.Body.KINEMATIC,
 	            mass : mine_settings.physics.mass,
 	            position: [initialPosition.x, initialPosition.y],
 	            velocity: [initialVelocity.x, initialVelocity.y],
@@ -71,14 +72,22 @@ var ProjectileFactory = {
 	    var shape = new p2.Circle(mine_settings.radius); //////set radius!!
 		shape.collisionGroup = MINE;
 		shape.collisionMask = PLAYER;
-	    // body.addShape(shape);
+		shape.sensor = true;
+	    body.addShape(shape);
 
 		entity.components.add(new PhysicsComponent(body));
-		entity.components.add(new MineController(shape));
+		entity.components.add(new MineController());
 		// console.log("End of entity");
 		return entity;
-	}
+	},
 
+	createMineCollisionManager : function() {
+		var entity = new Entity(UUID(), 'mine_collision_manager');
+	    
+		entity.components.add(new MineCollisionDetector());
+
+		return entity;
+	}
 };
 
 module.exports = ProjectileFactory;

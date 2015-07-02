@@ -18,8 +18,8 @@ MineGenerator.prototype.getId = function() {
 	return this.owner.id + '-mine_' + this._idCount++;
 }
 
-MineGenerator.prototype.createMine = function(mineId, minePosition, mineAngle, mineVelocity) {
-	ProjectileFactory.createMine(mineId, minePosition, mineAngle, mineVelocity)
+MineGenerator.prototype.createMine = function(mineId, mineKey, minePosition, mineAngle, mineVelocity) {
+	return ProjectileFactory.createMine(mineId, mineKey, minePosition, mineAngle, mineVelocity)
 }
 
 MineGenerator.prototype.getTempEntities = function() {

@@ -25,6 +25,8 @@ MineGenerator.prototype.createMines = function(initialPosition, boatAngle, boatV
 		// nao deve lancar outra mina antes dessa explodir
 		// ou arrumar para criar ids diferentes
 		var mineId = this.getId();
+		var mineKey = 'mine_' + this._idCount;
+		this._idCount++;
 		var mineAngle = alpha0 + i*mine_settings.angle_spacement;
 		var mineDeltaPosition = MathUtils.vector(mine_settings.initial_distance, mineAngle);
 		var minePosition = {
@@ -42,7 +44,7 @@ MineGenerator.prototype.createMines = function(initialPosition, boatAngle, boatV
 		// console.log(minePosition);
 		// console.log(mineAngle);
 		// console.log(mine_settings.physics.initial_velocity);
-		this.createMine(mineId, minePosition, mineAngle, mineVelocity);		
+		var mine = this.createMine(mineId, mineKey, minePosition, mineAngle, mineVelocity);		
 		this.temporaryEntitiesIDs.push(mineId);
 	}
 	// GameEngine.getInstance().printEntityHierarchy();

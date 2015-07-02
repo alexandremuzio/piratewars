@@ -19,6 +19,7 @@ var MineGeneratorComponent = require('../components/mine_generator.js');
 
 var player_settings = require('../../shared/settings/player.json');
 var stronghold_settings = require('../../shared/settings/stronghold.json');
+var mine_settings = require('../../shared/settings/mine.json');
 
 //collision groups
 var PLAYER = Math.pow(2,0);
@@ -76,8 +77,8 @@ var PlayerFactory = {
 		var cannonsManager = this.createCannonsManager(id+'-cannons_manager')
 		cannonsManager.setBaseEntity(entity, 0, 0, 0);
 
-		var mineStart = this.createEmptyEntity(data.id+'-mine_start', 'mine_start');
-		mineStart.setBaseEntity(entity, -40, 0, 0);
+		var mineStart = this.createEmptyEntity(id+'-mine_start', 'mine_start');
+		mineStart.setBaseEntity(entity, mine_settings.launch_distance, 0, 0);
 
 		return entity;
 	},

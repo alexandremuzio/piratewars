@@ -59,8 +59,11 @@ PlayState.prototype.create = function() {
 
 //update loop - runs at 60fps
 PlayState.prototype.update = function() {
-    this.applySyncFromServer();
+    var lastSnapshot = this.outSnapshotManager.getLast();
+    this.applySyncFromServer(lastSnapshot);
     GameEngine.getInstance().gameStep();
+    this.applySyncFromServerAfter(lastSnapshot);
+    this.outSnapshotManager.clear();
     // GameEngine.getInstance().printEntityHierarchy();
 };
 
@@ -71,12 +74,10 @@ PlayState.prototype.render = function() {
 //////////////////////////////////////
 // Functions in alphabetical order: //
 //////////////////////////////////////
-PlayState.prototype.applySyncFromServer = function() {
+PlayState.prototype.applySyncFromServer = function(lastSnapshot) {
     // console.log("Starting applySyncFromServer");
-    var lastSnapshot = this.outSnapshotManager.getLast();
     // console.log(lastSnapshot);
     if (lastSnapshot) {
-        this.outSnapshotManager.clear();
         // console.log("snapshot true");
         for (var key in lastSnapshot.players) {
             // console.log("for var key in snapshot", key);
@@ -96,8 +97,6 @@ PlayState.prototype.applySyncFromServer = function() {
                 GameEngine.getInstance().entities[key].sync(lastSnapshot.bullets[key]);
             }
         }
-
-        ///////////////
         for (var key in lastSnapshot.mines) {
             if (!GameEngine.getInstance().entities[key]) {
                 // console.log("creating remoteBullet");
@@ -110,10 +109,33 @@ PlayState.prototype.applySyncFromServer = function() {
                 GameEngine.getInstance().entities[key].sync(lastSnapshot.mines[key]);
             }
         }
-        ///////////////////
 
         for (var key in lastSnapshot.strongholds) {
             GameEngine.getInstance().entities[key].sync(lastSnapshot.strongholds[key]);
+        }
+    }
+}
+
+PlayState.prototype.applySyncFromServerAfter = function(lastSnapshot) {
+    // console.log("Starting applySyncFromServer");
+    // console.log(lastSnapshot);
+    if (lastSnapshot) {
+        // console.log("snapshot true");
+        for (var key in lastSnapshot.players) {
+            // console.log("for var key in snapshot", key);
+            GameEngine.getInstance().entities[key].syncAfter(lastSnapshot.players[key]);
+        }
+
+        if( lastSnapshot.mineCollisions ){
+            _.each( lastSnapshot.mineCollisions, function(mineCollision){
+                var mine = GameEngine.getInstance().entities[mineCollision.mineId];
+                if( mine ){
+                    console.log('Has new mine/player collision on server and client does not detected it');
+                    var mineController = mine.components.get('mine_controller');
+                    var player = GameEngine.getInstance().entities[mineCollision.playerId];
+                    mineController.forceCollision(player);
+                }
+            });
         }
     }
 }

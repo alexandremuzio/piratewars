@@ -7,6 +7,7 @@ var mine_settings = require('../../shared/settings/mine.json');
 
 function MineGenerator() {
 	BaseComponent.call(this);
+	this._mineCollisionManager = ProjectileFactory.createMineCollisionManager();
 };
 
 ///
@@ -18,8 +19,8 @@ MineGenerator.prototype.getId = function() {
 	return this.getFirstAvailableID();
 }
 
-MineGenerator.prototype.createMine = function(mineId, minePosition, mineAngle, mineVelocity) {
-	ProjectileFactory.createMine(mineId, minePosition, mineAngle, mineVelocity)
+MineGenerator.prototype.createMine = function(mineId, mineKey, minePosition, mineAngle, mineVelocity) {
+	return ProjectileFactory.createMine(mineId, mineKey, minePosition, mineAngle, mineVelocity, this._mineCollisionManager)
 }
 
 MineGenerator.prototype.getFirstAvailableID = function() {

@@ -3,18 +3,19 @@
 	"physics" :
 		{
 			"mass": 0.001,
-			"initial_velocity": 30,
+			"initial_velocity": 35,
 			"angular_velocity": 0.5,
-			"damping": 0.1,
-			"angular_damping": 0.3
+			"damping": 0.3,
+			"angular_damping": 0.2
 		},
 	"radius" : 30,
-	"sink_time" : 12000,
+	"sink_time" : 200000,
 	"n_mines": 3,
 	"angle_spacement": 0.5,
 	"initial_distance": 12,
 	"boat_velocity_factor": 0.5,
 	"charge_time": 1500,
 	"damage": 20,
-	"auto_damage_time": 3000
+	"auto_damage_time": 3000,
+	"launch_distance": -20	
 }

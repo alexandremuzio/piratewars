@@ -17,6 +17,7 @@ var CannonController = require('../components/cannon_controller');
 var HealthComponent = require('../components/health');
 var MineGeneratorComponent = require('../components/mine_generator.js');
 var SpawnManager = require('./spawn_manager.js');
+var ScoreComponent = require('../components/score.js');
 
 var player_settings = require('../../shared/settings/player.json');
 var stronghold_settings = require('../../shared/settings/stronghold.json');
@@ -72,6 +73,7 @@ var PlayerFactory = {
 		entity.components.add(new PlayerControllerComponent(team));
 		entity.components.add(new RespawnManagerComponent(team));
 		entity.components.add(new MineGeneratorComponent());
+		entity.components.add(new ScoreComponent());
 
 		// Subentitys
 		// Creating HealthBar subentity
@@ -83,7 +85,7 @@ var PlayerFactory = {
 		cannonsManager.setBaseEntity(entity, 0, 0, 0);
 
 		var mineStart = this.createEmptyEntity(id+'-mine_start', 'mine_start');
-		mineStart.setBaseEntity(entity, mine_settings.launch_distance, 0, 0);
+		mineStart.setBaseEntity(entity, 0, -mine_settings.launch_distance, 0);
 
 		return entity;
 	},

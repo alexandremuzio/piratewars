@@ -127,10 +127,10 @@ var PlayerFactory = {
 								0);
 		healthBar.setFollowBaseEntityAngle(false);
 
-		var cannonsManager = this.createCannonsManager(data.id+'-cannons_manager');
+		var cannonsManager = this.createCannonsManager(data.id+'*cannons_manager')
 		cannonsManager.setBaseEntity(entity, 0, 0, 0);
 
-		var mineStart = this.createEmptyEntity(data.id+'-mine_start', 'mine_start');
+		var mineStart = this.createEmptyEntity(data.id+'*mine_start', 'mine_start');
 		mineStart.setBaseEntity(entity, mine_settings.launch_distance, 0, 0);
 
 		return entity;

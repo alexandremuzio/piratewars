@@ -2,6 +2,7 @@
 
 var _ = require('underscore');
 var BaseComponent = require('../../shared/components/cannons_manager_controller.js');
+var UUID = require('node-uuid');
 
 function CannonsManagerController() {
 	BaseComponent.apply(this);
@@ -31,8 +32,11 @@ CannonsManagerController.prototype.shootRight = function() {
 }
 
 CannonsManagerController.prototype.getFirstAvailableID = function() {
+	// console.log(this.owner.id);
 	if (this.temporaryEntitiesIDs.length === 0) {
-		console.log("ERROR: tried to get id from empty array (package loss)");		
+		// console.log("ERROR: tried to get id from empty array (package loss)");
+		var uuid = new UUID();
+		return this.owner.id + '*' + uuid;
 	}
 	else {		
 		return this.temporaryEntitiesIDs.shift();

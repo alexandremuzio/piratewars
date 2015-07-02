@@ -75,6 +75,12 @@ PlayState.prototype.update = function() {
     GameEngine.getInstance().gameStep();
     this.applySyncFromServerAfter(lastSnapshot);
     this.outSnapshotManager.clear();
+
+    // if(this.selfPlayer){
+    //     console.log(this.selfPlayer.subentityManager.get('mine_start').transform);
+    //     console.log('localPos: '+this.selfPlayer.subentityManager.get('mine_start').transform.getLocalPosition());
+    //     console.log('pos: '+ this.selfPlayer.subentityManager.get('mine_start').transform.getPosition());
+    // }
 };
 
 PlayState.prototype.render = function() {
@@ -110,6 +116,9 @@ PlayState.prototype.applySyncFromServer = function(lastSnapshot) {
         for (var key in lastSnapshot.mines) {
             if (!GameEngine.getInstance().entities[key]) {
                 // console.log("creating remoteBullet");
+                // console.log('new mine localized');
+                // console.log('lastSnapshot.mines[key] = ' + lastSnapshot.mines[key]);
+                // console.log('lastSnapshot.mines[key] = ' + lastSnapshot.mines[key]);
                 ProjectileFactory.createRemoteMine(lastSnapshot.mines[key]);
                 // console.log('mine ' + key + ' created');
                 // GameEngine.getInstance().printEntityHierarchy();

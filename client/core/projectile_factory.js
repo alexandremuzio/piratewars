@@ -23,9 +23,10 @@ var ProjectileFactory = {
 		this.game = data.game;
 	},
 
-	createBullet : function(initialPosition, initialVelocity, angle) {
+	createBullet : function(bulletId, initialPosition, initialVelocity, angle) {
 		// console.log("createBullet");
-		var bulletId = UUID();
+		// var bulletId = UUID();
+		// console.log('--- Bullet created with id : ' + bulletId);
 		var entity = new Entity(bulletId, 'bullet'),
             entityGroup, sprites_info;
 
@@ -116,9 +117,12 @@ var ProjectileFactory = {
         return entity;
 	},
 
-	createMine : function(id, mineKey,initialPosition, initialAngle, initialVelocity) {
+	createMine : function(id, mineKey, initialPosition, initialAngle, initialVelocity) {
 		var entity = new Entity(id, mineKey),
         	entityGroup, sprites_info;
+
+        // console.log('Local mine created at:');
+        // console.log('x = ' + initialPosition.x + ' | y = ' + initialPosition.y );
 
         // console.log(this);
         // console.log(this.game);
@@ -170,6 +174,9 @@ var ProjectileFactory = {
 		var id = transform.id;
 		var entity = new Entity(id, 'mine'),
         	entityGroup, sprites_info;
+
+        // console.log('On remote mine created');
+        // console.log('x = ' + transform.position.x + ' | y = ' + transform.position.y );
 
         // console.log(this);
         // console.log(this.game);

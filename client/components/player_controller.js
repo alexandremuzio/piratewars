@@ -4,6 +4,8 @@ var BaseComponent = require('../../shared/components/player_controller');
 
 function Player() {
 	this.key = "player";
+	this.kills = 0;
+	this.deaths = 0;
 };
 
 ///
@@ -40,4 +42,11 @@ Player.prototype.onEntityRevive = function() {
 	spriteComponent.kill('dead_boat');
 	spriteComponent.revive('boat');
 }
+
+Player.prototype.setScore = function(score) {
+	this.kills = score.nKill;
+	this.deaths = score.nDeath;
+	// console.log('( k, d ) = ( ' + this.kills + ', ' + this.deaths + ' )' );
+}
+
 module.exports = Player;

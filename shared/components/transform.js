@@ -11,7 +11,7 @@ function Transform(owner) {
 	// this._localPosition = {"x": 0, "y": 0}; 
 	// this._localAngle = 0;
 	this._owner = owner;
-	this._id = owner.id;
+	this._id = owner.id; // encapsulate this on a dataPackage
 };
 
 Transform.prototype.updateAfterWorldStep = function(){
@@ -21,6 +21,7 @@ Transform.prototype.updateAfterWorldStep = function(){
 Transform.prototype.syncWithBody = function(){
 	var phsicsComponent = this._owner.components.get('physics');
 	if( phsicsComponent ){
+		// console.log('entrou no sync do body');
 		var body = this._owner.components.get('physics').body;
 		this.setPositionWithoutUpdateBody({ "x": body.position[0], "y": body.position[1] });
 		this.setVelocityWithoutUpdateBody({ "x": body.velocity[0], "y": body.velocity[1] });
@@ -311,9 +312,12 @@ Transform.prototype.setLocalAngle = function(localAngle){
 }
 
 Transform.prototype.initLocalVariables = function(x0, y0, alpha0){
+
 	var x_0 =  typeof x0 === 'number' ? x0 : 0;
 	var y_0 =  typeof y0 === 'number' ? y0 : 0;
 	var alpha_0 = typeof alpha0 === 'number' ? alpha0 : 0;
+
+	this.syncWithBody();
 
 	this.setLocalPosition({ "x": x_0, "y": y_0 });
 	this.setLocalAngle(alpha_0);

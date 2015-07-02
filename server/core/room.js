@@ -32,35 +32,35 @@ function Room(socket) {
 
 Room.prototype.init = function() {
 
-	this.createTeams();
+	// this.createTeams();
 
-	var testClient = new Client(this._socket, this);
-	testClient.onName("nome do cliente1");
-	testClient.onChangeTeam("red");
-	testClient.onReady(true);
+	// var testClient = new Client(this._socket, this);
+	// testClient.onName("nome do cliente1");
+	// testClient.onChangeTeam("red");
+	// testClient.onReady(true);
 
-	testClient = new Client(this._socket, this);
-	testClient.onName("nome do cliente2");
-	testClient.onChangeTeam("blue");
-	testClient.onReady(false);
-	testClient.onReady(true);
+	// testClient = new Client(this._socket, this);
+	// testClient.onName("nome do cliente2");
+	// testClient.onChangeTeam("blue");
+	// testClient.onReady(false);
+	// testClient.onReady(true);
 
-	testClient = new Client(this._socket, this);
-	testClient.onName("nome do cliente3");
-	testClient.onChangeTeam("blue");
-	testClient.onReady(true);
+	// testClient = new Client(this._socket, this);
+	// testClient.onName("nome do cliente3");
+	// testClient.onChangeTeam("blue");
+	// testClient.onReady(true);
 
-	testClient = new Client(this._socket, this);
-	testClient.onName("nome do cliente4");
-	testClient.onChangeTeam("blue");
-	testClient.onReady(true);
+	// testClient = new Client(this._socket, this);
+	// testClient.onName("nome do cliente4");
+	// testClient.onChangeTeam("blue");
+	// testClient.onReady(true);
 
-	testClient = new Client(this._socket, this);
-	testClient.onName("on weakest team");
-	testClient.onReady(true);
+	// testClient = new Client(this._socket, this);
+	// testClient.onName("on weakest team");
+	// testClient.onReady(true);
 
-	this.initializeGame();
- 	this.sendInitialMatchInfoToClients();
+	// this.initializeGame();
+ // 	this.sendInitialMatchInfoToClients();
 
 
 
@@ -88,14 +88,12 @@ Room.prototype.gameLoop = function() {
 Room.prototype.lobbyStateInit = function() {   
 	console.log("Changed state to lobby!");	
 	this.sendChangedStateToClients('lobby');
-	this._sendLobbyInfoInterval = setInterval(this.sendLobbyInfo.bind(this),
+	this._sendLobbyInfoInterval = setInterval(this.sendLobbyInfoToClients.bind(this),
 												this._lobbyInfoRate);
 }
 Room.prototype.lobbyStateLoop = function() {
 	if (this.allClientsAreReady()) {
 		clearInterval(this._sendLobbyInfoInterval);
-		this.sendLobbyInfo();
-		this.sendCountdownToClients();
 		this._gameState = this.allReadyStateLoop;
 		this.allReadyStateInit();
 	}
@@ -152,7 +150,7 @@ Room.prototype.playingStateInit = function() {
 }
 Room.prototype.playingStateLoop = function() {
 	var currentTime = new Date();
-	if (checkEndGame()) {
+	if (this.checkEndGame()) {
 		this._gameState = this.transitionState2Loop;
 		this.transitionState2Init();
 	}
@@ -194,6 +192,10 @@ Room.prototype.endGameStateLoop = function() {
 /******************************************************/
 Room.prototype.allClientsAreReady = function() {
 	var allReady = true;
+	console.log(this.getWeakestChosenTeamSize());
+	if (this.clients.length === 0 || 
+		this.getWeakestChosenTeamSize() == 0) return false; /////////////////////////
+
 	_.each(this.clients, function(client) {
 		if (!client.ready) {
 			allReady = false;
@@ -208,6 +210,12 @@ Room.prototype.clearPlayers = function() {
 		client.player = null;
 		client.team = null;
 	});
+}
+
+Room.prototype.checkEndGame = function() {
+	//TO DO!!
+	return this._stronghold0.components.get('health').currentHealth <= 0 || 
+		this._stronghold1.components.get('health').currentHealth <= 0;
 }
 
 Room.prototype.createInitialEntities = function() {
@@ -249,6 +257,28 @@ Room.prototype.getWeakestChosenTeam = function() {
 	return _.min(_.keys(teamSize), function(team) {
 		return teamSize[team];
 	});
+}
+
+Room.prototype.getWeakestChosenTeamSize = function() { ////////////////
+	var teamSize = {};	
+	_.each(team_settings.teams, function(team) {
+		teamSize[team.name] = 0;
+	}, this);
+	console.log(teamSize);
+	_.each(this.clients, function(client) {
+		var team = client.chosenTeam;
+		if (this.validateTeam(team)) {
+			teamSize[team]++;
+		}
+	}.bind(this));
+	console.log(teamSize);
+	var minimum = 9999999;
+	_.each(teamSize, function(team) {
+		if (team < minimum)
+			minimum = team;
+	});
+	// console.log(minimum);
+	return minimum;
 }
 
 Room.prototype.startListeningToUpdates = function() {	
@@ -313,7 +343,7 @@ Room.prototype.sendInitialMatchInfoToClients = function() {
 		});		
 		this.clients.push(currentClient);
 		// console.log(info);
-		// currentClient.sendInitialMatchInfo(info);
+		currentClient.sendInitialMatchInfo(info);
 	}
 }
 

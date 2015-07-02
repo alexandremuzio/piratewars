@@ -142,7 +142,7 @@ var PlayerFactory = {
 	        		x: 0.0,
 	        		y: 0.0
 	        	},
-        		//tint: 0xff6600
+        		// tint: data.initialAttrs.teamColor
 			},
 			outline: {
         		sprite: entityGroup.create(205, 205, 'blackbox'),
@@ -154,7 +154,7 @@ var PlayerFactory = {
 	        		x: 0.0,
 	        		y: 0.0
 	        	},
-        		//tint: 0xff6600
+        		// tint: data.initialAttrs.teamColor
 			}
 		};
 				
@@ -240,7 +240,7 @@ var PlayerFactory = {
 
 		sprites_info = {
 			boat: {
-				sprite: entityGroup.create(100, 100, 'boat_0'),
+				sprite: entityGroup.create(data.transform.x, data.transform.y, 'boat_0'),
 				width: player_settings.width,
 	        	height: player_settings.height,
 	        	anchor: {
@@ -250,7 +250,7 @@ var PlayerFactory = {
         		//tint: 0xff6600
 			},
 			dead_boat: {
-				sprite: entityGroup.create(100, 100, 'dead_boat'),
+				sprite: entityGroup.create(data.transform.x, data.transform.y, 'dead_boat'),
 				width: player_settings.width,
 	        	height: player_settings.height,
 	        	anchor: {
@@ -264,8 +264,7 @@ var PlayerFactory = {
 		var body = new p2.Body({
 	            name: "player",
 	            mass: player_settings.physics.mass,
-	            position: [100, 100],
-	            angle: 0
+	            position: [data.transform.x, data.transform.y]
 	        });
 		body.entity = entity;
 

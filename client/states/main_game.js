@@ -165,10 +165,11 @@ PlayState.prototype.assignAssets = function() {
     }*/
 }
 
-PlayState.prototype.assignNetworkCallbacks = function() {    
+PlayState.prototype.assignNetworkCallbacks = function() {   
     this.socket.on('game.sync', this.onGameSync.bind(this));
     this.socket.on('game.state', this.onGameState.bind(this));
     this.socket.on('player.create', this.onPlayerCreate.bind(this));
+    this.socket.on('game.initialInfo', this.onGameStart.bind(this));
 }
 
 PlayState.prototype.createInitialEntities = function() {
@@ -244,6 +245,14 @@ PlayState.prototype.endGame = function() {
     egt.visible = true;
     egt.alpha = 0;
     egt.animateFadeIn(500, EZGUI.Easing.Linear.None);
+}
+
+PlayState.prototype.onGameStart = function(initialGameInfo) {
+    console.log(initialGameInfo);
+    _.each(initialGameInfo, function(remotePlayerData, key) {
+        remotePlayerData.id = key;
+        PlayerFactory.createRemotePlayer(remotePlayerData);
+    });
 }
 
 PlayState.prototype.onPlayerCreate = function(data) {    

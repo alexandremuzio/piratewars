@@ -16,6 +16,7 @@ var CannonsManagerController = require('../components/cannons_manager_controller
 var CannonController = require('../components/cannon_controller');
 var HealthComponent = require('../components/health');
 var MineGeneratorComponent = require('../components/mine_generator.js');
+var SpawnManager = require('./spawn_manager.js');
 
 var player_settings = require('../../shared/settings/player.json');
 var stronghold_settings = require('../../shared/settings/stronghold.json');
@@ -36,16 +37,12 @@ var PlayerFactory = {
 	createPlayer : function(socket, snapshots) {
 		var id = UUID();
 		var entity = new Entity(id, 'player');
-		var team = this.room.teams.getWeakest();
-		// var initialPosition = this.room.teams. //get from spawn manager
-		
-		console.log("In player factory - Weakest team:");
-		console.log(team);
 
+		var spawn_position = SpawnManager.getSpawnPosition(0);
 		var body = new p2.Body({
 	            name: "player",
 	            mass: player_settings.physics.mass,
-	            position: [100, 100],
+	            position: [spawn_position.x, spawn_position.y],
 	            damping: player_settings.physics.linear_damping,
 	            angularDamping: player_settings.physics.angular_damping
 	        });

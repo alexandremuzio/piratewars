@@ -18,6 +18,7 @@ function PlayState(game, socket) {
     this.socket = socket;
     this.selfPlayer = null;
     this.numberOfConnectedPlayers = 1;
+    this._state = null;
 
     var data = { game:      this.game,
                  socket:    this.socket };
@@ -52,7 +53,6 @@ PlayState.prototype.create = function() {
     this.createTexts();
     this.createInitialEntities(); 
     this.assignNetworkCallbacks();
-    
     // setInterval(this.debugUpdate.bind(this), 1000);
     this.socket.emit('player.ready');
 };
@@ -145,6 +145,10 @@ PlayState.prototype.assignAssets = function() {
     this.game.map.addTilesetImage('watertile', 'gameTiles');
     this.game.backgroundlayer = this.game.map.createLayer('backgroundLayer');
     this.game.blockedLayer = this.game.map.createLayer('islandLayer');
+    
+    this.game.mask = this.game.add.sprite(0, 0, 'mask');
+    this.game.mask.kill();
+    this.game.mask.fixedToCamera = true;
 }
 
 PlayState.prototype.assignNetworkCallbacks = function() {    
@@ -197,8 +201,35 @@ PlayState.prototype.onGameSync = function(snapshot) {
     this.outSnapshotManager.add(snapshot);
 }
 
-PlayState.prototype.onGameState = function() {
+PlayState.prototype.onGameState = function(state) {
+    if(this._state != state) {
+        if(state == 'preGame') this.preGame();
+        else if(state == 'endGame') this.endGame();
+        else if(state == 'playing') this.startPlaying();
+        this._state = state;
+    }
+}
 
+PlayState.prototype.preGame = function() {
+    if(!this.game.mask.alive) {
+        this.game.mask.revive();
+        this.game.mask.alpha = 0.5;
+    }
+}
+
+PlayState.prototype.startPlaying = function() {
+    if(this.game.mask.alive) this.game.mask.kill();
+}
+
+PlayState.prototype.endGame = function() {
+    if(!this.game.mask.alive) {
+        this.game.mask.revive();
+        this.game.mask.alpha = 0.5;
+    }
+    var egt = EZGUI.components.endGame;
+    egt.visible = true;
+    egt.alpha = 0;
+    egt.animateFadeIn(500, EZGUI.Easing.Linear.None);
 }
 
 PlayState.prototype.onPlayerCreate = function(data) {    

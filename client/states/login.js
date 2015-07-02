@@ -5,7 +5,7 @@ var GameEngine = require('../../shared/game_engine.js');
 var PlayerFactory = require('../core/player_factory.js');
 var GameComponent = require('../../shared/core/component.js');
 var SnapshotManager = require('../../shared/core/snapshot_manager.js');
-var RespawnJSON = require('../../GUI/game-gui.js');
+var GameGUI = require('../../GUI/game-gui.json');
 
 //Private variables
 var nextState;
@@ -78,8 +78,9 @@ LoginState.prototype.loadAssets = function() {
     this.game.load.image('red_arrow', 'assets/red_arrow.png');
     this.game.load.image('stronghold', 'assets/stronghold.png');
     this.game.load.image('cannon_0', 'assets/cannon_0.png');
+    this.game.load.image('mask', 'assets/mask.png');
     this.game.load.image('mine', 'assets/mine.png');
-    
+
     /* ----------------- GUI assets --------------------*/
     this.game.load.image('lvlcomplete', 'assets/GUI/img/lvlcomplete.png');
     this.game.load.image('respawnDialogBox', 'assets/GUI/img/respawnDialogBox.png');
@@ -90,9 +91,11 @@ LoginState.prototype.loadAssets = function() {
 
 LoginState.prototype.loadTheme = function() {
     EZGUI.Theme.load(['assets/GUI/metalworks-theme/metalworks-theme.json'], function () {
-        var dlg1  = EZGUI.create(RespawnJSON, 'metalworks');
-        dlg1.visible=false;
+        var dlg1  = EZGUI.create(GameGUI.respawn, 'metalworks');
+        dlg1.visible = false;
     
+        var egt = EZGUI.create(GameGUI.endGame, 'metalworks');
+        egt.visible = false;
         //EZGUI.components.respawnTime.text = '9';
     });
 };

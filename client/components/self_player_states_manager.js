@@ -4,7 +4,8 @@
 var GameComponent = require('../../shared/core/component.js');
 var game_time_settings = require('../../shared/settings/game_time.json');
 
-function SelfPlayerStatesManager() {
+function SelfPlayerStatesManager(game) {
+	this.game = game;
 	this.key = "self_player_states";
 	this._currentRespawnTime = null;
 	this._currentTime = null;
@@ -60,5 +61,6 @@ SelfPlayerStatesManager.prototype.onEntityRevive = function() {
 	this._currentRespawnTime = null;
 	this.closeRespawnDialogBox();
 };
+
 
 module.exports = SelfPlayerStatesManager;

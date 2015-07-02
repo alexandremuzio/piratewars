@@ -102,8 +102,7 @@ var PlayerFactory = {
 		entity.components.add(new PlayerControllerComponent());
 		entity.components.add(new TextComponent(text));
 		entity.components.add(new MineGeneratorComponent());
-		entity.components.add(new SelfPlayerStatesManagerComponent());
-
+		entity.components.add(new SelfPlayerStatesManagerComponent(this.game));
 		// Subentitys
 		// Creating HealthBar subentity
 		var healthBar = this.createHealthBar(data.id+'-health_bar',
@@ -114,7 +113,7 @@ var PlayerFactory = {
 								0);
 		healthBar.setFollowBaseEntityAngle(false);
 
-		var cannonsManager = this.createCannonsManager(data.id+'-cannons_manager')
+		var cannonsManager = this.createCannonsManager(data.id+'-cannons_manager');
 		cannonsManager.setBaseEntity(entity, 0, 0, 0);
 
 		var mineStart = this.createEmptyEntity(data.id+'-mine_start', 'mine_start');

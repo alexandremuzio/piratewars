@@ -1,5 +1,5 @@
 {
 	"respawn_time": 5000,
-	"pre_game_time": 10,
+	"pre_game_time": 1000,
 	"end_game_time": 10 
 }

@@ -1,0 +1,56 @@
+{
+    "respawn": {
+    	"id": "respawnDialogBox",
+		"component": "Window",
+		"image": "respawnDialogBox",
+		"padding": 4,
+		"position": { "x": 200, "y": 200 },
+		"anchor": { "x": 0.5, "y": 0.5 },
+		"width": 400,
+		"height": 300,
+		"layout": [1, 4],
+		"children": [
+		    null,
+			{
+				"position": "center",
+				"text": "Respawns in",
+				"font": {
+					"size": "30px",
+					"family": "Skranji",
+					"color": "white"
+				},
+		        "anchor": { "x": 0.5, "y": 0.5 },
+				"width": 1,
+				"height": 1
+			},
+			{
+				"id": "respawnTime",
+				"position": "center",
+				"text": "10",
+				"font": {
+					"size": "50px",
+					"family": "Skranji",
+					"color": "white"
+				},
+				"anchor": { "x": 0.5, "y": 0.5 },
+		        "width": 1,
+				"height": 1
+			},
+			null
+		]
+    },
+    "endGame": {
+        "id": "endGameText",
+		"position": "center",
+		"text": "Game Over",
+		"font": {
+			"size": "60px",
+			"family": "Skranji",
+			"color": "white"
+		},
+	    "position": { "x": 200, "y": 200 },
+		"anchor": { "x": 0.5, "y": 0.5 },
+		"width": 1,
+		"height": 1
+    }
+}

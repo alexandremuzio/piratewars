@@ -280,6 +280,14 @@ Room.prototype.getWeakestChosenTeamSize = function() { ////////////////
 	return minimum;
 }
 
+Room.prototype.removeClient = function(client) {
+	for(var i = this.clients.length - 1; i >= 0; i--) {
+	    if(this.clients[i] === client) {
+	       this.clients.splice(i, 1);
+	    }
+	}
+}
+
 Room.prototype.startListeningToUpdates = function() {	
 	_.each(this.clients, function(client) {
 			client.startListeningToUpdates();

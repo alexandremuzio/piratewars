@@ -15,6 +15,7 @@ function Client(socket, room) {
 	this._room = room;
 	this._socket = socket;
 	this.player = null;
+	this._disconnectListener = this.onDisconnect.bind(this);
 	this._syncListener = this.queueSyncFromClient.bind(this);
 	this._nameListener = this.onName.bind(this);
 	this._teamListener = this.onChangeTeam.bind(this);
@@ -30,7 +31,8 @@ function Client(socket, room) {
 }
 
 Client.prototype.init = function() {
-	this._socket.emit('onconnected');	
+	this._socket.emit('onconnected');
+	this._socket.on('disconnect', this._disconnectListener);
 	this._socket.on('client.name', this._nameListener);
 	this._socket.on('client.changeTeam', this._teamListener);
 	this._socket.on('client.ready', this._readyListener);
@@ -42,6 +44,10 @@ Client.prototype.init = function() {
 /*******************************************************/
 /****************** NETWORK CALLBACKS ******************/
 /*******************************************************/
+Client.prototype.onDisconnect = function() {
+	this._room.removeClient(this);
+}
+
 Client.prototype.onName = function(name) {
 	if (_.isString(name)) {
 		this.name = name;

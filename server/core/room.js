@@ -23,7 +23,7 @@ function Room(socket) {
 	this._startTime = null;
 	// Send these to conf files
 	this._sendGameSyncTickRate = 1000/20;
-	this._lobbyInfoRate = 1000;
+	this._lobbyInfoRate = 1000/2;
 	this._allReadyDuration = 1000;
 	this._transitionDuration = 1000;
 	this._preGameDuration = 1000;

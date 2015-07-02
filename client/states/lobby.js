@@ -69,12 +69,12 @@ LobbyState.prototype.update = function() {
 
             if (player.ready) {
                 // EZGUI.components[teamKey + "slot" + i].font.color = 'green'; //////////////
-                EZGUI.components[teamKey + "slot" + i].text = player.name + " ready";
+                EZGUI.components[teamKey + "slot" + i].text = player.name + "- Ready";
             }
 
             else {
                 // EZGUI.components[teamKey + "slot" + i].font.color = 'red'; /////////////
-                EZGUI.components[teamKey + "slot" + i].text = player.name + " not ready";
+                EZGUI.components[teamKey + "slot" + i].text = player.name + "- Not Ready";
             }
         }
     });

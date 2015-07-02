@@ -33,7 +33,7 @@
 	"height" : 72,
 	"lateral_offset" : 30,
 	"frontal_offset" : 8,
-	"maxHealth" : 100,
+	"maxHealth" : 400,
 
 	"health_bar" :
 	{

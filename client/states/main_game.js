@@ -223,7 +223,26 @@ PlayState.prototype.debugUpdate = function() {
 };
 
 PlayState.prototype.onGameResults = function(results) {
+    var resultsString = "", tempList = [], sortedList = [];
+
     this._gameResults = results;
+    _.each(results.teams, function(team) {
+
+        _.each(team, function(player) {
+            tempList.push(player);
+        });
+    });
+    sortedList = _.sortBy(tempList, function(player) {
+        return player.kills;
+    });
+
+    //construct results ordered by kills
+    _.each(sortedList. function(player) {
+        resultsString += (player.name + player.kills + player.deaths + "\n");
+    });
+    
+    console.log("On Game results!");
+    console.log(resultsString);
 }
 
 PlayState.prototype.onGameState = function(state) {
@@ -287,6 +306,11 @@ PlayState.prototype.updateTexts = function() {
     // Debugging purposes
     // this.game.debug.cameraInfo(this.game.camera, 32, 32);
     this.fpsText.setText("FPS: " + this.game.time.fps);
+}
+
+
+PlayState.prototype.addStateEvents = function() {
+    EZGUI.components
 }
 
 module.exports = PlayState;

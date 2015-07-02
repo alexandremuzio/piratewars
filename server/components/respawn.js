@@ -42,11 +42,10 @@ RespawnComponent.prototype.onEntityDie = function() {
 RespawnComponent.prototype.onEntityRevive = function() {
 	this._currentRespawnTime = null;
 
-	var position = SpawnManager.getSpawnPosition(0);
-	console.log('respawning entity');
-	console.log(position);
-	if (!_.isNull(position) && !_.isUndefined(position))
-		this.owner.transform.setPosition(position);
+	var info = SpawnManager.getSpawnInfo(0);
+	if (!_.isNull(info) && !_.isUndefined(info))
+		this.owner.transform.setPosition({x: info.x, y: info.y});
+		this.owner.transform.setAngle(info.angle);
 };
 
 module.exports = RespawnComponent;

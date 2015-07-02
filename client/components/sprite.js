@@ -24,15 +24,25 @@ SpriteComponent.prototype.init = function() {
 
 	_.each(this._sprites_info, function(sprite_i, key) {
 		
-        if(sprite_i.scale) { sprite_i.sprite.scale.setTo(sprite_i.scale.x, sprite_i.scale.y); }
+        if(!_.isNull(sprite_i.scale) && !_.isUndefined(sprite_i.scale)) {
+        	sprite_i.sprite.scale.setTo(sprite_i.scale.x, sprite_i.scale.y);
+        }
         
-        if(sprite_i.anchor) { sprite_i.sprite.anchor.setTo(sprite_i.anchor.x, sprite_i.anchor.y); }
+        if(!_.isNull(sprite_i.anchor) && !_.isUndefined(sprite_i.anchor)) {
+        	sprite_i.sprite.anchor.setTo(sprite_i.anchor.x, sprite_i.anchor.y);
+        }
         
-        if(sprite_i.tint) { sprite_i.sprite.tint = sprite_i.tint; }
+        if(!_.isNull(sprite_i.tint) && !_.isUndefined(sprite_i.tint)) {
+        	sprite_i.sprite.tint = sprite_i.tint;
+        }
         
-        if(sprite_i.width) { sprite_i.sprite.width = sprite_i.width; }
+        if(!_.isNull(sprite_i.width) && !_.isUndefined(sprite_i.width)) {
+        	sprite_i.sprite.width = sprite_i.width;
+        }
 
-        if(sprite_i.height) { sprite_i.sprite.height = sprite_i.height; }
+        if(!_.isNull(sprite_i.height) && !_.isUndefined(sprite_i.height)) { 
+        	sprite_i.sprite.height = sprite_i.height;
+        }
 
         sprite_i.originalTexture = new Phaser.Rectangle(0, 0, sprite_i.sprite.texture.width, sprite_i.sprite.texture.height);
         sprite_i.sprite.crop(new Phaser.Rectangle(0, 0, sprite_i.sprite.texture.width, sprite_i.sprite.texture.height), false);

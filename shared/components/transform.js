@@ -284,8 +284,6 @@ Transform.prototype.setTransform = function(transform){ // remove this
 
 Transform.prototype.setLocalPosition = function(localPosition){
 	this._localPosition = localPosition;
-	// console.log('this._owner = '+ this._owner);
-	// console.log('this._owner.baseEntity = ' + this._owner.baseEntity);
 	var basePosition = this._owner.baseEntity.transform.getPosition();
 	var newPosition = {
 		"x": basePosition.x + localPosition.x,

@@ -226,7 +226,7 @@ PlayState.prototype.endGame = function() {
         this.game.mask.revive();
         this.game.mask.alpha = 0.5;
     }
-    var egt = EZGUI.components.endGame;
+    var egt = EZGUI.components.endGameText;
     egt.visible = true;
     egt.alpha = 0;
     egt.animateFadeIn(500, EZGUI.Easing.Linear.None);
@@ -242,10 +242,10 @@ PlayState.prototype.onPlayerCreate = function(data) {
 }
 
 PlayState.prototype.setPhaserPreferences = function() {    
-    // this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-    // this.game.scale.pageAlignHorizontally = true;
-    // this.game.scale.pageAlignVertically = false;
-    // this.game.scale.setMinMax(1024/2, 672/2, 1024*2, 672*2);
+    this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+    this.game.scale.pageAlignHorizontally = true;
+    this.game.scale.pageAlignVertically = false;
+    this.game.scale.setMinMax(1024/2, 672/2, 1024*2, 672*2);
 
     // Enable phaser to run its steps even on an unfocused window
     this.game.stage.disableVisibilityChange = true;

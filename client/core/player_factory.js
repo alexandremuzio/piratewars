@@ -64,7 +64,7 @@ var PlayerFactory = {
 	        		x: 0.5,
 	        		y: 0.5
 	        	},
-        		//tint: 0xff6600
+        		//tint: 
 			}
 		};
 	    /* Player name, must be set by the user (MUST FIX) */
@@ -79,6 +79,7 @@ var PlayerFactory = {
 	            name: "player",
 	            mass: player_settings.physics.mass,
 	            position: [data.transform.x, data.transform.y],
+	            angle: 0,
 	            damping: player_settings.physics.linear_damping,
 	            angularDamping: player_settings.physics.angular_damping
 	        });
@@ -88,8 +89,6 @@ var PlayerFactory = {
 		shape.collisionGroup = PLAYER;
 		shape.collisionMask = PLAYER | STRONGHOLD | BULLET | MINE;
 	    body.addShape(shape);
-
-	    body.angle = 0;
 
 		entity.components.add(new HealthComponent(player_settings.maxHealth));
 		entity.components.add(new CooldownComponent());
@@ -107,7 +106,7 @@ var PlayerFactory = {
 		// Creating HealthBar subentity
 		var healthBar = this.createHealthBar(data.id+'-health_bar',
 										player_settings.health_bar.scale);
-		healthBar.setBaseEntity(entity, 0,
+		healthBar.setBaseEntity(entity, -healthBar.components.get('sprite').getSprite('blood').width/2,
 								-player_settings.height 
 									- player_settings.health_bar.relativeYtoTop,
 								0);
@@ -263,7 +262,8 @@ var PlayerFactory = {
 		var body = new p2.Body({
 	            name: "player",
 	            mass: player_settings.physics.mass,
-	            position: [100, 100]
+	            position: [100, 100],
+	            angle: 0
 	        });
 		body.entity = entity;
 
@@ -274,8 +274,7 @@ var PlayerFactory = {
 
 	    // body.damping = player_settings.physics.linear_damping;
     	// body.angularDamping = player_settings.physics.angular_damping
-	    body.angle = 0;
-
+	    
 	    entity.components.add(new HealthComponent(player_settings.maxHealth));
 		entity.components.add(new CooldownComponent());
 		entity.components.add(new NetworkComponent(this.socket));
@@ -337,7 +336,7 @@ var PlayerFactory = {
 		// Creating HealthBar subentity
 		var healthBar = this.createHealthBar(data.id+'-health_bar',
 		 								stronghold_settings.health_bar.scale);
-		healthBar.setBaseEntity(entity, 0,
+		healthBar.setBaseEntity(entity, -healthBar.components.get('sprite').getSprite('blood').width/2,
 								-stronghold_settings.height / 2
 									- stronghold_settings.health_bar.relativeYtoTop,
 								0);

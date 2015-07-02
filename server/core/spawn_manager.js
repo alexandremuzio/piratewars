@@ -6,7 +6,7 @@ var _ = require('underscore');
 
 //Static class
 var SpawnManager = {
-	getSpawnPosition : function(team) {
+	getSpawnInfo : function(team) {
 		//Just check teams specifieds in spawn_settings
 		if(team == 0 || team == 1) {
 			var valid = false;
@@ -15,25 +15,27 @@ var SpawnManager = {
 
 			//Check for all slots - 1
 			//If still not valid, just put in the last one
-			for(id = 0; id < 4 && valid === false; id++) {
-				valid = true;
+			for(id = 0; id < 4 && valid == false;) {
 				position = { x: spawn_settings.teams[team].positions[id].x, y: spawn_settings.teams[team].positions[id].y }; 
 
-				var hitPoint = {};
+				var hitPoint = [];
 				valid = true;
-				for(var i = -1; i <= 1 && valid === true; i++) {
-					for(var j = -1; j <= 1 && valid === true; j++) {
-						hitPoint = { x: position.x + i*spawn_settings.hitPointInterval.x, 
-							y: position.y + j*spawn_settings.hitPointInterval.y};
-						if(GameEngine.getInstance().world.hitTest(hitPoint, GameEngine.getInstance().world.bodies) != null) {
+				for(var i = -1; i <= 1 && valid == true; i++) {
+					for(var j = -1; j <= 1 && valid == true; j++) {
+						hitPoint = [position.x + i*spawn_settings.hitPointInterval.x, 
+							position.y + j*spawn_settings.hitPointInterval.y];
+						if(GameEngine.getInstance().world.hitTest(hitPoint, GameEngine.getInstance().world.bodies).length != 0) {
 							valid = false;
 						}
 					}
 				}
-			}
-			return position;
+				if(valid == false) id++;
+			}	 
+			return { x: spawn_settings.teams[team].positions[id].x, 
+				y: spawn_settings.teams[team].positions[id].y,
+				angle: spawn_settings.teams[team].positions[id].angle }; 
 		}
-		else return {x: 100, y: 100};
+		else return {x: 100, y: 100, angle: 0};
    	},
 };
 

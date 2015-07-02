@@ -38,11 +38,12 @@ var PlayerFactory = {
 		var id = UUID();
 		var entity = new Entity(id, 'player');
 
-		var spawn_position = SpawnManager.getSpawnPosition(0);
+		var spawn_info = SpawnManager.getSpawnInfo(0);
 		var body = new p2.Body({
 	            name: "player",
 	            mass: player_settings.physics.mass,
-	            position: [spawn_position.x, spawn_position.y],
+	            position: [spawn_info.x, spawn_info.y],
+	            angle: spawn_info.angle,
 	            damping: player_settings.physics.linear_damping,
 	            angularDamping: player_settings.physics.angular_damping
 	        });
@@ -52,8 +53,6 @@ var PlayerFactory = {
 	    shape.collisionGroup = PLAYER;
 		shape.collisionMask = PLAYER | STRONGHOLD | BULLET | MINE;
 		body.addShape(shape);
-		
-	    body.angle = 0;
 
 	    entity.components.add(new HealthComponent(player_settings.maxHealth));
 		entity.components.add(new CreatorComponent());

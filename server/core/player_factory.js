@@ -51,7 +51,14 @@ var PlayerFactory = {
 	        });
 		body.entity = entity;
 
-	    var shape = new p2.Rectangle(player_settings.width, player_settings.height - player_settings.lateral_offset);
+	    var verts = [];
+		verts.push([-player_settings.width / 2, (player_settings.height - player_settings.lateral_offset) / 2]);
+		verts.push([-player_settings.width / 2, -(player_settings.height - player_settings.lateral_offset) / 2]);		
+		verts.push([+player_settings.width / 2 - player_settings.triangle, -(player_settings.height - player_settings.lateral_offset) / 2]);
+		verts.push([+player_settings.width / 2, 0]);
+		verts.push([+player_settings.width / 2 - player_settings.triangle, +(player_settings.height - player_settings.lateral_offset) / 2]);
+		var shape = new p2.Convex(verts);
+		// var shape = new p2.Rectangle(player_settings.width, player_settings.height - player_settings.lateral_offset);
 	    shape.collisionGroup = PLAYER;
 		shape.collisionMask = PLAYER | STRONGHOLD | BULLET | MINE;
 		body.addShape(shape);

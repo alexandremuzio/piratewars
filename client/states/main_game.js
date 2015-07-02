@@ -22,8 +22,7 @@ function PlayState(game, socket, nextState) {
     this.socket = socket;
     this.selfPlayer = null;
     this.numberOfConnectedPlayers = 1;
-    this._state = null;
-
+    
     this._currentState = 'preState';
     this._nextState = nextState;
     this._gameResults;
@@ -237,7 +236,7 @@ PlayState.prototype.onGameResults = function(results) {
     });
 
     //construct results ordered by kills
-    _.each(sortedList. function(player) {
+    _.each(sortedList, function(player) {
         resultsString += (player.name + player.kills + player.deaths + "\n");
     });
     
@@ -246,11 +245,12 @@ PlayState.prototype.onGameResults = function(results) {
 }
 
 PlayState.prototype.onGameState = function(state) {
-    if(this._state != state) {
+    
+    if(this._currentState != state) {
         if(state == 'preGame') this.preGame();
         else if(state == 'endGame') this.endGame();
         else if(state == 'playing') this.startPlaying();
-        this._state = state;
+        this._currentState = currentState;
     }
 }
 
@@ -286,11 +286,6 @@ PlayState.prototype.onGameStart = function(initialGameInfo) {
         remotePlayerData.id = key;
         PlayerFactory.createRemotePlayer(remotePlayerData);
     });
-}
-
-PlayState.prototype.onGameState = function(currentState) {
-    this._currentState = currentState;
-    console.log(this._currentState);
 }
 
 PlayState.prototype.onPlayerCreate = function(data) {    

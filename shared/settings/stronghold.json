@@ -3,6 +3,7 @@
 		{
 			"id" : 1,
 			"name" : "A",
+			"sprite" : "base-navy",
 			"initialPos" : {"x": 120, "y": 1880},
 			"color" : "0xff0000"
 		},
@@ -10,6 +11,7 @@
 		{
 			"id" : 2,
 			"name" : "B",
+			"sprite" : "base-pirate",
 			"initialPos" : {"x": 1880, "y": 120},
 			"color" : "0x0000ff"
 		}

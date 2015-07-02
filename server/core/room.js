@@ -30,38 +30,45 @@ function Room(socket) {
 }
 
 Room.prototype.init = function() {
-	var testClient = new Client(null, this);
+
+	this.createTeams();
+
+	var testClient = new Client(this._socket, this);
 	testClient.onName("nome do cliente1");
 	testClient.onChangeTeam("red");
 	testClient.onReady(true);
 
-	testClient = new Client(null, this);
+	testClient = new Client(this._socket, this);
 	testClient.onName("nome do cliente2");
 	testClient.onChangeTeam("blue");
 	testClient.onReady(false);
 	testClient.onReady(true);
 
-	testClient = new Client(null, this);
+	testClient = new Client(this._socket, this);
 	testClient.onName("nome do cliente3");
 	testClient.onChangeTeam("blue");
 	testClient.onReady(true);
 
-	testClient = new Client(null, this);
+	testClient = new Client(this._socket, this);
 	testClient.onName("nome do cliente4");
 	testClient.onChangeTeam("blue");
 	testClient.onReady(true);
 
-	testClient = new Client(null, this);
+	testClient = new Client(this._socket, this);
 	testClient.onName("on weakest team");
 	testClient.onReady(true);
 
-	console.log(this.allClientsAreReady());
+	this.initializeGame();
+ 	this.sendInitialMatchInfoToClients();
+
+
+
+	// console.log(this.allClientsAreReady());
 
 	// this.sendLobbyInfoToClients();
 
 
 	PlayerFactory.init(this);
-	this.createInitialEntities();
 	this.createTeams();
 	this._gameState = this.lobbyStateLoop;
 	this.lobbyStateInit();
@@ -96,6 +103,7 @@ Room.prototype.lobbyStateLoop = function() {
 Room.prototype.allReadyStateInit = function() {   
 	console.log("Changed state to allReady!");	
 	this.sendChangedStateToClients('countdown');
+	this.clearClientListeners();
 	this._startTime = new Date();
 }
 Room.prototype.allReadyStateLoop = function() {
@@ -110,7 +118,7 @@ Room.prototype.preGameStateInit = function() {
 	console.log("Changed state to preGame!");
 	this.sendChangedStateToClients('preGame');
 	this.initializeGame();
-	this.sendFullInfoToClients();
+	this.sendInitialMatchInfoToClients();
 	this._startTime = new Date();
 }
 Room.prototype.preGameStateLoop = function() {
@@ -124,6 +132,7 @@ Room.prototype.preGameStateLoop = function() {
 Room.prototype.playingStateInit = function() {
 	console.log("Changed state to playing!");
 	this.sendChangedStateToClients('playing');
+	this.startListeningToUpdates();
     this._sendSyncInterval = setInterval(this.sendGameSyncToClients.bind(this),
     										this._sendGameSyncTickRate);
 	this._startTime = new Date();
@@ -179,7 +188,10 @@ Room.prototype.createTeams = function() {
 }
 
 Room.prototype.initializeGame = function() {
-	
+	this.createInitialEntities();
+	_.each(this.clients, function(client) {
+			client.createPlayer();
+	});	
 }
 
 Room.prototype.getWeakestChosenTeam = function() {
@@ -195,6 +207,18 @@ Room.prototype.getWeakestChosenTeam = function() {
 	}.bind(this));
 	return _.min(_.keys(teamSize), function(team) {
 		return teamSize[team];
+	});
+}
+
+Room.prototype.startListeningToUpdates = function() {	
+	_.each(this.clients, function(client) {
+			client.startListeningToUpdates();
+	});
+}
+
+Room.prototype.clearClientListeners = function() {	
+	_.each(this.clients, function(client) {
+			client.clearClientListeners();
 	});
 }
 
@@ -219,19 +243,36 @@ Room.prototype.onConnection = function(socket) {
 /****************************************************/
 /****************** SYNC FUNCTIONS ******************/
 /****************************************************/
-Room.prototype.sendFullInfoToClients = function() {
-
+Room.prototype.sendInitialMatchInfoToClients = function() {
+	var info = null;
+	var currentClient = null;
+	var numberOfClients = this.clients.legth;
+	for (var i = 0; i < this.clients.length; i++) {
+		currentClient = this.clients.shift();
+		// console.log("currentClient", currentClient.name);
+		info = {};
+		_.each(this.clients, function(remotePlayer) {
+			// console.log("\tRemotePlayer", remotePlayer.name);
+			var id = remotePlayer.player.id;
+			info[id] = { name: remotePlayer.name,
+						 transform: remotePlayer.player.transform.getPosition(),
+						 initialAttrs: remotePlayer.player.initialAttrs.getAll() };
+		});		
+		this.clients.push(currentClient);
+		// console.log(info);
+		// currentClient.sendInitialMatchInfo();
+	}
 }
 
 Room.prototype.sendLobbyInfoToClients = function() {
-	var lobbyInfo = {}
+	var lobbyInfo = { teams: {} };
 	_.each(this.clients, function(client) {
 		var team = client.chosenTeam;
 		if (this.validateTeam(team)) {
-			if (!lobbyInfo[team]) {
-				lobbyInfo[team] = [];
+			if (!lobbyInfo.teams[team]) {
+				lobbyInfo.teams[team] = [];
 			}
-			lobbyInfo[team].push( { name: client.name,
+			lobbyInfo.teams[team].push( { name: client.name,
 									ready: client.ready
 			});			
 		}

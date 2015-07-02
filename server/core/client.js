@@ -14,7 +14,15 @@ function Client(socket, room) {
 	this.ready = false;
 	this._room = room;
 	this._socket = socket;
-	this._player = null;
+	this.player = null;
+	this._syncListener = this.queueSyncFromClient.bind(this);
+	this._nameListener = this.onName.bind(this);
+	this._teamListener = this.onChangeTeam.bind(this);
+	this._readyListener = this.onReady.bind(this);
+	this._eventList = [ 'client.name',
+							'client.changeTeam',
+							'client.ready',
+							'client.sync' ];
 	this._snapshots = new SnapshotManager();
 	//DEBUG
 	this._packagesLost = 0;
@@ -22,13 +30,12 @@ function Client(socket, room) {
 }
 
 Client.prototype.init = function() {
-	// console.log("client init");
-	this._socket.emit('onconnected');
-	this._socket.on('client.name', this.onName.bind(this));
-	this._socket.on('client.changeTeam', this.onChangeTeam.bind(this));
-	this._socket.on('client.ready', this.onReady.bind(this));
+	this._socket.emit('onconnected');	
+	this._socket.on('client.name', this._nameListener);
+	this._socket.on('client.changeTeam', this._teamListener);
+	this._socket.on('client.ready', this._readyListener);
 	// process.on("SIGINT", function(){
- //    	console.log(this._packagesLost + " from " + this._lastStep + " lost (" + 100*this._packagesLost/this._lastStep + "%)");
+ 	//    	console.log(this._packagesLost + " from " + this._lastStep + " lost (" + 100*this._packagesLost/this._lastStep + "%)");
 	// }.bind(this));
 }
 
@@ -69,15 +76,14 @@ Client.prototype.onReady = function(ready) {
 /****************** HELPER FUNCTIONS ******************/
 /******************************************************/
 Client.prototype.createPlayer = function() {
-	// console.log("client createPlayer");
-	this._player = PlayerFactory.createPlayer(this._socket, this._snapshots);
-	this._socket.emit('player.create', 
-		{
-			id: entity.id,
-			transform: entity.transform.getPosition(),
-			initialAttrs: entity.initialAttrs.getAll()
-		});
-	this._socket.on('client.sync', this.queueSyncFromClient.bind(this));
+	var team = this._room.teams.get(this.chosenTeam);
+	this.player = PlayerFactory.createPlayer(this._socket, this._snapshots, team);
+	// this._socket.emit('player.create', 
+	// 	{
+	// 		id: entity.id,
+	// 		transform: entity.transform.getPosition(),
+	// 		initialAttrs: entity.initialAttrs.getAll()
+	// 	});
 }
 
 Client.prototype.queueSyncFromClient = function(message) {
@@ -88,6 +94,16 @@ Client.prototype.queueSyncFromClient = function(message) {
 	this._lastStep = message.step;
 
 	this._snapshots.add(message);
+}
+
+Client.prototype.startListeningToUpdates = function() {
+	this._socket.on('client.sync', this._syncListener);
+}
+
+Client.prototype.clearClientListeners = function() {
+	_.each(this._eventList, function(event) {
+		this._socket.removeAllListeners(event);
+	});
 }
 
 

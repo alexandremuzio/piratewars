@@ -30,14 +30,13 @@ var PlayerFactory = {
 		this.room = room
 	},
 
-	createPlayer : function(socket, snapshots) {
+	createPlayer : function(socket, snapshots, team) {
 		var id = UUID();
 		var entity = new Entity(id, 'player');
-		var team = this.room.teams.getWeakest();
 		// var initialPosition = this.room.teams. //get from spawn manager
 		
-		console.log("In player factory - Weakest team:");
-		console.log(team);
+		// console.log("In player factory - Weakest team:");
+		// console.log(team);
 
 		var body = new p2.Body({
 	            name: "player",

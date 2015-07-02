@@ -34,6 +34,7 @@
 	"lateral_offset" : 30,
 	"frontal_offset" : 8,
 	"maxHealth" : 100,
+	"triangle" : 30,
 
 	"health_bar" :
 	{

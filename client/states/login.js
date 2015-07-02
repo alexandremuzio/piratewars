@@ -91,7 +91,8 @@ LoginState.prototype.loadAssets = function() {
     this.game.load.image('boat_4-dead', 'assets/boat_4.png');
     this.game.load.image('bullet', 'assets/bullet.png');
     this.game.load.image('red_arrow', 'assets/red_arrow.png');
-    this.game.load.image('stronghold', 'assets/stronghold.png');
+    this.game.load.image('base-pirate', 'assets/base-pirate.png');
+    this.game.load.image('base-navy', 'assets/base-navy.png');
     this.game.load.image('cannon_0', 'assets/cannon_0.png');
     this.game.load.image('mask', 'assets/mask.png');
     this.game.load.image('mine', 'assets/mine.png');

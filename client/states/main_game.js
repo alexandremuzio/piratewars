@@ -7,6 +7,10 @@ var ProjectileFactory = require('../core/projectile_factory.js');
 var GameComponent = require('../../shared/core/component.js');
 var SnapshotManager = require('../../shared/core/snapshot_manager.js');
 
+//To debug
+/*var spawn_settings = require('../../shared/settings/spawn_positions.json');
+var player_settings = require('../../shared/settings/player.json');*/
+
 function PlayState(game, socket) {
     this.game = game;
 
@@ -42,7 +46,6 @@ PlayState.prototype.init = function(param) {
 };
 
 PlayState.prototype.preload = function() {
-    this.setPhaserPreferences();
 };
 
 PlayState.prototype.create = function() {
@@ -148,6 +151,18 @@ PlayState.prototype.assignAssets = function() {
     this.game.mask = this.game.add.sprite(0, 0, 'mask');
     this.game.mask.kill();
     this.game.mask.fixedToCamera = true;
+
+    //To debug
+    /*for(var i = 0; i < 5; i++) {
+        var sprite = this.game.add.sprite(spawn_settings.teams[1].positions[i].x,
+            spawn_settings.teams[1].positions[i].y,
+            'boat_0')
+        sprite.angle = spawn_settings.teams[1].positions[i].angle*180/3.1415;
+        sprite.width = player_settings.width,
+        sprite.height = player_settings.height,
+        sprite.anchor.x = 0.5,
+        sprite.anchor.y = 0.5
+    }*/
 }
 
 PlayState.prototype.assignNetworkCallbacks = function() {    
@@ -238,19 +253,6 @@ PlayState.prototype.onPlayerCreate = function(data) {
 
     // MPTest
     GameEngine.getInstance().printEntityHierarchy();
-}
-
-PlayState.prototype.setPhaserPreferences = function() {    
-    this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-    this.game.scale.pageAlignHorizontally = true;
-    this.game.scale.pageAlignVertically = false;
-    this.game.scale.setMinMax(1024/2, 672/2, 1024*2, 672*2);
-
-    // Enable phaser to run its steps even on an unfocused window
-    this.game.stage.disableVisibilityChange = true;
-
-    // Enable FPS of game shown on the screen
-    this.game.time.advancedTiming = true;
 }
 
 PlayState.prototype.updateTexts = function() {

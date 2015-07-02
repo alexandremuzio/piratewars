@@ -3,14 +3,14 @@
 		{
 			"id" : 1,
 			"name" : "A",
-			"initialPos" : {"x": 200, "y": 1800},
+			"initialPos" : {"x": 120, "y": 1880},
 			"color" : "0xff0000"
 		},
 
 		{
 			"id" : 2,
 			"name" : "B",
-			"initialPos" : {"x": 1800, "y": 200},
+			"initialPos" : {"x": 1880, "y": 120},
 			"color" : "0x0000ff"
 		}
 	],
@@ -25,7 +25,8 @@
 			"x" : 1,
 			"y" : 0.2
 		},
-		"relativeYtoTop" : 10
+		"relativeYtoTop" : 10,
+		"relativeYtoBottom": 10
 	},
 
 	"maxHealth" : 600

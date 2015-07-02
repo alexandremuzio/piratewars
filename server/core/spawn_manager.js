@@ -6,9 +6,13 @@ var _ = require('underscore');
 
 //Static class
 var SpawnManager = {
-	getSpawnInfo : function(team) {
+	getSpawnInfo : function(name) {
 		//Just check teams specifieds in spawn_settings
-		if(team == 0 || team == 1) {
+		//Spawn based in names of current teams
+		var team = null;
+		if(name == "red") team = 0;
+		else if(name == "blue") team = 1;
+		if(!_.isNull(team)) {
 			var valid = false;
 			var position = {};
 			var id = 0;

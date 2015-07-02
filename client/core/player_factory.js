@@ -338,10 +338,20 @@ var PlayerFactory = {
 		// Creating HealthBar subentity
 		var healthBar = this.createHealthBar(data.id+'-health_bar',
 		 								stronghold_settings.health_bar.scale);
-		healthBar.setBaseEntity(entity, -healthBar.components.get('sprite').getSprite('blood').width/2,
-								-stronghold_settings.height / 2
-									- stronghold_settings.health_bar.relativeYtoTop,
-								0);
+
+		//Improve this, doing in the wrong way
+		if(index == 0) {
+			healthBar.setBaseEntity(entity, -healthBar.components.get('sprite').getSprite('blood').width/2,
+									-stronghold_settings.height / 2
+										- stronghold_settings.health_bar.relativeYtoTop,
+									0);
+		}
+		else {
+			healthBar.setBaseEntity(entity, -healthBar.components.get('sprite').getSprite('blood').width/2,
+									stronghold_settings.height / 2
+										+ stronghold_settings.health_bar.relativeYtoBottom,
+									0);
+		}
 		healthBar.setFollowBaseEntityAngle(false);
 
 		return entity;

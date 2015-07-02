@@ -8,23 +8,48 @@
     <script type="text/javascript" src="lib/phaser.js"></script>
     <script type="text/javascript" src="lib/EZGUI.js"></script>
     <script type="text/javascript" src="bundle.js"></script>
+    
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script type="text/javascript" language="JavaScript">
+        function set_body_height() { // set body height = window height
+            $('body').height($(window).height());
+        }
+        $(document).ready(function() {
+            $(window).bind('resize', set_body_height);
+            set_body_height();
+        });
+    </script>
+    
     <style type="text/css">
         body {
+            position: fixed;
             margin: 0;
-            background-color: black 
-        }#initialScreen {
+            padding: 0;
+            background-color: black;
+        }#login {
             position: absolute;
             left: 50%;
             top: 50%;
-            transform: translate(-50%, -50%);
-            background-color: black;
+            transform: translate(-50%, -50%); 
+        }.fit { /* set relative picture size */
+            max-width: 100%;
+            max-height: 100%;
+        }
+        .center {
+            display: block;
+            margin: auto;
         }
     </style>
 </head>
 <body>
 <div id='initialScreen'>
-    <input id='nickname' name='nickname' type='text' maxlength="15" placeholder="Edgar Yano" />
-    <input id='loginbtn' name='loginbtn' type='button' value='Login' />
+    <div id='bg'>
+        <img src="assets/background.jpg" class="center fit"/>
+    </div>
+    <div id='login'>
+        <input id='nickname' name='nickname' type='text' maxlength="15" placeholder="Edgar Yano" />
+        <input id='loginbtn' name='loginbtn' type='button' value='Login' />
+    </div>
 </div>
 <!-- <div id="game">
 </div> -->

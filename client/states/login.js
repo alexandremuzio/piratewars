@@ -27,7 +27,7 @@ LoginState.prototype.constructor = LoginState;
 LoginState.prototype.init = function() {};
 
 LoginState.prototype.preload = function() {
-    //this.setPhaserPreferences();
+    this.setPhaserPreferences();
     this.loadAssets();
 };
 
@@ -35,6 +35,19 @@ LoginState.prototype.create = function() {
     this.loadTheme();
     this.setupGUI();
     this.addNextStateEvents();
+};
+
+LoginState.prototype.setPhaserPreferences = function() {    
+    this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+    this.game.scale.pageAlignHorizontally = true;
+    this.game.scale.pageAlignVertically = true;
+    this.game.scale.setMinMax(1024/2, 672/2, 1024*2, 672*2);
+
+    // Enable phaser to run its steps even on an unfocused window
+    this.game.stage.disableVisibilityChange = true;
+
+    // Enable FPS of game shown on the screen
+    this.game.time.advancedTiming = true;
 };
 
 //Add next state functions to Enter Key or Login button
@@ -93,7 +106,10 @@ LoginState.prototype.loadTheme = function() {
     EZGUI.Theme.load(['assets/GUI/metalworks-theme/metalworks-theme.json'], function () {
         var dlg1  = EZGUI.create(GameGUI.respawn, 'metalworks');
         dlg1.visible = false;
-    
+        
+        var lobbyScreen = EZGUI.create(GameGUI.lobby, 'metalworks');
+        lobbyScreen.visible = false;
+
         var egt = EZGUI.create(GameGUI.endGame, 'metalworks');
         egt.visible = false;
         //EZGUI.components.respawnTime.text = '9';

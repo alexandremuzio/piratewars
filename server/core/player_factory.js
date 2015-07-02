@@ -39,7 +39,7 @@ var PlayerFactory = {
 		var entity = new Entity(id, 'player');
 		var team = this.room.teams.getWeakest();
 		
-		var spawn_info = SpawnManager.getSpawnInfo(0);
+		var spawn_info = SpawnManager.getSpawnInfo(team.name);
 		var body = new p2.Body({
 	            name: "player",
 	            mass: player_settings.physics.mass,
@@ -62,7 +62,7 @@ var PlayerFactory = {
 		entity.components.add(new PhysicsComponent(body));
 		entity.components.add(new ServerInputComponent(snapshots));
 		entity.components.add(new PlayerControllerComponent(team));
-		entity.components.add(new RespawnManagerComponent());
+		entity.components.add(new RespawnManagerComponent(team));
 		entity.components.add(new MineGeneratorComponent());
 
 		// Subentitys

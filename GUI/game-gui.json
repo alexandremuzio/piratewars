@@ -4,9 +4,9 @@
 		"component": "Window",
 		"image": "respawnDialogBox",
 		"padding": 4,
-		"position": { "x": 200, "y": 200 },
+		"position": "center",
 		"anchor": { "x": 0.5, "y": 0.5 },
-		"width": 400,
+		"width": 300,
 		"height": 300,
 		"layout": [1, 4],
 		"children": [
@@ -52,5 +52,181 @@
 		"anchor": { "x": 0.5, "y": 0.5 },
 		"width": 1,
 		"height": 1
+    },
+    "lobby": {
+
+        "id": "lobby",
+        "component": "Window",
+        "header": { "position": { "x": 0, "y": 0 }, "height": 40, "text": "Pirate Wars" },
+        "draggable": false,
+        "width": 1000,
+        "height": 450,
+        // padding: 10,
+
+        "layout": [1, 2],
+        "children": [
+            {
+                "component": "Layout",
+                "position": {"x": 0, "y": 30},
+                "width": 750,
+                "height": 300,
+                "layout": [3, 1],
+                "children": [
+                    {
+                        "component": "List",
+                        "padding": 3,
+                        "width": 320,
+                        "height": 300,
+                        "position": "center",
+                        "layout": [1, 5],
+                        "children": [
+                            { 
+                                "id": "redslot1",
+                                "text": "Slot 1",
+                                "component": "Button",
+                                "position": "center",
+                                "width": 320,
+                                "height": 60
+                            },
+                            { 
+                                "id": "redslot2",
+                                "text": "Slot 2",
+                                "component": "Button",
+                                "position": "center",
+                                "width": 320,
+                                "height": 60
+                            },
+                            { 
+                                "id": "redslot3",
+                                "text": "Slot 3",
+                                "component": "Button",
+                                "position": "center",
+                                "width": 320,
+                                "height": 60
+                            },
+                            { 
+                                "id": "redslot4",
+                                "text": "Slot 4",
+                                "component": "Button",
+                                "position": "center",
+                                "width": 320,
+                                "height": 60
+                            },
+                            { 
+                                "id": "redslot5",
+                                "text": "Slot 5",
+                                "component": "Button",
+                                "position": "center",
+                                "width": 320,
+                                "height": 60
+                            },
+                        ]
+                    },
+
+                    {
+                        "id": "switchTeamButton",
+                        "text": "Switch",
+                        "font": {
+                            "size": "16px",
+                            "family": "Skranji",
+                            "color": "red"
+                        },
+                        "component": "Button",
+                        "position": "center",
+                        "width": 100,
+                        "height": 40
+                    },
+
+                    {
+                        "component": "List",
+                        "padding": 3,
+                        "width": 320,
+                        "height": 300,
+                        "position": "center",
+                        "layout": [1, 5],
+                        "children": [
+                            { 
+                                "id": "blueslot1",
+                                "text": "Slot 1",
+                                "component": "Button",
+                                "position": "center",
+                                "width": 320,
+                                "height": 60
+                            },
+                            { 
+                                "id": "blueslot2",
+                                "text": "Slot 2",
+                                "component": "Button",
+                                "position": "center",
+                                "width": 320,
+                                "height": 60
+                            },
+                            { 
+                                "id": "blueslot3",
+                                "text": "Slot 3",
+                                "component": "Button",
+                                "position": "center",
+                                "width": 320,
+                                "height": 60
+                            },
+                            { 
+                                "id": "blueslot4",
+                                "text": "Slot 4",
+                                "component": "Button",
+                                "position": "center",
+                                "width": 320,
+                                "height": 60
+                            },
+                            { 
+                                "id": "blueslot5",
+                                "text": "Slot 5",
+                                "component": "Button",
+                                "position": "center",
+                                "width": 320,
+                                "height": 60
+                            },
+                        ]
+                    }
+                ]
+            },
+
+            {
+                "component": "Layout",
+                "width": 320,
+                "height": 100,
+                "position": "center",
+                "layout": [2, 1],
+                "children": [
+                    { 
+                        "id": "readyButton",
+                        "component": "Button",
+                        "font":
+                        {
+                            "size": "16px",
+                            "family": "Skranji",
+                            "color": "red"
+                        },
+                        "position": "center",
+                        "text": "Ready",
+                        "anchor": { "x": 0.5, "y": 0.5 },
+                        "width": 200,
+                        "height": 50
+                    },
+                    {
+                        "id": "waitingText",
+                        "text": "Waiting for another players",
+                        "position": "center",
+                        "font": {
+                            "size": "20px",
+                            "family": "Skranji",
+                            "color": "white"
+                        },
+                        "anchor": { "x": 0.5, "y": 0.5 },
+                        "width": 1,
+                        "height": 1
+                    },
+                ]
+            }
+        ]
     }
 }

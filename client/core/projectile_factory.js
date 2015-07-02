@@ -112,7 +112,7 @@ var ProjectileFactory = {
 		entity.components.add(new PhysicsComponent(body));
 		entity.components.add(new SpriteComponent(sprites_info));
 		entity.components.add(new BulletComponent());
-		
+
         return entity;
 	},
 

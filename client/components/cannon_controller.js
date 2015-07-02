@@ -16,7 +16,10 @@ CannonController.prototype.constructor = CannonController;
 
 CannonController.prototype.shoot = function() {
     // console.log(this.owner.subentityManager.get('bullet_start'));
-
+	//create sound
+	var cannonAudio = ProjectileFactory.game.add.audio('cannon');
+	cannonAudio.play();
+	
 	var bulletStartTransform = this.owner.subentityManager.get('bullet_start').transform;
 	var velocity = this.owner.baseEntity.baseEntity.components.get('physics').body.velocity;
 	return ProjectileFactory.createBullet(bulletStartTransform.getPosition(),

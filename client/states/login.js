@@ -10,6 +10,7 @@ var GameGUI = require('../../GUI/game-gui.json');
 function LoginState(game, state) {
     this.game = game;
     this.nextState = state;
+    this.music;
 };
 
 ///
@@ -34,6 +35,10 @@ LoginState.prototype.create = function() {
     this.loadTheme();
     this.setupGUI();
     this.addNextStateEvents();
+
+    this.music = this.game.add.audio('themesong');
+    this.music.loop = true;
+    this.music.play();
 };
 
 LoginState.prototype.setPhaserPreferences = function() {    
@@ -102,6 +107,10 @@ LoginState.prototype.loadAssets = function() {
     this.game.load.image('star2', "assets/GUI/img/star2.png");
     this.game.load.image('orange-btn', "assets/GUI/img/orange-btn.png");
     /* ------------------------------------------------ */
+
+    /* ----------------- Audio assets --------------------*/
+    this.game.load.audio('themesong', ['assets/audio/gametheme.mp3']);
+    this.game.load.audio('cannon', ['assets/audio/cannonsound.mp3']);
 };
 
 LoginState.prototype.loadTheme = function() {

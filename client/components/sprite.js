@@ -44,6 +44,10 @@ SpriteComponent.prototype.init = function() {
         	sprite_i.sprite.height = sprite_i.height;
         }
 
+        if(!_.isNull(sprite_i.rotation) && !_.isUndefined(sprite_i.rotation)) { 
+        	sprite_i.sprite.rotation = sprite_i.rotation;
+        }
+
         sprite_i.originalTexture = new Phaser.Rectangle(0, 0, sprite_i.sprite.texture.width, sprite_i.sprite.texture.height);
         sprite_i.sprite.crop(new Phaser.Rectangle(0, 0, sprite_i.sprite.texture.width, sprite_i.sprite.texture.height), false);
 

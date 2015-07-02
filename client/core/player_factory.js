@@ -59,16 +59,18 @@ var PlayerFactory = {
 	        		x: 0.5,
 	        		y: 0.5
 	        	},
+	        	rotation: data.transform.angle
         		// tint: data.initialAttrs.teamColor
 			},
 			dead_boat: {
-				sprite: entityGroup.create(100, 100, deadSpriteName),
+				sprite: entityGroup.create(data.transform.x, data.transform.y, deadSpriteName),
 				width: player_settings.width,
 	        	height: player_settings.height,
 	        	anchor: {
 	        		x: 0.5,
 	        		y: 0.5
 	        	},
+	        	rotation: data.transform.angle
         		//tint: 
 			}
 		};
@@ -85,7 +87,7 @@ var PlayerFactory = {
 	            name: "player",
 	            mass: player_settings.physics.mass,
 	            position: [data.transform.x, data.transform.y],
-	            angle: 0,
+	            angle: data.transform.angle,
 	            damping: player_settings.physics.linear_damping,
 	            angularDamping: player_settings.physics.angular_damping
 	        });
@@ -256,6 +258,7 @@ var PlayerFactory = {
 	        		x: 0.5,
 	        		y: 0.5
 	        	},
+	        	rotation: data.transform.angle
         		//tint: 0xff6600
 			},
 			dead_boat: {
@@ -266,6 +269,7 @@ var PlayerFactory = {
 	        		x: 0.5,
 	        		y: 0.5
 	        	},
+	        	rotation: data.transform.angle
         		//tint: 0xff6600
 			}
 		};
@@ -280,7 +284,8 @@ var PlayerFactory = {
 		var body = new p2.Body({
 	            name: "player",
 	            mass: player_settings.physics.mass,
-	            position: [data.transform.x, data.transform.y]
+	            position: [data.transform.x, data.transform.y],
+	            angle: data.transform.angle
 	        });
 		body.entity = entity;
 

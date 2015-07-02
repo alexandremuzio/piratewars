@@ -14,6 +14,7 @@ function LobbyState(game, socket, state) {
     this.socket = socket;
     this.nextState = state;
 
+    this._firstTime = true;
     this.clientName = {};
     this._lobbyInfo = {};
     this._ready = false;
@@ -32,21 +33,30 @@ LobbyState.prototype.init = function(clientName) {
 };
 
 LobbyState.prototype.preload = function() {
+    console.log('in preload!');
     this.socket.emit('client.name', this._clientName);
 };
 
 LobbyState.prototype.create = function() {
-    this.showLobbyGUI();
-    this.assignNetworkCallbacks();
-    this.addStateEvents();
+    if (this._firstTime) {
+        console.log("Test");
+        this.assignNetworkCallbacks();
+        this.addStateEvents();
+        this.showLobbyGUI();
+    }
+    this.clearGUI();
+    this._firstTime = false;
+    console.log("in create!");
 };
 
 
 LobbyState.prototype.update = function() {
+    this.showLobbyGUI();
+    // console.log(EZGUI.components);
     if (this._currentState == 'preGame') {
+        this.clearGUI();
         EZGUI.components.lobby.visible= false;
-        console.log("Im in pre game!!!");
-        this.game.state.start(this.nextState, true, false);
+        this.game.state.start(this.nextState, false, false);
     }
 
     _.each(this._lobbyInfo.teams, function(team, teamKey) {
@@ -87,6 +97,7 @@ LobbyState.prototype.onReceiveClientName = function(clientName) {
 }
 
 LobbyState.prototype.onLobbyInfo = function(lobbyInfo) {
+    console.log(lobbyInfo);
     this.clearGUI();
     this._lobbyInfo = lobbyInfo;
 }
@@ -98,6 +109,7 @@ LobbyState.prototype.onGameState = function (gameState) {
 LobbyState.prototype.addStateEvents = function() {
     //change team button TO DO
     EZGUI.components.switchTeamButton.on('click', function () {
+        console.log('clicked switch!');
         if (this._currentState == 'lobby') {
             if (this._lobbyInfo.selfTeam == "red") {
                 this.socket.emit('client.changeTeam', "blue");
@@ -112,10 +124,9 @@ LobbyState.prototype.addStateEvents = function() {
 
     //ready button
     EZGUI.components.readyButton.on('click', function () {
-        console.log(" im here!!!!!!");
+        console.log("clicked ready!");
         if (this._currentState == 'lobby') {
             this._ready = Boolean(this._ready ^ 1);
-            console.log(this._ready);
             this.socket.emit('client.ready', this._ready);
         }
     }.bind(this));

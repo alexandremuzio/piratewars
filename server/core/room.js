@@ -144,7 +144,7 @@ Room.prototype.playingStateInit = function() {
 	console.log("Changed state to playing!");
 	this.sendChangedStateToClients('playing');
 	this.startListeningToUpdates();
-    this._sendSyncInterval = setInterval(this.sendGameSyncToClients.bind(this),
+    this._sendSyncInterval = setInterval(this.sendSyncToClients.bind(this),
     										this._sendGameSyncTickRate);
 	this._startTime = new Date();
 }
@@ -179,6 +179,7 @@ Room.prototype.endGameStateInit = function() {
 Room.prototype.endGameStateLoop = function() {
 	var currentTime = new Date();
 	if (currentTime - this._startTime > this._endGameDuration) {
+		this.clients = [];
 		this.clearPlayers();///////////////////////////////////////////////
 		this.initializeClients();		
 		this._gameState = this.lobbyStateLoop;
@@ -192,7 +193,6 @@ Room.prototype.endGameStateLoop = function() {
 /******************************************************/
 Room.prototype.allClientsAreReady = function() {
 	var allReady = true;
-	// console.log(this.getWeakestChosenTeamSize());
 	if (this.clients.length === 0 || 
 		this.getWeakestChosenTeamSize() == 0) return false; /////////////////////////
 
@@ -209,6 +209,7 @@ Room.prototype.clearPlayers = function() {
 	_.each(this.clients, function(client) {
 		client.player = null;
 		client.team = null;
+		client.ready = false;
 	});
 }
 
@@ -264,14 +265,12 @@ Room.prototype.getWeakestChosenTeamSize = function() { ////////////////
 	_.each(team_settings.teams, function(team) {
 		teamSize[team.name] = 0;
 	}, this);
-	// console.log(teamSize);
 	_.each(this.clients, function(client) {
 		var team = client.chosenTeam;
 		if (this.validateTeam(team)) {
 			teamSize[team]++;
 		}
 	}.bind(this));
-	// console.log(teamSize);
 	var minimum = 9999999;
 	_.each(teamSize, function(team) {
 		if (team < minimum)
@@ -321,6 +320,7 @@ Room.prototype.sendChangedStateToClients = function(newState) {
 }
 
 Room.prototype.sendGameSyncToClients = function(snapshot) {
+	// console.log(snapshot);
 	_.each(this.clients, function(client) {
 			client.sendGameSync(snapshot);
 	});
@@ -360,7 +360,6 @@ Room.prototype.sendLobbyInfoToClients = function() {
 			});			
 		}
 	}.bind(this));
-	// console.log(lobbyInfo);
 	_.each(this.clients, function(client) {
 		client.sendLobbyInfo(lobbyInfo);
 	});

@@ -7,10 +7,10 @@ var ProjectileFactory = require('../core/projectile_factory.js');
 var GameComponent = require('../../shared/core/component.js');
 var SnapshotManager = require('../../shared/core/snapshot_manager.js');
 
-function PlayState(game, socket) {
+function PlayState(game, socket, nextState) {
     this.game = game;
 
-    console.log("In PlayState constructor");
+    // console.log("In PlayState constructor");
     if(this.game) console.log("this.game setted");
     
     this.outSnapshotManager = new SnapshotManager();
@@ -18,6 +18,10 @@ function PlayState(game, socket) {
     this.socket = socket;
     this.selfPlayer = null;
     this.numberOfConnectedPlayers = 1;
+
+    this._currentState = 'preState';
+    this._nextState = nextState;
+    this._gameResults;
 
     var data = { game:      this.game,
                  socket:    this.socket };
@@ -37,7 +41,7 @@ PlayState.prototype.constructor = PlayState;
 //Init is the first function called when starting the State
 //Param comes from game.state.start()
 PlayState.prototype.init = function(param) {
-    console.log(param);
+    // console.log(param);
 };
 
 PlayState.prototype.preload = function() {
@@ -59,7 +63,11 @@ PlayState.prototype.create = function() {
 
 //update loop - runs at 60fps
 PlayState.prototype.update = function() {
-    // GameEngine.getInstance().printEntityHierarchy();
+    //Go back to lobby
+    if (this._currentState == 'lobby'){
+        // this.game.state.start(this._nextState, true, false); ////////////////////////
+    }
+
     this.applySyncFromServer();
     GameEngine.getInstance().gameStep();
 };
@@ -115,6 +123,7 @@ PlayState.prototype.assignNetworkCallbacks = function() {
     this.socket.on('game.state', this.onGameState.bind(this));
     this.socket.on('player.create', this.onPlayerCreate.bind(this));
     this.socket.on('game.initialInfo', this.onGameStart.bind(this));
+    this.socket.on('game.results', this.onGameResults.bind(this));
 }
 
 PlayState.prototype.createInitialEntities = function() {
@@ -157,12 +166,12 @@ PlayState.prototype.debugUpdate = function() {
     }
 };
 
-PlayState.prototype.onGameSync = function(snapshot) {
-    this.outSnapshotManager.add(snapshot);
+PlayState.prototype.onGameResults = function(results) {
+    this._gameResults = results;
 }
 
-PlayState.prototype.onGameState = function() {
-
+PlayState.prototype.onGameSync = function(snapshot) {
+    this.outSnapshotManager.add(snapshot);
 }
 
 PlayState.prototype.onGameStart = function(initialGameInfo) {
@@ -171,6 +180,11 @@ PlayState.prototype.onGameStart = function(initialGameInfo) {
         remotePlayerData.id = key;
         PlayerFactory.createRemotePlayer(remotePlayerData);
     });
+}
+
+PlayState.prototype.onGameState = function(currentState) {
+    this._currentState = currentState;
+    console.log(this._currentState);
 }
 
 PlayState.prototype.onPlayerCreate = function(data) {    

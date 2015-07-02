@@ -15,7 +15,7 @@ MineGenerator.prototype.constructor = MineGenerator;
 ///
 
 MineGenerator.prototype.getId = function() {
-	return this.owner.id + '-mine_' + this._idCount++;
+	return this.owner.id + '*mine_' + this._idCount++;
 }
 
 MineGenerator.prototype.createMine = function(mineId, mineKey, minePosition, mineAngle, mineVelocity) {

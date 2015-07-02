@@ -112,6 +112,7 @@ Room.prototype.sendSyncToClients = function() {
 			clientSnapshot.players[entity.id] = {};
 			clientSnapshot.players[entity.id].transform = entity.transform.getTransform();
 			clientSnapshot.players[entity.id].health = entity.components.get('health').currentHealth;
+			clientSnapshot.players[entity.id].score = entity.components.get('score').get();
 		}
 		else if (entity.key === 'bullet' && entity.components.get('bullet').sent === false) {
 			entity.components.get('bullet').sent = true;

@@ -23,9 +23,10 @@ var ProjectileFactory = {
 		this.game = data.game;
 	},
 
-	createBullet : function(initialPosition, initialVelocity, angle) {
+	createBullet : function(bulletId, initialPosition, initialVelocity, angle) {
 		// console.log("createBullet");
-		var bulletId = UUID();
+		// var bulletId = UUID();
+		console.log('--- Bullet created with id : ' + bulletId);
 		var entity = new Entity(bulletId, 'bullet'),
             entityGroup, sprites_info;
 

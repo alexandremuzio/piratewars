@@ -59,6 +59,10 @@ SyncComponent.prototype.onSyncronization = function(message) {
 	if (!_.isUndefined(message.transform) && !_.isNull(message.transform)) {
 		this.owner.transform.setTransform(message.transform);
 	}
+
+	if (!_.isUndefined(message.score) && !_.isNull(message.score) && message.transform.id === this.owner.id ) {
+		this.owner.components.get('player').setScore(message.score);
+	}
 }
 
 SyncComponent.prototype.onSyncronizationAfter = function(message) {

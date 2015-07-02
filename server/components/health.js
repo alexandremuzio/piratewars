@@ -30,10 +30,20 @@ HealthComponent.prototype.onEntityDie = function() {
 	this.alive = false;
 }
 
-HealthComponent.prototype.onEntityDamage = function(value) {
-	this.currentHealth -= value;
-	// console.log( this.owner.key + " has been damaged by " + value);
-	if(this.currentHealth < 0) this.currentHealth = 0;
+HealthComponent.prototype.onEntityDamage = function(value, attacker) {
+	console.log('CALL onEntityDamage');
+	if( this.alive ){
+		console.log('entity is alive');
+		this.currentHealth -= value;
+		console.log('this.currentHealth = ' + this.currentHealth);
+		// console.log( this.owner.key + " has been damaged by " + value);
+		if(this.currentHealth <= 0){
+			this.owner.die(attacker);
+			this.owner.damageDie(attacker);
+			console.log('DEATHHHHHHH');
+			this.currentHealth = 0;
+		}
+	}
 }
 
 HealthComponent.prototype.onEntityRevive = function() {

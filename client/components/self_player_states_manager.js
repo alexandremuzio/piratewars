@@ -29,8 +29,8 @@ SelfPlayerStatesManager.prototype.update = function() {
 		this._currentTime =  newCurrentTime;
 		
 		if(this._currentRespawnTime >= 0 && timestamp != (this._currentRespawnTime/1000 | 0)) {
-			console.log(timestamp);
-			console.log(this._currentRespawnTime/1000 | 0);
+			// console.log(timestamp);
+			// console.log(this._currentRespawnTime/1000 | 0);
 	        EZGUI.components.respawnTime.text = (this._currentRespawnTime/1000 | 0).toString();
 	    }
 	}

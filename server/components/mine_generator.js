@@ -28,7 +28,7 @@ MineGenerator.prototype.getFirstAvailableID = function() {
 	if (this.temporaryEntitiesIDs.length === 0) {
 		console.log("ERROR: tried to get id from empty array (package loss)");
 		var uuid = new UUID();
-		return this.owner.id + '_' + uuid;		
+		return this.owner.id + '*' + uuid;		
 	}
 	else {		
 		return this.temporaryEntitiesIDs.shift();

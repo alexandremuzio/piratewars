@@ -26,6 +26,7 @@ var ProjectileFactory = {
 
 	createBullet : function(initialPosition, initialVelocity, angle, id) {
 		// console.log("createBullet");
+		console.log('--- Bullet created with id : ' + id);
 		var bulletId = id;
 		var entity = new Entity(bulletId, 'bullet');
 

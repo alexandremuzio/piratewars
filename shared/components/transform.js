@@ -11,7 +11,7 @@ function Transform(owner) {
 	// this._localPosition = {"x": 0, "y": 0}; 
 	// this._localAngle = 0;
 	this._owner = owner;
-	this._id = owner.id;
+	this._id = owner.id; // encapsulate this on a dataPackage
 };
 
 Transform.prototype.updateAfterWorldStep = function(){

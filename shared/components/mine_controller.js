@@ -28,24 +28,39 @@ MineController.prototype.update = function(){
 	}
 }
 
-// Bug:
+MineController.prototype.whoLaunchId = function() {
+	return this.owner.id.substr(0, this.owner.id.indexOf('*'));
+};
+
 // O Id das minas remotas nao corresponde ao id do player que a lançou
 MineController.prototype.onCollision = function(collider) {
 	if ((collider.key === "player" || collider.key === "remote_player") && (!this.isMineFromPlayer(collider.id) || this.autoDemageOn()) ) {
 		// console.log('collider.key = ' + collider.key);
-		this.owner.destroy();
-		collider.damage(mine_settings.damage, collider);
-		console.log("damaging player!");
-		console.log('damage:' + mine_settings.damage);
+		var attackerId = this.whoLaunchId();
+		// console.log('attackerId = ' + attackerId);
+		var attacker = GameEngine.getInstance().entities[attackerId];
+		if(!attacker){
+			console.log('WARNING: player ' + attackerId + '( who launch the mine ) not found on server');
+		}
+		collider.damage(mine_settings.damage, attacker);
+		// console.log("damaging player!");
+		// console.log('damage:' + mine_settings.damage);
 		this.onCollisionOcured(collider);
+		this.owner.destroy();
 	}
 };
 
 MineController.prototype.forceCollision = function(player) {
-	console.log("forcing damaging player!");
-	console.log('damage:' + mine_settings.damage);
+	// console.log("forcing damaging player!");
+	// console.log('damage:' + mine_settings.damage);
+	var attackerId = this.whoLaunchId();
+	// console.log('attackerId = ' + attackerId);
+	var attacker = GameEngine.getInstance().entities[attackerId];
+	if(!attacker){
+		console.log('WARNING: player ' + attackerId + '( who launch the mine ) not found on server');
+	}
+	player.damage(mine_settings.damage, attacker);
 	this.owner.destroy();
-	player.damage(mine_settings.damage, player);
 };
 
 MineController.prototype.autoDemageOn = function(collider) {

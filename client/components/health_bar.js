@@ -21,7 +21,7 @@ HealthBarComponent.prototype.update = function() {
 	var maxHealth = this.owner.baseEntity.components.get("health").maxHealth;
 
     this._percentage = currentHealth / maxHealth;
-	this.owner.components.get("sprite").cropImage('blood', this._percentage);
+    this.owner.components.get("sprite").cropImage('blood', this._percentage);
 };
 
 HealthBarComponent.prototype.onEntityDie = function() {

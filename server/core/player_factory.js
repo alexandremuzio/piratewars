@@ -37,7 +37,8 @@ var PlayerFactory = {
 	createPlayer : function(socket, snapshots) {
 		var id = UUID();
 		var entity = new Entity(id, 'player');
-
+		var team = this.room.teams.getWeakest();
+		
 		var spawn_info = SpawnManager.getSpawnInfo(0);
 		var body = new p2.Body({
 	            name: "player",

@@ -64,7 +64,7 @@ PlayState.prototype.update = function() {
     GameEngine.getInstance().gameStep();
     this.applySyncFromServerAfter(lastSnapshot);
     this.outSnapshotManager.clear();
-    // GameEngine.getInstance().printEntityHierarchy();
+    GameEngine.getInstance().gameStep();
 };
 
 PlayState.prototype.render = function() {
@@ -109,10 +109,6 @@ PlayState.prototype.applySyncFromServer = function(lastSnapshot) {
                 GameEngine.getInstance().entities[key].sync(lastSnapshot.mines[key]);
             }
         }
-
-        for (var key in lastSnapshot.strongholds) {
-            GameEngine.getInstance().entities[key].sync(lastSnapshot.strongholds[key]);
-        }
     }
 }
 
@@ -136,6 +132,10 @@ PlayState.prototype.applySyncFromServerAfter = function(lastSnapshot) {
                     mineController.forceCollision(player);
                 }
             });
+        }
+
+        for (var key in lastSnapshot.strongholds) {
+            GameEngine.getInstance().entities[key].syncAfter(lastSnapshot.strongholds[key]);
         }
     }
 }
@@ -237,7 +237,7 @@ PlayState.prototype.onPlayerCreate = function(data) {
     this.selfPlayer = PlayerFactory.createLocalPlayer(data);
     this.game.camera.follow(this.selfPlayer.components.get("sprite").getSprite('boat'));
 
-    console.log('On player created');
+    // MPTest
     GameEngine.getInstance().printEntityHierarchy();
 }
 

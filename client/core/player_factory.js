@@ -45,6 +45,8 @@ var PlayerFactory = {
 
 		entityGroup = this.game.add.group();
 
+		console.log(data.transform);
+		console.log(data.initialAttrs);
 		sprites_info = {
 			boat: {
         		sprite: entityGroup.create(data.transform.x, data.transform.y, 'boat_0'),

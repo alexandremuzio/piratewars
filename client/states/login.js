@@ -5,14 +5,14 @@ var GameEngine = require('../../shared/game_engine.js');
 var PlayerFactory = require('../core/player_factory.js');
 var GameComponent = require('../../shared/core/component.js');
 var SnapshotManager = require('../../shared/core/snapshot_manager.js');
-var RespawnJSON = require('../../GUI/game-gui.js');
 
-//Private variables
-var nextState;
+var RespawnJSON = require('../../GUI/game-gui.js');
+var LobbyJSON = require('../../GUI/lobby-gui.js');
+
 
 function LoginState(game, state) {
     this.game = game;
-    nextState = state;
+    this.nextState = state;
 };
 
 ///
@@ -43,23 +43,23 @@ LoginState.prototype.addNextStateEvents = function() {
     document.getElementById("loginbtn").addEventListener("click", function() {
         document.getElementById("initialScreen").style.display = "none";
         var nickname = document.getElementById("nickname").value;
-        that.state.start(nextState, true, false, nickname);
-    });
+        that.state.start(this.nextState, true, false, nickname);
+    }.bind(this));
 
     document.getElementById('nickname').addEventListener('keydown', function(event) {
         if (event.keyCode == 13) {
             console.log('Pressed enter');
             document.getElementById("initialScreen").style.display = "none";
             var nickname = document.getElementById("nickname").value;
-            that.state.start(nextState, true, false, nickname);
+            that.state.start(this.nextState, true, false, nickname);
         }
-    });
+    }.bind(this));
 };
 
 //Switch to next state
 LoginState.prototype.switchState = function(param) {
-    console.log('Going to ' + nextState);
-    this.game.state.start(nextState, true, false, param);
+    console.log('Going to ' + this.nextState);
+    this.game.state.start(this.nextState, true, false, param);
 }
 
 LoginState.prototype.loadAssets = function() {
@@ -88,9 +88,13 @@ LoginState.prototype.loadAssets = function() {
 };
 
 LoginState.prototype.loadTheme = function() {
+    var lobbyScreen, respawnScreen;
     EZGUI.Theme.load(['assets/GUI/metalworks-theme/metalworks-theme.json'], function () {
-        var dlg1  = EZGUI.create(RespawnJSON, 'metalworks');
-        dlg1.visible=false;
+        lobbyScreen = EZGUI.create(LobbyJSON, 'metalworks');
+        lobbyScreen.visible = false;
+
+        respawnScreen  = EZGUI.create(RespawnJSON, 'metalworks');
+        respawnScreen.visible=false;
     
         //EZGUI.components.respawnTime.text = '9';
     });

@@ -240,7 +240,7 @@ PlayState.prototype.onGameState = function(state) {
         if(state == 'preGame') this.preGame();
         else if(state == 'endGame') this.endGame();
         else if(state == 'playing') this.startPlaying();
-        this._currentState = currentState;
+        this._currentState = state;
     }
 }
 

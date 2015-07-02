@@ -59,7 +59,6 @@ Client.prototype.initialize = function() {
 }
 
 Client.prototype.onChangeTeam = function(team) {
-	console.log(team);
 	if (this._room.validateTeam(team)) {
 		this.chosenTeam = team;
 	}
@@ -118,7 +117,6 @@ Client.prototype.clearClientListeners = function() {
 /****************** SYNC FUNCTIONS ******************/
 /****************************************************/
 Client.prototype.sendInitialMatchInfo = function(info) {
-	// console.log(info);
 	this._socket.emit('game.initialInfo', info);
 }
 

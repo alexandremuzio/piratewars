@@ -11,10 +11,10 @@ var SnapshotManager = require('../../shared/core/snapshot_manager.js');
 /*var spawn_settings = require('../../shared/settings/spawn_positions.json');
 var player_settings = require('../../shared/settings/player.json');*/
 
-function PlayState(game, socket) {
+function PlayState(game, socket, nextState) {
     this.game = game;
 
-    console.log("In PlayState constructor");
+    // console.log("In PlayState constructor");
     if(this.game) console.log("this.game setted");
     
     this.outSnapshotManager = new SnapshotManager();
@@ -23,6 +23,10 @@ function PlayState(game, socket) {
     this.selfPlayer = null;
     this.numberOfConnectedPlayers = 1;
     this._state = null;
+
+    this._currentState = 'preState';
+    this._nextState = nextState;
+    this._gameResults;
 
     var data = { game:      this.game,
                  socket:    this.socket };
@@ -42,7 +46,7 @@ PlayState.prototype.constructor = PlayState;
 //Init is the first function called when starting the State
 //Param comes from game.state.start()
 PlayState.prototype.init = function(param) {
-    console.log(param);
+    // console.log(param);
 };
 
 PlayState.prototype.preload = function() {
@@ -64,6 +68,11 @@ PlayState.prototype.create = function() {
 PlayState.prototype.update = function() {
     var lastSnapshot = this.outSnapshotManager.getLast();
     this.applySyncFromServer(lastSnapshot);
+    
+    //Go back to lobby
+    if (this._currentState == 'lobby'){
+        // this.game.state.start(this._nextState, true, false); ////////////////////////
+    }
     GameEngine.getInstance().gameStep();
     this.applySyncFromServerAfter(lastSnapshot);
     this.outSnapshotManager.clear();
@@ -170,6 +179,7 @@ PlayState.prototype.assignNetworkCallbacks = function() {
     this.socket.on('game.state', this.onGameState.bind(this));
     this.socket.on('player.create', this.onPlayerCreate.bind(this));
     this.socket.on('game.initialInfo', this.onGameStart.bind(this));
+    this.socket.on('game.results', this.onGameResults.bind(this));
 }
 
 PlayState.prototype.createInitialEntities = function() {
@@ -212,10 +222,11 @@ PlayState.prototype.debugUpdate = function() {
     }
 };
 
-PlayState.prototype.onGameSync = function(snapshot) {
-    this.outSnapshotManager.add(snapshot);
+PlayState.prototype.onGameResults = function(results) {
+    this._gameResults = results;
 }
 
+<<<<<<< HEAD
 PlayState.prototype.onGameState = function(state) {
     if(this._state != state) {
         if(state == 'preGame') this.preGame();
@@ -245,6 +256,10 @@ PlayState.prototype.endGame = function() {
     egt.visible = true;
     egt.alpha = 0;
     egt.animateFadeIn(500, EZGUI.Easing.Linear.None);
+=======
+PlayState.prototype.onGameSync = function(snapshot) {
+    this.outSnapshotManager.add(snapshot);
+>>>>>>> Ignoring return to lobby bug for now
 }
 
 PlayState.prototype.onGameStart = function(initialGameInfo) {
@@ -253,6 +268,11 @@ PlayState.prototype.onGameStart = function(initialGameInfo) {
         remotePlayerData.id = key;
         PlayerFactory.createRemotePlayer(remotePlayerData);
     });
+}
+
+PlayState.prototype.onGameState = function(currentState) {
+    this._currentState = currentState;
+    console.log(this._currentState);
 }
 
 PlayState.prototype.onPlayerCreate = function(data) {    

@@ -110,10 +110,11 @@ PlayState.prototype.assignAssets = function() {
     this.game.blockedLayer = this.game.map.createLayer('islandLayer');
 }
 
-PlayState.prototype.assignNetworkCallbacks = function() {    
+PlayState.prototype.assignNetworkCallbacks = function() {   
     this.socket.on('game.sync', this.onGameSync.bind(this));
     this.socket.on('game.state', this.onGameState.bind(this));
     this.socket.on('player.create', this.onPlayerCreate.bind(this));
+    this.socket.on('game.initialInfo', this.onGameStart.bind(this));
 }
 
 PlayState.prototype.createInitialEntities = function() {
@@ -162,6 +163,14 @@ PlayState.prototype.onGameSync = function(snapshot) {
 
 PlayState.prototype.onGameState = function() {
 
+}
+
+PlayState.prototype.onGameStart = function(initialGameInfo) {
+    console.log(initialGameInfo);
+    _.each(initialGameInfo, function(remotePlayerData, key) {
+        remotePlayerData.id = key;
+        PlayerFactory.createRemotePlayer(remotePlayerData);
+    });
 }
 
 PlayState.prototype.onPlayerCreate = function(data) {    

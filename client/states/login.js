@@ -29,6 +29,8 @@ LoginState.prototype.init = function() {};
 LoginState.prototype.preload = function() {
     //this.setPhaserPreferences();
     this.loadAssets();
+    // Enable phaser to run its steps even on an unfocused window
+    this.game.stage.disableVisibilityChange = true; ///////////////////////
 };
 
 LoginState.prototype.create = function() {

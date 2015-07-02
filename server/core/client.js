@@ -59,6 +59,7 @@ Client.prototype.initialize = function() {
 }
 
 Client.prototype.onChangeTeam = function(team) {
+	console.log(team);
 	if (this._room.validateTeam(team)) {
 		this.chosenTeam = team;
 	}
@@ -85,9 +86,9 @@ Client.prototype.createPlayer = function() {
 	this.player = PlayerFactory.createPlayer(this._socket, this._snapshots, team);
 	this._socket.emit('player.create', 
 		{
-			id: entity.id,
-			transform: entity.transform.getPosition(),
-			initialAttrs: entity.initialAttrs.getAll()
+			id: this.player.id,
+			transform: this.player.transform.getPosition(),
+			initialAttrs: this.player.initialAttrs.getAll()
 		});
 }
 
@@ -107,8 +108,8 @@ Client.prototype.startListeningToUpdates = function() {
 
 Client.prototype.clearClientListeners = function() {
 	_.each(this._eventList, function(event) {
-		this._socket.removeAllListeners(event);
-	});
+		// this._socket.removeAllListeners(event); ///////////////
+	}, this);
 }
 
 
@@ -116,6 +117,7 @@ Client.prototype.clearClientListeners = function() {
 /****************** SYNC FUNCTIONS ******************/
 /****************************************************/
 Client.prototype.sendInitialMatchInfo = function(info) {
+	console.log(info);
 	this._socket.emit('game.initialInfo', info);
 }
 
@@ -132,6 +134,7 @@ Client.prototype.sendMatchResults = function(results) {
 }
 
 Client.prototype.sendLobbyInfo = function(info) {
+	info.selfTeam = this.chosenTeam;
 	this._socket.emit('lobby.info', info);
 }
 

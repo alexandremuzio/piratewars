@@ -25,6 +25,7 @@ function Room(socket) {
 	this._sendGameSyncTickRate = 1000/20;
 	this._lobbyInfoRate = 1000;
 	this._allReadyDuration = 1000;
+	this._transitionDuration = 1000;
 	this._preGameDuration = 1000;
 	this._endGameDuration = 500;
 }
@@ -109,6 +110,19 @@ Room.prototype.allReadyStateInit = function() {
 Room.prototype.allReadyStateLoop = function() {
 	var currentTime = new Date();
 	if (currentTime - this._startTime > this._allReadyDuration) {
+		this._gameState = this.transitionStateLoop;
+		this.transitionStateInit();
+	}
+}
+
+Room.prototype.transitionStateInit = function() {   
+	console.log("Changed state to transition!");
+	this.sendChangedStateToClients('preGame');
+	this._startTime = new Date();
+}
+Room.prototype.transitionStateLoop = function() {
+	var currentTime = new Date();
+	if (currentTime - this._startTime > this._transitionDuration) {
 		this._gameState = this.preGameStateLoop;
 		this.preGameStateInit();
 	}
@@ -116,7 +130,6 @@ Room.prototype.allReadyStateLoop = function() {
 
 Room.prototype.preGameStateInit = function() {   
 	console.log("Changed state to preGame!");
-	this.sendChangedStateToClients('preGame');
 	this.initializeGame();
 	this.sendInitialMatchInfoToClients();
 	this._startTime = new Date();
@@ -260,7 +273,7 @@ Room.prototype.sendInitialMatchInfoToClients = function() {
 		});		
 		this.clients.push(currentClient);
 		// console.log(info);
-		// currentClient.sendInitialMatchInfo();
+		// currentClient.sendInitialMatchInfo(info);
 	}
 }
 

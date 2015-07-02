@@ -78,12 +78,12 @@ Client.prototype.onReady = function(ready) {
 Client.prototype.createPlayer = function() {
 	var team = this._room.teams.get(this.chosenTeam);
 	this.player = PlayerFactory.createPlayer(this._socket, this._snapshots, team);
-	// this._socket.emit('player.create', 
-	// 	{
-	// 		id: entity.id,
-	// 		transform: entity.transform.getPosition(),
-	// 		initialAttrs: entity.initialAttrs.getAll()
-	// 	});
+	this._socket.emit('player.create', 
+		{
+			id: entity.id,
+			transform: entity.transform.getPosition(),
+			initialAttrs: entity.initialAttrs.getAll()
+		});
 }
 
 Client.prototype.queueSyncFromClient = function(message) {
@@ -110,12 +110,16 @@ Client.prototype.clearClientListeners = function() {
 /****************************************************/
 /****************** SYNC FUNCTIONS ******************/
 /****************************************************/
-Client.prototype.sendGameSync = function(snapshot) {
-	this._socket.emit('game.sync', snapshot);
+Client.prototype.sendInitialMatchInfo = function(info) {
+	this._socket.emit('game.initialInfo', info);
 }
 
 Client.prototype.sendChangedState = function(newState) {
 	this._socket.emit('game.state', newState);
+}
+
+Client.prototype.sendGameSync = function(snapshot) {
+	this._socket.emit('game.sync', snapshot);
 }
 
 Client.prototype.sendLobbyInfo = function(info) {

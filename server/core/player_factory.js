@@ -41,9 +41,6 @@ var PlayerFactory = {
 		var spawn_info = SpawnManager.getSpawnInfo(team.name);
 		// var initialPosition = this.room.teams. //get from spawn manager
 		
-		// console.log("In player factory - Weakest team:");
-		// console.log(team);
-
 		var body = new p2.Body({
 	            name: "player",
 	            mass: player_settings.physics.mass,

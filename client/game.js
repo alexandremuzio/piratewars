@@ -1,11 +1,13 @@
 'use strict'
 
-var LoginState = require('./states/login.js');
-var PlayState = require('./states/main_game.js');
+var LoginState = require('./states/login');
+var LobbyState = require('./states/lobby');
+var PlayState = require('./states/main_game');
 
 function Game(socket) {
     this.game = new Phaser.Game(1000, 450, Phaser.CANVAS, "");
-    this.game.state.add('login', new LoginState(this.game, 'play' /*next state*/));
+    this.game.state.add('login', new LoginState(this.game, 'lobby' /*next state*/));
+    this.game.state.add('lobby', new LobbyState(this.game, socket,  'play' /*next state*/));
     this.game.state.add('play', new PlayState(this.game, socket));
     console.log("States loaded");
 

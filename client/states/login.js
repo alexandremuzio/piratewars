@@ -7,12 +7,9 @@ var GameComponent = require('../../shared/core/component.js');
 var SnapshotManager = require('../../shared/core/snapshot_manager.js');
 var GameGUI = require('../../GUI/game-gui.json');
 
-//Private variables
-var nextState;
-
 function LoginState(game, state) {
     this.game = game;
-    nextState = state;
+    this.nextState = state;
 };
 
 ///
@@ -56,23 +53,23 @@ LoginState.prototype.addNextStateEvents = function() {
     document.getElementById("loginbtn").addEventListener("click", function() {
         document.getElementById("initialScreen").style.display = "none";
         var nickname = document.getElementById("nickname").value;
-        that.state.start(nextState, true, false, nickname);
-    });
+        that.state.start(this.nextState, true, false, nickname);
+    }.bind(this));
 
     document.getElementById('nickname').addEventListener('keydown', function(event) {
         if (event.keyCode == 13) {
             console.log('Pressed enter');
             document.getElementById("initialScreen").style.display = "none";
             var nickname = document.getElementById("nickname").value;
-            that.state.start(nextState, true, false, nickname);
+            that.state.start(this.nextState, true, false, nickname);
         }
-    });
+    }.bind(this));
 };
 
 //Switch to next state
 LoginState.prototype.switchState = function(param) {
-    console.log('Going to ' + nextState);
-    this.game.state.start(nextState, true, false, param);
+    console.log('Going to ' + this.nextState);
+    this.game.state.start(this.nextState, true, false, param);
 }
 
 LoginState.prototype.loadAssets = function() {
@@ -103,6 +100,7 @@ LoginState.prototype.loadAssets = function() {
 };
 
 LoginState.prototype.loadTheme = function() {
+    var lobbyScreen, respawnScreen;
     EZGUI.Theme.load(['assets/GUI/metalworks-theme/metalworks-theme.json'], function () {
         var dlg1  = EZGUI.create(GameGUI.respawn, 'metalworks');
         dlg1.visible = false;

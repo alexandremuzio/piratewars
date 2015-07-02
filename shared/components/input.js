@@ -33,7 +33,7 @@ InputComponent.prototype.init = function() {
 }
 
 InputComponent.prototype.onEntityDie = function() {
-    console.log('dying in input shared');
+    // console.log('dying in input shared');
     this._processCommandBoolean = false;
     this._processAttackBoolean = false;
 }

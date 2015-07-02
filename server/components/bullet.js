@@ -35,9 +35,19 @@ BulletComponent.prototype.update = function() {
 	// console.log(this.owner.components.get("physics").body.position);
 };
 
+BulletComponent.prototype.whoLaunchId = function() {
+	return this.owner.id.substr(0, this.owner.id.indexOf('*'));
+};
+
 BulletComponent.prototype.onCollision = function(collider) {
+	// check if is an enemy key
 	if (collider.key == "player") {
-		collider.damage(this.damage, collider);
+		var attackerId = this.whoLaunchId();
+		var attacker = GameEngine.getInstance().entities[attackerId];
+		if(!attacker){
+			console.log('WARNING: player ' + attackerId + '( who launch the bullet ) not found on server');
+		}
+		collider.damage(this.damage, attacker);
 		console.log("damaging player!");
 	}
 

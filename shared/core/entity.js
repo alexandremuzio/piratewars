@@ -84,6 +84,10 @@ Entity.prototype.damage = function(amount, attacker) {
     this.trigger('entity.damage', amount, attacker, this);
 }
 
+Entity.prototype.damageDie = function(attacker) {
+    this.trigger('entity.damageDie', attacker, this);
+}
+
 Entity.prototype.collision = function(collider) {
     this.trigger('entity.collision', collider, this);
 }

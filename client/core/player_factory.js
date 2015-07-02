@@ -66,7 +66,7 @@ var PlayerFactory = {
 	        		x: 0.5,
 	        		y: 0.5
 	        	},
-        		//tint: 
+        		//tint: 0xff6600
 			}
 		};
 	    /* Player name, must be set by the user (MUST FIX) */
@@ -92,6 +92,7 @@ var PlayerFactory = {
 		shape.collisionMask = PLAYER | STRONGHOLD | BULLET | MINE;
 	    body.addShape(shape);
 
+
 		entity.components.add(new HealthComponent(player_settings.maxHealth));
 		entity.components.add(new CooldownComponent());
 		entity.components.add(new CreatorComponent());
@@ -114,10 +115,10 @@ var PlayerFactory = {
 								0);
 		healthBar.setFollowBaseEntityAngle(false);
 
-		var cannonsManager = this.createCannonsManager(data.id+'-cannons_manager');
+		var cannonsManager = this.createCannonsManager(data.id+'*cannons_manager')
 		cannonsManager.setBaseEntity(entity, 0, 0, 0);
 
-		var mineStart = this.createEmptyEntity(data.id+'-mine_start', 'mine_start');
+		var mineStart = this.createEmptyEntity(data.id+'*mine_start', 'mine_start');
 		mineStart.setBaseEntity(entity, mine_settings.launch_distance, 0, 0);
 
 		return entity;
@@ -276,7 +277,7 @@ var PlayerFactory = {
 
 	    // body.damping = player_settings.physics.linear_damping;
     	// body.angularDamping = player_settings.physics.angular_damping
-	    
+
 	    entity.components.add(new HealthComponent(player_settings.maxHealth));
 		entity.components.add(new CooldownComponent());
 		entity.components.add(new NetworkComponent(this.socket));

@@ -17,6 +17,7 @@ var CannonController = require('../components/cannon_controller');
 var HealthComponent = require('../components/health');
 var MineGeneratorComponent = require('../components/mine_generator.js');
 var SpawnManager = require('./spawn_manager.js');
+var ScoreComponent = require('../components/score.js');
 
 var player_settings = require('../../shared/settings/player.json');
 var stronghold_settings = require('../../shared/settings/stronghold.json');
@@ -38,6 +39,7 @@ var PlayerFactory = {
 		var id = UUID();
 		var entity = new Entity(id, 'player');
 		var team = this.room.teams.getWeakest();
+		// var initialPosition = this.room.teams. //get from spawn manager
 		
 		var spawn_info = SpawnManager.getSpawnInfo(0);
 		var body = new p2.Body({
@@ -64,6 +66,7 @@ var PlayerFactory = {
 		entity.components.add(new PlayerControllerComponent(team));
 		entity.components.add(new RespawnManagerComponent());
 		entity.components.add(new MineGeneratorComponent());
+		entity.components.add(new ScoreComponent());
 
 		// Subentitys
 		// Creating HealthBar subentity

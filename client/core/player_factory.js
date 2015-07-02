@@ -70,7 +70,7 @@ var PlayerFactory = {
 			}
 		};
 	    /* Player name, must be set by the user (MUST FIX) */
-	    var text = this.game.add.text(0, 0, "Edgard Yano", {
+	    var text = this.game.add.text(0, 0, "Type your nickname", {
 		        font: player_settings.text.font,
 		        fill: player_settings.text.fill,
 		        align: player_settings.text.allign

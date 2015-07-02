@@ -18,6 +18,10 @@ MineGenerator.prototype.constructor = MineGenerator;
 ///
 
 MineGenerator.prototype.createMines = function(initialPosition, boatAngle, boatVelocityArray){ 
+	console.log('createMines called');
+	var playerPos = this.owner.transform.getPosition();
+	console.log('player.x = ' + playerPos.x + ' | player.y = ' + playerPos.y);
+
 	//transferir para dentro do input
 	var alpha0 = boatAngle+Math.PI-(mine_settings.n_mines-1)/2*mine_settings.angle_spacement;
 	// console.log('alpha0 = ' + alpha0);

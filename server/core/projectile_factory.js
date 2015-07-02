@@ -59,6 +59,9 @@ var ProjectileFactory = {
 		// console.log('base: ' + base);
 		entity.setBaseEntity(base);
 
+		console.log('On server mine created');
+        console.log('x = ' + initialPosition.x + ' | y = ' + initialPosition.y );
+
 		var body = new p2.Body({
 	            name: "mine",
 	            mass : mine_settings.physics.mass,

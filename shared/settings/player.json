@@ -10,7 +10,7 @@
 			"mass":100,
 			"linear_force": 500,
 			"linear_damping": 0.9,
-			"angular_force": 100000,
+			"angular_force": 300000,
 			"angular_damping": 0.7,
 			"min_velocity_to_curve": 0,
 			"max_velocity_to_reverse": 20,

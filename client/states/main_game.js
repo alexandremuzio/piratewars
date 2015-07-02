@@ -64,7 +64,6 @@ PlayState.prototype.update = function() {
     GameEngine.getInstance().gameStep();
     this.applySyncFromServerAfter(lastSnapshot);
     this.outSnapshotManager.clear();
-    GameEngine.getInstance().gameStep();
 };
 
 PlayState.prototype.render = function() {

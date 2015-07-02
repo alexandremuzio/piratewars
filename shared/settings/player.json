@@ -27,18 +27,22 @@
 		    "angle_step": 0.1,
 		    "turn_ratio": 0.0001745
 		},
-	"width": 90,
-	"height" : 30,
+	"old_width": 90,
+	"old_height" : 30,
+	"width": 120,
+	"height" : 72,
+	"lateral_offset" : 30,
+	"frontal_offset" : 8,
 	"maxHealth" : 100,
 
 	"health_bar" :
 	{
 		"scale" : 
 		{
-			"x" : 0.2,
-			"y" : 0.2
+			"x" : 0.6,
+			"y" : 0.6
 		},
-		"relativeYtoTop" : 5
+		"relativeYtoTop" : 8
 	},
 
 	"cannon" :
@@ -48,21 +52,21 @@
 			"x" : 0.2,
 			"y" : 0.2
 		},
-		"x0" : -20,
+		"x0" : -25,
 		"y0" : 8,
-		"xInterval" : 15,
-		"distFromCannon" : 15
+		"xInterval" : 20,
+		"distFromCannon" : 30
 	},
 
 	"text" : 
 	{
 		"scale" : 
 		{
-			"x" : 0.2,
-			"y" : 0.2
+			"x" : 1,
+			"y" : 1
 		},
 		"font" : "12px Arial",
-		"fill": "#ff0044",
+		"fill": "#000000",
 		"align": "center"
 	}
 }

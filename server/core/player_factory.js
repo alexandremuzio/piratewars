@@ -51,7 +51,7 @@ var PlayerFactory = {
 	        });
 		body.entity = entity;
 
-	    var shape = new p2.Rectangle(player_settings.width, player_settings.height);
+	    var shape = new p2.Rectangle(player_settings.width, player_settings.height - player_settings.lateral_offset);
 	    shape.collisionGroup = PLAYER;
 		shape.collisionMask = PLAYER | STRONGHOLD | BULLET | MINE;
 		body.addShape(shape);

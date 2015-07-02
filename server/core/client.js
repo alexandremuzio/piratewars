@@ -87,6 +87,7 @@ Client.prototype.createPlayer = function() {
 	this._socket.emit('player.create', 
 		{
 			id: this.player.id,
+			name: this.name,
 			transform: this.player.transform.getPosition(),
 			initialAttrs: this.player.initialAttrs.getAll()
 		});
@@ -117,7 +118,7 @@ Client.prototype.clearClientListeners = function() {
 /****************** SYNC FUNCTIONS ******************/
 /****************************************************/
 Client.prototype.sendInitialMatchInfo = function(info) {
-	console.log(info);
+	// console.log(info);
 	this._socket.emit('game.initialInfo', info);
 }
 

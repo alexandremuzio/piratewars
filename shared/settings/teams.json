@@ -2,12 +2,16 @@
 	"teams" : [
 		{
 			"name" : "red",
-			"color" : "0xAE2044"
+			"color" : "0xAE2044",
+			"sprite" : "boat_3",			
+			"dead_sprite" : "boat_3-dead"
 		},
 
 		{
 			"name" : "blue",
-			"color" : "0x4BDBE5"
+			"color" : "0x4BDBE5",
+			"sprite" : "boat_4",			
+			"dead_sprite" : "boat_4-dead"
 		}
 	]
 }

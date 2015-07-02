@@ -192,7 +192,7 @@ Room.prototype.endGameStateLoop = function() {
 /******************************************************/
 Room.prototype.allClientsAreReady = function() {
 	var allReady = true;
-	console.log(this.getWeakestChosenTeamSize());
+	// console.log(this.getWeakestChosenTeamSize());
 	if (this.clients.length === 0 || 
 		this.getWeakestChosenTeamSize() == 0) return false; /////////////////////////
 
@@ -264,14 +264,14 @@ Room.prototype.getWeakestChosenTeamSize = function() { ////////////////
 	_.each(team_settings.teams, function(team) {
 		teamSize[team.name] = 0;
 	}, this);
-	console.log(teamSize);
+	// console.log(teamSize);
 	_.each(this.clients, function(client) {
 		var team = client.chosenTeam;
 		if (this.validateTeam(team)) {
 			teamSize[team]++;
 		}
 	}.bind(this));
-	console.log(teamSize);
+	// console.log(teamSize);
 	var minimum = 9999999;
 	_.each(teamSize, function(team) {
 		if (team < minimum)
@@ -360,7 +360,7 @@ Room.prototype.sendLobbyInfoToClients = function() {
 			});			
 		}
 	}.bind(this));
-	console.log(lobbyInfo);
+	// console.log(lobbyInfo);
 	_.each(this.clients, function(client) {
 		client.sendLobbyInfo(lobbyInfo);
 	});

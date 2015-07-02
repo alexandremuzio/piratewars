@@ -64,7 +64,7 @@ LoginState.prototype.addNextStateEvents = function() {
             document.getElementById("initialScreen").style.display = "none";
             var nickname = document.getElementById("nickname").value;
             that.state.start(this.nextState, true, false, nickname);
-        }
+        }   
     }.bind(this));
 };
 

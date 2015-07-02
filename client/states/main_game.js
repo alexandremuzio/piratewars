@@ -180,13 +180,13 @@ PlayState.prototype.createInitialEntities = function() {
 
 PlayState.prototype.createTexts = function() {
     // Creating debug text
-    this.text = this.game.add.text(0, 0, "0 Players Connected", {
-        font: "20px Arial",
-        fill: "#ff0044",
-        align: "center"
-    });
-    this.text.fixedToCamera = true;
-    this.text.cameraOffset.setTo(310,100);
+    // this.text = this.game.add.text(0, 0, "0 Players Connected", {
+    //     font: "20px Arial",
+    //     fill: "#ff0044",
+    //     align: "center"
+    // });
+    // this.text.fixedToCamera = true;
+    // this.text.cameraOffset.setTo(310,100);
 
     this.fpsText = this.game.add.text(0, 0, "FPS: 0", {
         font: "12px Arial",
@@ -266,7 +266,7 @@ PlayState.prototype.onPlayerCreate = function(data) {
 
 PlayState.prototype.updateTexts = function() {
     // Debugging purposes
-    this.game.debug.cameraInfo(this.game.camera, 32, 32);
+    // this.game.debug.cameraInfo(this.game.camera, 32, 32);
     this.fpsText.setText("FPS: " + this.game.time.fps);
 }
 

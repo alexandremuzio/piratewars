@@ -1,5 +1,6 @@
 'use strict'
 
+var _ = require('underscore');
 var UUID = require('node-uuid');
 var GameEngine = require('../../shared/game_engine.js');
 var BulletComponent = require('../components/bullet.js');
@@ -24,6 +25,7 @@ var SelfPlayerStatesManagerComponent = require('../components/self_player_states
 var stronghold_settings = require('../../shared/settings/stronghold.json');
 var player_settings = require('../../shared/settings/player.json');
 var mine_settings = require('../../shared/settings/mine.json');
+var team_settings = require('../../shared/settings/teams.json');
 
 //collision groups
 var PLAYER = Math.pow(2,0);
@@ -45,21 +47,22 @@ var PlayerFactory = {
 
 		entityGroup = this.game.add.group();
 
-		console.log(data.transform);
-		console.log(data.initialAttrs);
+		var spriteName = _.findWhere(team_settings.teams, { name: data.initialAttrs.team }).sprite;
+		var deadSpriteName = _.findWhere(team_settings.teams, { name: data.initialAttrs.team }).dead_sprite;
+
 		sprites_info = {
 			boat: {
-        		sprite: entityGroup.create(data.transform.x, data.transform.y, 'boat_0'),
+        		sprite: entityGroup.create(data.transform.x, data.transform.y, spriteName),
 				width: player_settings.width,
 	        	height: player_settings.height,
 	        	anchor: {
 	        		x: 0.5,
 	        		y: 0.5
 	        	},
-        		tint: data.initialAttrs.teamColor
+        		// tint: data.initialAttrs.teamColor
 			},
 			dead_boat: {
-				sprite: entityGroup.create(100, 100, 'dead_boat'),
+				sprite: entityGroup.create(100, 100, deadSpriteName),
 				width: player_settings.width,
 	        	height: player_settings.height,
 	        	anchor: {
@@ -69,8 +72,9 @@ var PlayerFactory = {
         		//tint: 
 			}
 		};
+
 	    /* Player name, must be set by the user (MUST FIX) */
-	    var text = this.game.add.text(0, 0, "Edgard Yano", {
+	    var text = this.game.add.text(0, 0, data.name, {
 		        font: player_settings.text.font,
 		        fill: player_settings.text.fill,
 		        align: player_settings.text.allign
@@ -87,7 +91,7 @@ var PlayerFactory = {
 	        });
 		body.entity = entity;
 
-		var shape = new p2.Rectangle(player_settings.width, player_settings.height);
+		var shape = new p2.Rectangle(player_settings.width, player_settings.height - player_settings.lateral_offset);
 		shape.collisionGroup = PLAYER;
 		shape.collisionMask = PLAYER | STRONGHOLD | BULLET | MINE;
 	    body.addShape(shape);
@@ -108,7 +112,9 @@ var PlayerFactory = {
 		// Creating HealthBar subentity
 		var healthBar = this.createHealthBar(data.id+'-health_bar',
 										player_settings.health_bar.scale);
-		healthBar.setBaseEntity(entity, -healthBar.components.get('sprite').getSprite('blood').width/2,
+
+		// healthBar.setBaseEntity(entity, -healthBar.components.get('sprite').getSprite('blood').width/2,
+		healthBar.setBaseEntity(entity, -player_settings.width / 2,
 								-player_settings.height 
 									- player_settings.health_bar.relativeYtoTop,
 								0);
@@ -199,22 +205,22 @@ var PlayerFactory = {
 
 		entityGroup = this.game.add.group();
 
-		sprites_info = {
-			cannon: {
-				sprite: entityGroup.create(205, 100, 'cannon_0'),
-				scale: { 
-	        		x: player_settings.cannon.scale.x,
-	        		y: player_settings.cannon.scale.y
-        		},
-	        	anchor: {
-	        		x: 0.5,
-	        		y: 0.5
-	        	},
-        		//tint: 0xff6600
-			}
-		}			
+		// sprites_info = {
+		// 	cannon: {
+		// 		sprite: entityGroup.create(205, 100, 'cannon_0'),
+		// 		scale: { 
+	 //        		x: player_settings.cannon.scale.x,
+	 //        		y: player_settings.cannon.scale.y
+  //       		},
+	 //        	anchor: {
+	 //        		x: 0.5,
+	 //        		y: 0.5
+	 //        	},
+  //       		//tint: 0xff6600
+		// 	}
+		// }			
 
-		entity.components.add(new SpriteComponent(sprites_info));
+		// entity.components.add(new SpriteComponent(sprites_info));
 		entity.components.add(new CannonController());
 
 		// Creating bulletInitialTransform subentity
@@ -228,7 +234,7 @@ var PlayerFactory = {
 	createEmptyEntity : function(id, key) {
 		var entity = new Entity(id, key);
 		return entity;
-	},
+	}
 
 	createRemotePlayer : function(data) {
 		// console.log("inside entity factory createRemotePlayer");
@@ -238,9 +244,12 @@ var PlayerFactory = {
 
 		entityGroup = this.game.add.group();
 
+		var spriteName = _.findWhere(team_settings.teams, { name: data.initialAttrs.team }).sprite;
+		var deadSpriteName = _.findWhere(team_settings.teams, { name: data.initialAttrs.team }).dead_sprite;
+
 		sprites_info = {
 			boat: {
-				sprite: entityGroup.create(data.transform.x, data.transform.y, 'boat_0'),
+				sprite: entityGroup.create(data.transform.x, data.transform.y, spriteName),
 				width: player_settings.width,
 	        	height: player_settings.height,
 	        	anchor: {
@@ -250,7 +259,7 @@ var PlayerFactory = {
         		//tint: 0xff6600
 			},
 			dead_boat: {
-				sprite: entityGroup.create(data.transform.x, data.transform.y, 'dead_boat'),
+				sprite: entityGroup.create(data.transform.x, data.transform.y, deadSpriteName),
 				width: player_settings.width,
 	        	height: player_settings.height,
 	        	anchor: {
@@ -261,6 +270,13 @@ var PlayerFactory = {
 			}
 		};
 
+		var text = this.game.add.text(0, 0, data.name, {
+		        font: player_settings.text.font,
+		        fill: player_settings.text.fill,
+		        align: player_settings.text.allign
+		    });
+		text.anchor.setTo(0.5, 0.5);
+
 		var body = new p2.Body({
 	            name: "player",
 	            mass: player_settings.physics.mass,
@@ -268,7 +284,7 @@ var PlayerFactory = {
 	        });
 		body.entity = entity;
 
-		var shape = new p2.Rectangle(player_settings.width, player_settings.height);
+		var shape = new p2.Rectangle(player_settings.width, player_settings.height - player_settings.lateral_offset);
 		shape.collisionGroup = PLAYER;
 		shape.collisionMask = PLAYER | STRONGHOLD | BULLET | MINE;
 	    body.addShape(shape);
@@ -282,9 +298,19 @@ var PlayerFactory = {
 		entity.components.add(new PhysicsComponent(body));
 		entity.components.add(new SpriteComponent(sprites_info));
 		entity.components.add(new SyncComponent());
+		entity.components.add(new TextComponent(text));
 		entity.components.add(new PlayerControllerComponent());
 
-		// Subentitys
+		// Subentitys// Subentitys
+		// Creating HealthBar subentity
+		var healthBar = this.createHealthBar(data.id+'-health_bar',
+										player_settings.health_bar.scale);
+		healthBar.setBaseEntity(entity, -player_settings.width / 2,
+								-player_settings.height 
+									- player_settings.health_bar.relativeYtoTop,
+								0);
+		healthBar.setFollowBaseEntityAngle(false);
+		
 		var cannonsManager = this.createCannonsManager(data.id+'-cannons_manager')
 		cannonsManager.setBaseEntity(entity, 0, 0, 0);
 
@@ -308,7 +334,7 @@ var PlayerFactory = {
 	        		x: 0.5,
 	        		y: 0.5
 	        	},
-        		tint: data.color
+        		// tint: data.color
 			}
 		};
 

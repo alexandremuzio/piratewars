@@ -16,6 +16,6 @@
 	"boat_velocity_factor": 0.5,
 	"charge_time": 1500,
 	"damage": 20,
-	"auto_damage_time": 3000,
+	"auto_damage_time": 5000,
 	"launch_distance": -20	
 }

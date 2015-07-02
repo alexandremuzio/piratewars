@@ -35,13 +35,15 @@ MineController.prototype.onCollision = function(collider) {
 		// console.log('collider.key = ' + collider.key);
 		this.owner.destroy();
 		collider.damage(mine_settings.damage, collider);
-		// console.log("damaging player!");
-		// console.log('damage:' + mine_settings.damage);
+		console.log("damaging player!");
+		console.log('damage:' + mine_settings.damage);
 		this.onCollisionOcured(collider);
 	}
 };
 
 MineController.prototype.forceCollision = function(player) {
+	console.log("forcing damaging player!");
+	console.log('damage:' + mine_settings.damage);
 	this.owner.destroy();
 	player.damage(mine_settings.damage, player);
 };
@@ -51,7 +53,7 @@ MineController.prototype.autoDemageOn = function(collider) {
 	return currentTime - this._createdTime > mine_settings.auto_damage_time;
 };
 
-MineController.prototype.isMineFromPlayer = function(playerId) {
+MineController.prototype.isMineFromPlayer = function(playerId) {	
 	if( this.owner.id )
 		return this.owner.id.indexOf(playerId) > -1;
 	else{

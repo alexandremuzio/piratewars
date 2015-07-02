@@ -4,10 +4,10 @@
 		"component": "Window",
 		"image": "respawnDialogBox",
 		"padding": 4,
-		"position": "center",
+		"position": { "x": 0, "y": 100},
 		"anchor": { "x": 0.5, "y": 0.5 },
-		"width": 300,
-		"height": 300,
+		"width": 1000,
+		"height": 250,
 		"layout": [1, 4],
 		"children": [
 		    null,
@@ -41,14 +41,13 @@
     },
     "endGame": {
         "id": "endGameText",
-		"position": "center",
 		"text": "Game Over",
 		"font": {
 			"size": "60px",
 			"family": "Skranji",
 			"color": "white"
 		},
-	    "position": { "x": 200, "y": 200 },
+	    "position": { "x": 500, "y": 200 },
 		"anchor": { "x": 0.5, "y": 0.5 },
 		"width": 1,
 		"height": 1
@@ -57,24 +56,31 @@
 
         "id": "lobby",
         "component": "Window",
-        "header": { "position": { "x": 0, "y": 0 }, "height": 40, "text": "Pirate Wars" },
+        "header": {
+            "position": { "x": 0, "y": 0 },
+            "height": 50,
+            "text": "Pirate Wars",
+            "font": {
+                "size": "40px",
+                "family": "Skranji",
+                "color": "white"
+            },
+        },
         "draggable": false,
         "width": 1000,
         "height": 450,
         // padding: 10,
-
         "layout": [1, 2],
         "children": [
             {
                 "component": "Layout",
-                "position": {"x": 0, "y": 30},
+                "position": {"x": 140, "y": 30},
                 "width": 750,
                 "height": 300,
                 "layout": [3, 1],
                 "children": [
                     {
                         "component": "List",
-                        "padding": 3,
                         "width": 320,
                         "height": 300,
                         "position": "center",
@@ -83,7 +89,7 @@
                             { 
                                 "id": "redslot1",
                                 "text": "Slot 1",
-                                "component": "Button",
+                                "image": "wood_tile",
                                 "position": "center",
                                 "width": 320,
                                 "height": 60
@@ -91,7 +97,7 @@
                             { 
                                 "id": "redslot2",
                                 "text": "Slot 2",
-                                "component": "Button",
+                                "image": "wood_tile",
                                 "position": "center",
                                 "width": 320,
                                 "height": 60
@@ -99,7 +105,7 @@
                             { 
                                 "id": "redslot3",
                                 "text": "Slot 3",
-                                "component": "Button",
+                                "image": "wood_tile",
                                 "position": "center",
                                 "width": 320,
                                 "height": 60
@@ -107,7 +113,7 @@
                             { 
                                 "id": "redslot4",
                                 "text": "Slot 4",
-                                "component": "Button",
+                                "image": "wood_tile",
                                 "position": "center",
                                 "width": 320,
                                 "height": 60
@@ -115,7 +121,7 @@
                             { 
                                 "id": "redslot5",
                                 "text": "Slot 5",
-                                "component": "Button",
+                                "image": "wood_tile",
                                 "position": "center",
                                 "width": 320,
                                 "height": 60
@@ -139,7 +145,6 @@
 
                     {
                         "component": "List",
-                        "padding": 3,
                         "width": 320,
                         "height": 300,
                         "position": "center",
@@ -148,7 +153,7 @@
                             { 
                                 "id": "blueslot1",
                                 "text": "Slot 1",
-                                "component": "Button",
+                                "image": "wood_tile",
                                 "position": "center",
                                 "width": 320,
                                 "height": 60
@@ -156,7 +161,7 @@
                             { 
                                 "id": "blueslot2",
                                 "text": "Slot 2",
-                                "component": "Button",
+                                "image": "wood_tile",
                                 "position": "center",
                                 "width": 320,
                                 "height": 60
@@ -164,7 +169,7 @@
                             { 
                                 "id": "blueslot3",
                                 "text": "Slot 3",
-                                "component": "Button",
+                                "image": "wood_tile",
                                 "position": "center",
                                 "width": 320,
                                 "height": 60
@@ -172,7 +177,7 @@
                             { 
                                 "id": "blueslot4",
                                 "text": "Slot 4",
-                                "component": "Button",
+                                "image": "wood_tile",
                                 "position": "center",
                                 "width": 320,
                                 "height": 60
@@ -180,7 +185,7 @@
                             { 
                                 "id": "blueslot5",
                                 "text": "Slot 5",
-                                "component": "Button",
+                                "image": "wood_tile",
                                 "position": "center",
                                 "width": 320,
                                 "height": 60
@@ -192,9 +197,9 @@
 
             {
                 "component": "Layout",
-                "width": 320,
-                "height": 100,
-                "position": "center",
+                "width": 750,
+                "height": 60,
+                "position": {"x": 140, "y": 130},
                 "layout": [2, 1],
                 "children": [
                     { 
@@ -207,14 +212,14 @@
                             "color": "red"
                         },
                         "position": "center",
+                        "padding": 40,
                         "text": "Ready",
-                        "anchor": { "x": 0.5, "y": 0.5 },
                         "width": 200,
-                        "height": 50
+                        "height": 40
                     },
                     {
                         "id": "waitingText",
-                        "text": "Waiting for another players",
+                        "text": "Press Ready to start",
                         "position": "center",
                         "font": {
                             "size": "20px",

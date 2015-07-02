@@ -101,6 +101,7 @@ LoginState.prototype.loadAssets = function() {
     this.game.load.image('respawnDialogBox', 'assets/GUI/img/respawnDialogBox.png');
     this.game.load.image('star2', "assets/GUI/img/star2.png");
     this.game.load.image('orange-btn', "assets/GUI/img/orange-btn.png");
+    this.game.load.image('wood_tile', "assets/GUI/img/wood_tile.png");
     /* ------------------------------------------------ */
 };
 

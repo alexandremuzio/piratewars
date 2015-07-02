@@ -26,7 +26,7 @@ var ProjectileFactory = {
 
 	createBullet : function(initialPosition, initialVelocity, angle, id) {
 		// console.log("createBullet");
-		console.log('--- Bullet created with id : ' + id);
+		// console.log('--- Bullet created with id : ' + id);
 		var bulletId = id;
 		var entity = new Entity(bulletId, 'bullet');
 
@@ -59,8 +59,8 @@ var ProjectileFactory = {
 		// console.log('base: ' + base);
 		entity.setBaseEntity(base);
 
-		console.log('On server mine created');
-        console.log('x = ' + initialPosition.x + ' | y = ' + initialPosition.y );
+		// console.log('Server mine created at:');
+  // 		console.log('x = ' + initialPosition.x + ' | y = ' + initialPosition.y );
 
 		var body = new p2.Body({
 	            name: "mine",

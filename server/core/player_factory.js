@@ -77,8 +77,12 @@ var PlayerFactory = {
 		var cannonsManager = this.createCannonsManager(id+'-cannons_manager')
 		cannonsManager.setBaseEntity(entity, 0, 0, 0);
 
+		console.log('INNNNNNNNNNNNNN');
 		var mineStart = this.createEmptyEntity(id+'-mine_start', 'mine_start');
-		mineStart.setBaseEntity(entity, mine_settings.launch_distance, 0, 0);
+		mineStart.setBaseEntity(entity, 0, -mine_settings.launch_distance, 0);
+		console.log('OUTTTTTTTTTTTTTTTTTT');
+		// console.log('localPosition of mineStart')
+		// console.log(mineStart.transform.getLocalPosition())
 
 		return entity;
 	},

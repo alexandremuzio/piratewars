@@ -137,6 +137,8 @@ Room.prototype.sendSyncToClients = function() {
 				if(mine.components.get('mine_controller').sent === false){
 					mine.components.get('mine_controller').sent = true;
 					clientSnapshot.mines[mine.id] = mine.transform.getTransform();
+					console.log('mine transform send');
+					console.log(mine.transform.getTransform());
 				}
 			});
 		}

@@ -120,6 +120,8 @@ var PlayerFactory = {
 
 		var mineStart = this.createEmptyEntity(data.id+'*mine_start', 'mine_start');
 		mineStart.setBaseEntity(entity, mine_settings.launch_distance, 0, 0);
+		console.log('localPosition of mineStart')
+		console.log(mineStart.transform.getLocalPosition())
 
 		return entity;
 	},

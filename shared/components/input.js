@@ -101,6 +101,8 @@ InputComponent.prototype.processAttack = function(command) {
             var mineStartPosition = mineStartTransform.getPosition();
             var boatAngle = mineStartTransform.getAngle();
             var boatVelocityArray = this.owner.components.get('physics').body.velocity;
+            // console.log('printing mineStartTransform : --------------------------');
+            // console.log(mineStartTransform);
             this.owner.components.get('mine_generator').createMines(mineStartPosition, boatAngle, boatVelocityArray);
             // GameEngine.getInstance().printEntityHierarchy();
         }

@@ -18,9 +18,9 @@ MineGenerator.prototype.constructor = MineGenerator;
 ///
 
 MineGenerator.prototype.createMines = function(initialPosition, boatAngle, boatVelocityArray){ 
-	console.log('createMines called');
-	var playerPos = this.owner.transform.getPosition();
-	console.log('player.x = ' + playerPos.x + ' | player.y = ' + playerPos.y);
+	// console.log('createMines called');
+	// var playerPos = this.owner.transform.getPosition();
+	// console.log('player.x = ' + playerPos.x + ' | player.y = ' + playerPos.y);
 
 	//transferir para dentro do input
 	var alpha0 = boatAngle+Math.PI-(mine_settings.n_mines-1)/2*mine_settings.angle_spacement;
@@ -33,10 +33,16 @@ MineGenerator.prototype.createMines = function(initialPosition, boatAngle, boatV
 		this._idCount++;
 		var mineAngle = alpha0 + i*mine_settings.angle_spacement;
 		var mineDeltaPosition = MathUtils.vector(mine_settings.initial_distance, mineAngle);
+		// console.log('initialPosition:');
+		// console.log(initialPosition);
+		// console.log('mineDeltaPosition:');
+		// console.log(mineDeltaPosition);
 		var minePosition = {
 			"x": initialPosition.x + mineDeltaPosition.x,
 			"y": initialPosition.y + mineDeltaPosition.y
 		}
+		// console.log('minePosition:');
+		// console.log(minePosition);
 		var mineVelocity = MathUtils.vector(mine_settings.physics.initial_velocity, mineAngle);
 		mineVelocity = {
 			"x": mineVelocity.x + boatVelocityArray[0]*mine_settings.boat_velocity_factor,

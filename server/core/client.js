@@ -45,12 +45,17 @@ Client.prototype.init = function() {
 Client.prototype.onName = function(name) {
 	if (_.isString(name)) {
 		this.name = name;
-		this.chosenTeam =  this._room.getWeakestChosenTeam();
-		this._room.clients.push(this);
+		this.initialize();
 	}
 	else {
 		console.error("Didn't get a string as name from the client");		
 	}
+}
+
+// Improve this
+Client.prototype.initialize = function() {	
+	this.chosenTeam =  this._room.getWeakestChosenTeam();
+	this._room.clients.push(this);
 }
 
 Client.prototype.onChangeTeam = function(team) {
@@ -120,6 +125,10 @@ Client.prototype.sendChangedState = function(newState) {
 
 Client.prototype.sendGameSync = function(snapshot) {
 	this._socket.emit('game.sync', snapshot);
+}
+
+Client.prototype.sendMatchResults = function(results) {
+	this._socket.emit('game.results', results);
 }
 
 Client.prototype.sendLobbyInfo = function(info) {

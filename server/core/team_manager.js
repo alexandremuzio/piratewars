@@ -12,6 +12,10 @@ TeamManager.prototype.get = function(key) {
 	return this._teams[key];
 }
 
+TeamManager.prototype.getAll = function() {
+	return this._teams;
+}
+
 TeamManager.prototype.getWeakest = function() {
 	var minKey = "";
 	var minNumberOfMembers = 999999;

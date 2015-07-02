@@ -85,7 +85,10 @@ LoginState.prototype.loadAssets = function() {
 
     this.game.load.tilemap('backgroundmap', 'assets/map.json', null, Phaser.Tilemap.TILED_JSON);
     this.game.load.image('gameTiles', 'assets/watertile.png');
-    this.game.load.image('boat_0', 'assets/boat_0.png');
+    this.game.load.image('boat_3', 'assets/boat_3.png');
+    this.game.load.image('boat_4', 'assets/boat_4.png');
+    this.game.load.image('boat_3-dead', 'assets/boat_3.png');
+    this.game.load.image('boat_4-dead', 'assets/boat_4.png');
     this.game.load.image('bullet', 'assets/bullet.png');
     this.game.load.image('red_arrow', 'assets/red_arrow.png');
     this.game.load.image('stronghold', 'assets/stronghold.png');

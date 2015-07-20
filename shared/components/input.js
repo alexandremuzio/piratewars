@@ -1,26 +1,21 @@
-'use strict'
+'use strict';
 
-var GameEngine = require('../game_engine');
+// var GameEngine = require('../game_engine');
 var GameComponent = require('../core/component');
 
 var physics_settings = require('../settings/player.json').physics;
 
 function InputComponent() {
-	// console.log("inside InputComp constr");
-	this.key = "input";
+    // console.log('inside InputComp constr');
+    this.key = 'input';
     this.followingTrajectory = false;
-    this._body;
-    this._clickedPoint;
-    this._circle;
     this._rotating = false;
-    this._rotateOnCounterClockWise;
     this._clickedPointInCycle = false;
-    this._centerToClickedPointVector;
     this._processCommandBoolean = true;
     this._processAttackBoolean = true;
     this.initNewTrajectoryCalled = false;
     this._actualForce = 0;
-};
+}
 
 ///
 InputComponent.prototype = Object.create(GameComponent.prototype);
@@ -30,32 +25,32 @@ InputComponent.prototype.constructor = InputComponent;
 InputComponent.prototype.init = function() {
     this.owner.on('entity.revive', this.onEntityRevive.bind(this));
     this.owner.on('entity.die', this.onEntityDie.bind(this));
-}
+};
 
 InputComponent.prototype.onEntityDie = function() {
     console.log('dying in input shared');
     this._processCommandBoolean = false;
     this._processAttackBoolean = false;
-}
+};
 
 InputComponent.prototype.onEntityRevive = function() {
     this._processCommandBoolean = true;
     this._processAttackBoolean = true;
     this.resetVelocity();
-}
+};
 
 InputComponent.prototype.resetVelocity = function() {
     if( this._body == null )
-        this._body = this.owner.components.get("physics").body;
+        this._body = this.owner.components.get('physics').body;
 
     this._body.velocity[0] = 0;
     this._body.velocity[1] = 0;
-}
+};
 
 InputComponent.prototype.processCommand = function(command) {
-    if(this._processCommandBoolean == true) {
+    if(this._processCommandBoolean === true) {
         if( this._body == null )
-            this._body = this.owner.components.get("physics").body;
+            this._body = this.owner.components.get('physics').body;
 
         this.processAttack(command);
     //    if( this.hasArrowCommand(command)){
@@ -77,25 +72,25 @@ InputComponent.prototype.processCommand = function(command) {
 };
 
 InputComponent.prototype.processAttack = function(command) {
-    if(this._processAttackBoolean == true) {
+    if(this._processAttackBoolean === true) {
         if( command.qKey ){
-            if (this.owner.components.get("cooldown").activate()) {
+            if (this.owner.components.get('cooldown').activate()) {
                 var cannonsManager = this.owner.subentityManager.get('cannons_manager');
-                var cannonsManagerController = cannonsManager.components.get("cannons_manager_controller");
+                var cannonsManagerController = cannonsManager.components.get('cannons_manager_controller');
                 cannonsManagerController.shootLeft();
             }
         }
         if( command.eKey ){
-            if (this.owner.components.get("cooldown").activate()) {
+            if (this.owner.components.get('cooldown').activate()) {
                 var cannonsManager = this.owner.subentityManager.get('cannons_manager');
-                var cannonsManagerController = cannonsManager.components.get("cannons_manager_controller");
+                var cannonsManagerController = cannonsManager.components.get('cannons_manager_controller');
                 cannonsManagerController.shootRight();
             }
         }
     }
     if( command.spaceKey ){
         // remove && this.owner.components.get('sprite')
-        if( this.owner.components.get("cooldown").mineActivate()){
+        if( this.owner.components.get('cooldown').mineActivate()){
             // console.log('SpaceKey clicked!!!!!!!!!!!!');
             var mineStartTransform = this.owner.subentityManager.get('mine_start').transform;
             var mineStartPosition = mineStartTransform.getPosition();
@@ -178,33 +173,33 @@ InputComponent.prototype.initNewTrajectory = function(command){
     // this._g.drawCircle(this._circle.x0, this._circle.y0, 2*this._circle.radius);
 
     var circleCenterToBoatVector = { // In world coordinates
-        "x": this._body.position[0] - this._circle.x0,
-        "y": this._body.position[1] - this._circle.y0
-    }
+        'x': this._body.position[0] - this._circle.x0,
+        'y': this._body.position[1] - this._circle.y0
+    };
     this._clickedPoint = {
-        "x": command.mouseWorldX,
-        "y": command.mouseWorldY
-    }
+        'x': command.mouseWorldX,
+        'y': command.mouseWorldY
+    };
     
     this._rotating = true;
     this.followingTrajectory = true;
 
     this._centerToClickedPointVector = {
-        "x": command.mouseWorldX - this._circle.x0,
-        "y": command.mouseWorldY - this._circle.y0
-    }
+        'x': command.mouseWorldX - this._circle.x0,
+        'y': command.mouseWorldY - this._circle.y0
+    };
     if( this.module(this._centerToClickedPointVector) < this._circle.radius )
         this._clickedPointInCycle = true;
     else
         this._clickedPointInCycle = false;
-}
+};
 
 InputComponent.prototype.followTrajectoryUpdate = function(command) { 
     if( this._rotating ){  
         var boatToClickedPointVector = { // In normal coordinates
-            "x": this._clickedPoint.x - this._body.position[0],
-            "y": -(this._clickedPoint.y - this._body.position[1])
-        }
+            'x': this._clickedPoint.x - this._body.position[0],
+            'y': -(this._clickedPoint.y - this._body.position[1])
+        };
 
         // Test
         // this._g.lineStyle(2, 0x0000ff);
@@ -219,8 +214,8 @@ InputComponent.prototype.followTrajectoryUpdate = function(command) {
         // this._g.lineTo(this._body.position[0] + boatDirectionVector.x*100, this._body.position[1] - boatDirectionVector.y*100);
 
         var centerToBoat = { // In world coordinates
-            "x": this._body.position[0] - this._circle.x0,
-            "y": this._body.position[1] - this._circle.y0
+            'x': this._body.position[0] - this._circle.x0,
+            'y': this._body.position[1] - this._circle.y0
         };
         this.normalize(centerToBoat);
 
@@ -260,8 +255,8 @@ InputComponent.prototype.followTrajectoryUpdate = function(command) {
                 boatDirectionVector = this.rotate90CCW(centerToBoat);
 
             var velocityVector = {
-                "x": this._body.velocity[0],
-                "y": this._body.velocity[1]
+                'x': this._body.velocity[0],
+                'y': this._body.velocity[1]
             };
             var velocityModule = this.module(velocityVector);
 
@@ -289,8 +284,8 @@ InputComponent.prototype.correctVelocity = function() {
 
 InputComponent.prototype.getVelocityVector = function(){
     var velocityVector = {
-        "x": this._body.velocity[0],
-        "y": this._body.velocity[1]
+        'x': this._body.velocity[0],
+        'y': this._body.velocity[1]
     };
     return velocityVector;
 };
@@ -317,29 +312,29 @@ InputComponent.prototype.getTrajectoryCircle = function(boatDirectionVector){
 // v and v2 in normal coordinates
 InputComponent.prototype.rotate90CCW = function(v){
     var v2 = {
-        "x": -v.y,
-        "y": v.x
-    }
+        'x': -v.y,
+        'y': v.x
+    };
     return v2;
-}
+};
 
 // v and v2 in normal coordinates
 InputComponent.prototype.rotate90CW = function(v){
     var v2 = {
-        "x": v.y,
-        "y": -v.x
-    }
+        'x': v.y,
+        'y': -v.x
+    };
     return v2;
-}
+};
 
 // Boat direction vector in normal coordinates ( y in correct direction )
 InputComponent.prototype.getBoatDirectionVector = function(command){
     var boat_vector = {
-        "x": Math.cos(this._body.angle),
-        "y": -Math.sin(this._body.angle)
+        'x': Math.cos(this._body.angle),
+        'y': -Math.sin(this._body.angle)
     };
     return boat_vector;
-}
+};
 
 // Boat to clicked point direction vector in normal coordinates
 InputComponent.prototype.getBoatToClickedPointVector = function(command){
@@ -348,17 +343,17 @@ InputComponent.prototype.getBoatToClickedPointVector = function(command){
     boat_to_point_vector.y = -(command.mouseWorldY - this._body.position[1]);
     this.normalize(boat_to_point_vector);
     return boat_to_point_vector;
-}
+};
 
 // v1 and v2 in normal coordinates
 InputComponent.prototype.v1ReachV2RotatingOnCounterClockWise = function(v1, v2){
     return this.crossProduct(v1, v2) > 0;
-}
+};
 
 // v1 and v2 in normal coordinates
 InputComponent.prototype.crossProduct = function(v1, v2){
     return v1.x*v2.y-v1.y*v2.x;
-}
+};
 
 // Return diference angle(degree) between finalAngle(degree) and currentAngle(degree)
 // Return value is greater than zero: currentAngle reach finalAngle on clockWise direction
@@ -401,9 +396,9 @@ InputComponent.prototype.getAngleFromVector = function(v){
 // The returned vector is in normal coordinates
 InputComponent.prototype.getVectorFromAngle = function(angle){
     var v = {
-        "x": Math.cos(angle),
-        "y": -Math.sin(angle) ///////////////////////////////////////////////////////////////////////////
-    }
+        'x': Math.cos(angle),
+        'y': -Math.sin(angle) ///////////////////////////////////////////////////////////////////////////
+    };
     return v;
 };
 
@@ -416,6 +411,6 @@ InputComponent.prototype.normalize = function(v){
 
 InputComponent.prototype.module = function(v){
     return Math.sqrt(Math.pow(v.x, 2) + Math.pow(v.y, 2));
-}
+};
 
 module.exports = InputComponent;

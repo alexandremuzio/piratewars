@@ -1,8 +1,7 @@
-'use strict'
+'use strict';
 
 var p2 = require('p2');
 var _ = require('underscore');
-var GameComponent = require('./core/component.js');
 
 // Singleton class
 var GameEngine = (function () {
@@ -15,7 +14,7 @@ var GameEngine = (function () {
 		var _scheduledForDeletion = [];
 		var _deleteEntities = function() {
 				_.each(_scheduledForDeletion, function(id) {	
-					// console.log("deleting= ", id);			
+					// console.log('deleting= ', id);			
 					delete _entities[id];
 				});
 				_scheduledForDeletion = [];
@@ -31,12 +30,12 @@ var GameEngine = (function () {
 			}.bind(this));
 		};
 
-		_world.on("beginContact", function(event){
+		_world.on('beginContact', function(event){
 	        var bodyA = event.bodyA;
 	        var bodyB = event.bodyB;
-	        // console.log("Colliding %s %s with %s %s", bodyA.entity.key, bodyA.entity.id, bodyB.entity.id, bodyB.entity.key);
+	        // console.log('Colliding %s %s with %s %s', bodyA.entity.key, bodyA.entity.id, bodyB.entity.id, bodyB.entity.key);
 
-	        // console.log("Impacting!!");
+	        // console.log('Impacting!!');
 	        if (bodyA.entity) {
 	        	bodyA.entity.collision(bodyB.entity);
 	        }
@@ -78,16 +77,16 @@ var GameEngine = (function () {
 				for (var i in _entities) {
 					_entities[i].updateBeforeWorldStep();
 				}
-				// console.log("doing world step");
+				// console.log('doing world step');
 				_world.step(_stepLength);
 				for (var i in _entities) {
 					_entities[i].updateAfterWorldStep();
 				}
-				// console.log("deleting entities");
+				// console.log('deleting entities');
 				_deleteEntities();
 			},
 			addEntity: function(entity, id) {
-				// console.log("gameEngine addEntity");
+				// console.log('gameEngine addEntity');
 				// console.log(entity);
 				_entities[id] = entity;
 			},
@@ -102,7 +101,7 @@ var GameEngine = (function () {
 				});
 			}
 		};
-	};
+	}
 	return {
 		getInstance: function () {
 			if (!instance) {

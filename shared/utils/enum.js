@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 function _enum(list) {       
     for (var key in list) {

@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 function Team(data, room) {
 	// console.log("inside team constr");
@@ -9,7 +9,7 @@ function Team(data, room) {
 	this._players = [];
 	this._points = 0;
 	this._room = room;
-};
+}
 
 Team.prototype.addPlayer = function(player) {
 	this._players.push(player);
@@ -17,7 +17,7 @@ Team.prototype.addPlayer = function(player) {
 
 Team.prototype.getPlayers = function() {
 	return this._players;
-}
+};
 
 Team.prototype.size = function() {
 	return this._players.length;

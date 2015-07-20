@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 var _enum = require('../../shared/utils/enum.js');
 

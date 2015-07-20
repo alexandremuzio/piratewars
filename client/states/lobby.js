@@ -1,12 +1,8 @@
-'use strict'
+'use strict';
 
 var _ = require('underscore');
-var GameEngine = require('../../shared/game_engine.js');
-var PlayerFactory = require('../core/player_factory.js');
-var GameComponent = require('../../shared/core/component.js');
-var SnapshotManager = require('../../shared/core/snapshot_manager.js');
-var RespawnJSON = require('../../GUI/game-gui.json');
-var LobbyJSON = require('../../GUI/lobby-gui.js');
+// var RespawnJSON = require('../../GUI/game-gui.json');
+// var LobbyJSON = require('../../GUI/lobby-gui.js');
 
 
 function LobbyState(game, socket, state) {
@@ -18,10 +14,10 @@ function LobbyState(game, socket, state) {
     this.clientName = {};
     this._lobbyInfo = {};
     this._ready = false;
-    this._currentState = "lobby";
+    this._currentState = 'lobby';
 
-    console.log("Inside Lobby!");
-};
+    console.log('Inside Lobby!');
+}
 
 ///
 LobbyState.prototype = Object.create(Phaser.State.prototype);
@@ -39,21 +35,21 @@ LobbyState.prototype.preload = function() {
 
 LobbyState.prototype.create = function() {
     if (this._firstTime) {
-        console.log("Test");
+        console.log('Test');
         this.assignNetworkCallbacks();
         this.addStateEvents();
         this.showLobbyGUI();
     }
     this.clearGUI();
     this._firstTime = false;
-    console.log("in create!");
+    console.log('in create!');
 };
 
 
 LobbyState.prototype.update = function() {
     this.showLobbyGUI();
     // console.log(EZGUI.components);
-    if (this._currentState == 'preGame') {
+    if (this._currentState === 'preGame') {
         this.clearGUI();
         EZGUI.components.lobby.visible= false;
         this.game.state.start(this.nextState, false, false);
@@ -65,58 +61,58 @@ LobbyState.prototype.update = function() {
             var player = team[i - 1];
             // console.log(team);
             // console.log(teamKey);
-            EZGUI.components[teamKey + "slot" + i].text = player.name;
+            EZGUI.components[teamKey + 'slot' + i].text = player.name;
 
             if (player.ready) {
-                // EZGUI.components[teamKey + "slot" + i].font.color = 'green'; //////////////
-                EZGUI.components[teamKey + "slot" + i].text = player.name + "- Ready";
+                // EZGUI.components[teamKey + 'slot' + i].font.color = 'green'; //////////////
+                EZGUI.components[teamKey + 'slot' + i].text = player.name + '- Ready';
             }
 
             else {
-                // EZGUI.components[teamKey + "slot" + i].font.color = 'red'; /////////////
-                EZGUI.components[teamKey + "slot" + i].text = player.name + "- Not Ready";
+                // EZGUI.components[teamKey + 'slot' + i].font.color = 'red'; /////////////
+                EZGUI.components[teamKey + 'slot' + i].text = player.name + '- Not Ready';
             }
         }
     });
-}
+};
 
 LobbyState.prototype.clearGUI = function() {
     for (var i = 1; i <= 5; i++) {
-        EZGUI.components["redslot" + i].text = "";
-        EZGUI.components["blueslot" + i].text = "";
+        EZGUI.components['redslot' + i].text = '';
+        EZGUI.components['blueslot' + i].text = '';
     }
-}
+};
 
 LobbyState.prototype.assignNetworkCallbacks = function() {
     this.socket.on('lobby.info', this.onLobbyInfo.bind(this));
     this.socket.on('game.state', this.onGameState.bind(this));
-}
+};
 
 LobbyState.prototype.onReceiveClientName = function(clientName) {
     this._clientName = clientName;
-}
+};
 
 LobbyState.prototype.onLobbyInfo = function(lobbyInfo) {
     console.log(lobbyInfo);
     this.clearGUI();
     this._lobbyInfo = lobbyInfo;
-}
+};
 
 LobbyState.prototype.onGameState = function (gameState) {
     this._currentState = gameState;
-}
+};
 
 LobbyState.prototype.addStateEvents = function() {
     //change team button TO DO
     EZGUI.components.switchTeamButton.on('click', function () {
         console.log('clicked switch!');
         if (this._currentState == 'lobby') {
-            if (this._lobbyInfo.selfTeam == "red") {
-                this.socket.emit('client.changeTeam', "blue");
+            if (this._lobbyInfo.selfTeam == 'red') {
+                this.socket.emit('client.changeTeam', 'blue');
             }
 
-             if (this._lobbyInfo.selfTeam == "blue") {
-                this.socket.emit('client.changeTeam', "red");
+             if (this._lobbyInfo.selfTeam == 'blue') {
+                this.socket.emit('client.changeTeam', 'red');
             }
         }
     }.bind(this));
@@ -124,17 +120,17 @@ LobbyState.prototype.addStateEvents = function() {
 
     //ready button
     EZGUI.components.readyButton.on('click', function () {
-        console.log("clicked ready!");
+        console.log('clicked ready!');
         if (this._currentState == 'lobby') {
             this._ready = Boolean(this._ready ^ 1);
             this.socket.emit('client.ready', this._ready);
         }
     }.bind(this));
-}
+};
 
 LobbyState.prototype.showLobbyGUI = function() {
     EZGUI.components.lobby.visible= true;
-}
+};
 
 
 module.exports = LobbyState;

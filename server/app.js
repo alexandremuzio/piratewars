@@ -17,7 +17,7 @@ var
 webRoot = path.resolve(__dirname, '../');
 
 
-server.listen(config.port)
+server.listen(config.port);
 
 console.log('\t :: Express :: Listening on port ' + config.port);
 

@@ -1,7 +1,6 @@
-'use strict'
+'use strict';
 
 var BaseComponent = require('../../shared/components/stronghold');
-var GameEngine = require('../../shared/game_engine');
 
 function StrongholdComponent() {
 	BaseComponent.apply(this);

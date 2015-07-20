@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 var UUID = require('node-uuid');
 var p2 = require('p2');
@@ -10,7 +10,6 @@ var NetworkComponent = require('../../shared/components/network.js');
 var ServerInputComponent = require('../components/input.js');
 var RespawnManagerComponent = require('../components/respawn.js');
 var PhysicsComponent = require('../../shared/components/physics.js');
-var GameEngine = require('../../shared/game_engine.js');
 var StrongholdComponent = require('../components/stronghold');
 var CannonsManagerController = require('../components/cannons_manager_controller.js');
 var CannonController = require('../components/cannon_controller');
@@ -31,7 +30,7 @@ var MINE = Math.pow(2,3);
 //static class
 var PlayerFactory = {
 	init : function (room) {
-		this.room = room
+		this.room = room;
 	},
 
 	createPlayer : function(socket, snapshots, team) {
@@ -42,7 +41,7 @@ var PlayerFactory = {
 		// var initialPosition = this.room.teams. //get from spawn manager
 		
 		var body = new p2.Body({
-	            name: "player",
+	            name: 'player',
 	            mass: player_settings.physics.mass,
 	            position: [spawn_info.x, spawn_info.y],
 	            angle: spawn_info.angle,
@@ -79,7 +78,7 @@ var PlayerFactory = {
 		// healthBar.setBaseEntity(entity, 0, -30, 0);
 		// healthBar.setFollowFatherAngle(false);
 
-		var cannonsManager = this.createCannonsManager(id+'-cannons_manager')
+		var cannonsManager = this.createCannonsManager(id+'-cannons_manager');
 		cannonsManager.setBaseEntity(entity, 0, 0, 0);
 
 		var mineStart = this.createEmptyEntity(id+'-mine_start', 'mine_start');
@@ -97,8 +96,8 @@ var PlayerFactory = {
 		for( var i = 0; i < 3; i++ ){
 			var cannon = this.createCannon(id+'-cannon_'+(i+1), 'cannon_'+(i+1));
 			cannon.setBaseEntity(entity,
-									player_settings.cannon.x0
-									+ player_settings.cannon.xInterval*i,
+									player_settings.cannon.x0 +
+									player_settings.cannon.xInterval*i,
 									-player_settings.cannon.y0,
 									-Math.PI/2);
 			cannonsManagerController.addLeft(cannon);
@@ -106,8 +105,8 @@ var PlayerFactory = {
 		for( var i = 0; i < 3; i++ ){
 			var cannon = this.createCannon(id+'-cannon_'+(i+4), 'cannon_'+(i+4));
 			cannon.setBaseEntity(entity,
-							  		player_settings.cannon.x0
-							  		+ player_settings.cannon.xInterval*i,
+							  		player_settings.cannon.x0 +
+							  		player_settings.cannon.xInterval*i,
 							  		player_settings.cannon.y0,
 							  		Math.PI/2);
 			cannonsManagerController.addRight(cannon);
@@ -139,7 +138,7 @@ var PlayerFactory = {
 		var entity = new Entity(data.id, 'stronghold');
 
 		var body = new p2.Body({
-	            name: "stronghold",
+	            name: 'stronghold',
 	            mass: 99999999,
 	            // type: p2.Body.STATIC,
 	            position: [data.initialPos.x, data.initialPos.y]
@@ -159,6 +158,6 @@ var PlayerFactory = {
 
 		return entity;
 	}
-}
+};
 
 module.exports = PlayerFactory;

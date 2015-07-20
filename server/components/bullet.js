@@ -1,7 +1,6 @@
-'use strict'
+'use strict';
 
 var BaseComponent = require('../../shared/components/bullet');
-var GameEngine = require('../../shared/game_engine');
 
 var bullet_settings = require('../../shared/settings/bullet.json');
 
@@ -19,8 +18,8 @@ BulletComponent.prototype.constructor = BulletComponent;
 
 BulletComponent.prototype.init = function() {
 	this.currentTime = new Date();
-	this.owner.on("entity.collision", this.onCollision.bind(this));
-}
+	this.owner.on('entity.collision', this.onCollision.bind(this));
+};
 
 BulletComponent.prototype.update = function() {
 	var newCurrentTime = new Date();
@@ -29,21 +28,21 @@ BulletComponent.prototype.update = function() {
 
 	if (this.currentAliveTime >= this.bulletSurvivalTime) {
 		//delete bullet some way
-		// console.log("Bullet should be deleted now!");
+		// console.log('Bullet should be deleted now!');
 		this.owner.destroy();
 	}
-	// console.log(this.owner.components.get("physics").body.position);
+	// console.log(this.owner.components.get('physics').body.position);
 };
 
 BulletComponent.prototype.onCollision = function(collider) {
-	if (collider.key == "player") {
+	if (collider.key == 'player') {
 		collider.damage(this.damage, collider);
-		console.log("damaging player!");
+		console.log('damaging player!');
 	}
 
-	if (collider.key == "stronghold") {
+	if (collider.key == 'stronghold') {
 		collider.damage(this.damage, collider);
-		console.log("damaging stronghold!");
+		console.log('damaging stronghold!');
 	}
 
 	//kill bullet after collision

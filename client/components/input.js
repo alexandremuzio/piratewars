@@ -1,20 +1,14 @@
-'use strict'
+'use strict';
 
 var _ = require('underscore');
 var InputComponent = require('../../shared/components/input.js');
 var NextPositionIndicatorConstructor = require('../next_position_indicator/next_position_indicator.js');
 
 function PhaserInputComponent(input) {
-	// console.log("inside PhaserInputComp constr");
-	this._input = input;
-	this._sequence = 0;
-    this._cursorKeys;
-    this._attackKey;
-    this._socket;
+    // console.log("inside PhaserInputComp constr");
+    this._input = input;
+    this._sequence = 0;
     this._mouseLeftButtonDown = false;
-    this._mouseWorldX;
-    this._mouseWorldY;
-    this._nextPositionIndicator;
     this._lastFollowingTrajectory = false;
     this._lastRotating = false;
     // MPTemp
@@ -25,7 +19,7 @@ function PhaserInputComponent(input) {
 
     // this._cursorKeys = this._input.keyboard.createCursorKeys();
     // this._attackKey = this._input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-};
+}
 
 ///
 PhaserInputComponent.prototype = Object.create(InputComponent.prototype);
@@ -33,7 +27,7 @@ PhaserInputComponent.prototype.constructor = PhaserInputComponent;
 ///
 
 PhaserInputComponent.prototype.init = function() {
-	this._cursorKeys = this._input.keyboard.createCursorKeys();
+    this._cursorKeys = this._input.keyboard.createCursorKeys();
     this._leftAttackKey = this._input.keyboard.addKey(Phaser.Keyboard.Q);
     this._rightAttackKey = this._input.keyboard.addKey(Phaser.Keyboard.E);
     this._mineAttackKey = this._input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);  
@@ -45,7 +39,7 @@ PhaserInputComponent.prototype.init = function() {
     /* This is in Input Shared */
     this.owner.on('entity.revive', this.onEntityRevive.bind(this));
     this.owner.on('entity.die', this.onEntityDie.bind(this));
-}
+};
 
 PhaserInputComponent.prototype.onMouseDown = function() {
     if( event.button === 0 ){
@@ -53,16 +47,16 @@ PhaserInputComponent.prototype.onMouseDown = function() {
         this._mouseWorldX = this._input.mousePointer.worldX;
         this._mouseWorldY = this._input.mousePointer.worldY;
     }
-}
+};
 
 /**
  * @override
  */
 PhaserInputComponent.prototype.update = function() {
-	//console.log("input");
-	this.captureInput();
+    //console.log("input");
+    this.captureInput();
     this.updateNextPositionIndicator();
-}
+};
 
 PhaserInputComponent.prototype.captureInput = function() {
     var command = {};
@@ -106,7 +100,7 @@ PhaserInputComponent.prototype.captureInput = function() {
     if (!_.isEmpty(command)) {
         this._snapshots.add(command);
     }
-}
+};
 
 PhaserInputComponent.prototype.updateNextPositionIndicator = function() {
     if( !this._followingTrajectory && this._lastFollowingTrajectory && this._nextPositionIndicator ){
@@ -130,6 +124,6 @@ PhaserInputComponent.prototype.updateNextPositionIndicator = function() {
 
     if( this._nextPositionIndicator )
         this._nextPositionIndicator.update();
-}
+};
 
 module.exports = PhaserInputComponent;

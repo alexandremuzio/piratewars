@@ -1,17 +1,11 @@
-'use strict'
+'use strict';
 
-var _ = require('underscore');
-var GameEngine = require('../../shared/game_engine.js');
-var PlayerFactory = require('../core/player_factory.js');
-var GameComponent = require('../../shared/core/component.js');
-var SnapshotManager = require('../../shared/core/snapshot_manager.js');
 var GameGUI = require('../../GUI/game-gui.json');
 
 function LoginState(game, state) {
     this.game = game;
     this.nextState = state;
-    this.music;
-};
+}
 
 ///
 LoginState.prototype = Object.create(Phaser.State.prototype);
@@ -57,17 +51,17 @@ LoginState.prototype.setPhaserPreferences = function() {
 //Add next state functions to Enter Key or Login button
 LoginState.prototype.addNextStateEvents = function() {
     var that = this.game;
-    document.getElementById("loginbtn").addEventListener("click", function() {
-        document.getElementById("initialScreen").style.display = "none";
-        var nickname = document.getElementById("nickname").value;
+    document.getElementById('loginbtn').addEventListener('click', function() {
+        document.getElementById('initialScreen').style.display = 'none';
+        var nickname = document.getElementById('nickname').value;
         that.state.start(this.nextState, true, false, nickname);
     }.bind(this));
 
     document.getElementById('nickname').addEventListener('keydown', function(event) {
         if (event.keyCode == 13) {
             console.log('Pressed enter');
-            document.getElementById("initialScreen").style.display = "none";
-            var nickname = document.getElementById("nickname").value;
+            document.getElementById('initialScreen').style.display = 'none';
+            var nickname = document.getElementById('nickname').value;
             that.state.start(this.nextState, true, false, nickname);
         }   
     }.bind(this));
@@ -77,7 +71,7 @@ LoginState.prototype.addNextStateEvents = function() {
 LoginState.prototype.switchState = function(param) {
     console.log('Going to ' + this.nextState);
     this.game.state.start(this.nextState, true, false, param);
-}
+};
 
 LoginState.prototype.loadAssets = function() {
     /* ------------- health bar assets -----------------*/
@@ -105,9 +99,9 @@ LoginState.prototype.loadAssets = function() {
     /* ----------------- GUI assets --------------------*/
     this.game.load.image('lvlcomplete', 'assets/GUI/img/lvlcomplete.png');
     this.game.load.image('respawnDialogBox', 'assets/GUI/img/respawnDialogBox.png');
-    this.game.load.image('star2', "assets/GUI/img/star2.png");
-    this.game.load.image('orange-btn', "assets/GUI/img/orange-btn.png");
-    this.game.load.image('wood_tile', "assets/GUI/img/wood_tile.png");
+    this.game.load.image('star2', 'assets/GUI/img/star2.png');
+    this.game.load.image('orange-btn', 'assets/GUI/img/orange-btn.png');
+    this.game.load.image('wood_tile', 'assets/GUI/img/wood_tile.png');
     /* ------------------------------------------------ */
 
     /* ----------------- Audio assets --------------------*/
@@ -116,7 +110,7 @@ LoginState.prototype.loadAssets = function() {
 };
 
 LoginState.prototype.loadTheme = function() {
-    var lobbyScreen, respawnScreen;
+    // var lobbyScreen, respawnScreen;
     EZGUI.Theme.load(['assets/GUI/metalworks-theme/metalworks-theme.json'], function () {
         var dlg1  = EZGUI.create(GameGUI.respawn, 'metalworks');
         dlg1.visible = false;
@@ -132,6 +126,6 @@ LoginState.prototype.loadTheme = function() {
 
 LoginState.prototype.setupGUI = function() {
 //    EZGUI.components.
-}
+};
 
 module.exports = LoginState;

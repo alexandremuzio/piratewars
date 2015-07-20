@@ -1,7 +1,6 @@
-'use strict'
+'use strict';
 
 var BaseComponent = require('../../shared/components/bullet');
-var GameEngine = require('../../shared/game_engine');
 
 function BulletComponent() {
 	BaseComponent.apply(this);
@@ -14,8 +13,8 @@ BulletComponent.prototype.constructor = BulletComponent;
 
 BulletComponent.prototype.init = function() {
 	this.currentTime = new Date();
-	this.owner.on("entity.collision", this.onCollision.bind(this));
-}
+	this.owner.on('entity.collision', this.onCollision.bind(this));
+};
 
 BulletComponent.prototype.update = function() {
 	var newCurrentTime = new Date();

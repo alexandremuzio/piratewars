@@ -1,10 +1,9 @@
-'use strict'
+'use strict';
 
 var _ = require('underscore');
 var GameEngine = require('../../shared/game_engine.js');
 var PlayerFactory = require('../core/player_factory.js');
 var ProjectileFactory = require('../core/projectile_factory.js');
-var GameComponent = require('../../shared/core/component.js');
 var SnapshotManager = require('../../shared/core/snapshot_manager.js');
 
 //To debug
@@ -14,8 +13,8 @@ var player_settings = require('../../shared/settings/player.json');*/
 function PlayState(game, socket, nextState) {
     this.game = game;
 
-    // console.log("In PlayState constructor");
-    if(this.game) console.log("this.game setted");
+    // console.log('In PlayState constructor');
+    if(this.game) console.log('this.game setted');
     
     this.outSnapshotManager = new SnapshotManager();
     this.snapshot = null;
@@ -25,14 +24,13 @@ function PlayState(game, socket, nextState) {
     
     this._currentState = 'preState';
     this._nextState = nextState;
-    this._gameResults;
 
     var data = { game:      this.game,
                  socket:    this.socket };
 
     PlayerFactory.init(data);
     ProjectileFactory.init(data);
-};
+}
 
 
 ///
@@ -85,50 +83,51 @@ PlayState.prototype.render = function() {
 // Functions in alphabetical order: //
 //////////////////////////////////////
 PlayState.prototype.applySyncFromServer = function(lastSnapshot) {
-    // console.log("Starting applySyncFromServer");
+    // console.log('Starting applySyncFromServer');
     // console.log(lastSnapshot);
     if (lastSnapshot) {
-        // console.log("snapshot true");
+        // console.log('snapshot true');
         for (var key in lastSnapshot.players) {
-            // console.log("for var key in snapshot", key);
+            // console.log('for var key in snapshot', key);
             if (!GameEngine.getInstance().entities[key]) {
-                // console.log("creating remote player");
+                // console.log('creating remote player');
                 PlayerFactory.createRemotePlayer({ id: key });
             }
             GameEngine.getInstance().entities[key].sync(lastSnapshot.players[key]);
         }
-        for (var key in lastSnapshot.bullets) {
+
+        for (key in lastSnapshot.bullets) {
             if (!GameEngine.getInstance().entities[key]) {
-                // console.log("creating remoteBullet");
+                // console.log('creating remoteBullet');
                 ProjectileFactory.createRemoteBullet(lastSnapshot.bullets[key]);
             }
             else {
-                // console.log("syncing localBullet");
+                // console.log('syncing localBullet');
                 GameEngine.getInstance().entities[key].sync(lastSnapshot.bullets[key]);
             }
         }
-        for (var key in lastSnapshot.mines) {
+        for (key in lastSnapshot.mines) {
             if (!GameEngine.getInstance().entities[key]) {
-                // console.log("creating remoteBullet");
+                // console.log('creating remoteBullet');
                 ProjectileFactory.createRemoteMine(lastSnapshot.mines[key]);
                 // console.log('mine ' + key + ' created');
                 // GameEngine.getInstance().printEntityHierarchy();
             }
             else {
-                // console.log("syncing localBullet");
+                // console.log('syncing localBullet');
                 GameEngine.getInstance().entities[key].sync(lastSnapshot.mines[key]);
             }
         }
     }
-}
+};
 
 PlayState.prototype.applySyncFromServerAfter = function(lastSnapshot) {
-    // console.log("Starting applySyncFromServer");
+    // console.log('Starting applySyncFromServer');
     // console.log(lastSnapshot);
     if (lastSnapshot) {
-        // console.log("snapshot true");
+        // console.log('snapshot true');
         for (var key in lastSnapshot.players) {
-            // console.log("for var key in snapshot", key);
+            // console.log('for var key in snapshot', key);
             GameEngine.getInstance().entities[key].syncAfter(lastSnapshot.players[key]);
         }
 
@@ -144,11 +143,11 @@ PlayState.prototype.applySyncFromServerAfter = function(lastSnapshot) {
             });
         }
 
-        for (var key in lastSnapshot.strongholds) {
+        for (key in lastSnapshot.strongholds) {
             GameEngine.getInstance().entities[key].syncAfter(lastSnapshot.strongholds[key]);
         }
     }
-}
+};
 
 PlayState.prototype.assignAssets = function() {  
     this.game.map = this.game.add.tilemap('backgroundmap');
@@ -171,7 +170,7 @@ PlayState.prototype.assignAssets = function() {
         sprite.anchor.x = 0.5,
         sprite.anchor.y = 0.5
     }*/
-}
+};
 
 PlayState.prototype.assignNetworkCallbacks = function() {   
     this.socket.on('game.sync', this.onGameSync.bind(this));
@@ -179,50 +178,50 @@ PlayState.prototype.assignNetworkCallbacks = function() {
     this.socket.on('player.create', this.onPlayerCreate.bind(this));
     this.socket.on('game.initialInfo', this.onGameStart.bind(this));
     this.socket.on('game.results', this.onGameResults.bind(this));
-}
+};
 
 PlayState.prototype.createInitialEntities = function() {
     // Create turrets, bases, creeps...
     PlayerFactory.createStronghold(0);
     PlayerFactory.createStronghold(1);
-}
+};
 
 PlayState.prototype.createTexts = function() {
     // Creating debug text
-    // this.text = this.game.add.text(0, 0, "0 Players Connected", {
-    //     font: "20px Arial",
-    //     fill: "#ff0044",
-    //     align: "center"
+    // this.text = this.game.add.text(0, 0, '0 Players Connected', {
+    //     font: '20px Arial',
+    //     fill: '#ff0044',
+    //     align: 'center'
     // });
     // this.text.fixedToCamera = true;
     // this.text.cameraOffset.setTo(310,100);
 
-    this.fpsText = this.game.add.text(0, 0, "FPS: 0", {
-        font: "12px Arial",
-        fill: "#000000",
-        align: "center"
+    this.fpsText = this.game.add.text(0, 0, 'FPS: 0', {
+        font: '12px Arial',
+        fill: '#000000',
+        align: 'center'
     });
     this.fpsText.fixedToCamera = true;
     this.fpsText.cameraOffset.setTo(750,10);
-}
+};
 
 PlayState.prototype.debugUpdate = function() {    
     /////////////////// NOOOOO!!! FIND A WAY TO REMOVE THIS IF, PLEASE!!!
     if (this.selfPlayer) {
-        console.log("");
-        console.log("STARTING applySyncFromServer");
-        this.applySyncFromServer();;
-        console.log("ENDING applySyncFromServer");
-        console.log("STARTING gameStep");
+        console.log('');
+        console.log('STARTING applySyncFromServer');
+        this.applySyncFromServer();
+        console.log('ENDING applySyncFromServer');
+        console.log('STARTING gameStep');
         GameEngine.getInstance().gameStep();
-        console.log("ENDING gameStep");
-        console.log("STARTING emit");
-        console.log("ENDING emit");
+        console.log('ENDING gameStep');
+        console.log('STARTING emit');
+        console.log('ENDING emit');
     }
 };
 
 PlayState.prototype.onGameResults = function(results) {
-    var resultsString = "", tempList = [], sortedList = [];
+    var resultsString = '', tempList = [], sortedList = [];
 
     this._gameResults = results;
     _.each(results.teams, function(team) {
@@ -237,12 +236,12 @@ PlayState.prototype.onGameResults = function(results) {
 
     //construct results ordered by kills
     _.each(sortedList, function(player) {
-        resultsString += (player.name + player.kills + player.deaths + "\n");
+        resultsString += (player.name + player.kills + player.deaths + '\n');
     });
     
-    console.log("On Game results!");
+    console.log('On Game results!');
     console.log(resultsString);
-}
+};
 
 PlayState.prototype.onGameState = function(state) {
     
@@ -250,20 +249,20 @@ PlayState.prototype.onGameState = function(state) {
         if(state == 'preGame') this.preGame();
         else if(state == 'endGame') this.endGame();
         else if(state == 'playing') this.startPlaying();
-        this._currentState = currentState;
+        this._currentState = state;
     }
-}
+};
 
 PlayState.prototype.preGame = function() {
     if(!this.game.mask.alive) {
         this.game.mask.revive();
         this.game.mask.alpha = 0.5;
     }
-}
+};
 
 PlayState.prototype.startPlaying = function() {
     if(this.game.mask.alive) this.game.mask.kill();
-}
+};
 
 PlayState.prototype.endGame = function() {
     if(!this.game.mask.alive) {
@@ -274,11 +273,11 @@ PlayState.prototype.endGame = function() {
     egt.visible = true;
     egt.alpha = 0;
     egt.animateFadeIn(500, EZGUI.Easing.Linear.None);
-}
+};
 
 PlayState.prototype.onGameSync = function(snapshot) {
     this.outSnapshotManager.add(snapshot);
-}
+};
 
 PlayState.prototype.onGameStart = function(initialGameInfo) {
     console.log(initialGameInfo);
@@ -286,26 +285,25 @@ PlayState.prototype.onGameStart = function(initialGameInfo) {
         remotePlayerData.id = key;
         PlayerFactory.createRemotePlayer(remotePlayerData);
     });
-}
+};
 
 PlayState.prototype.onPlayerCreate = function(data) {    
-    console.log("Creating a new player!");
+    console.log('Creating a new player!');
     this.selfPlayer = PlayerFactory.createLocalPlayer(data);
-    this.game.camera.follow(this.selfPlayer.components.get("sprite").getSprite('boat'));
+    this.game.camera.follow(this.selfPlayer.components.get('sprite').getSprite('boat'));
 
     // MPTest
     GameEngine.getInstance().printEntityHierarchy();
-}
+};
 
 PlayState.prototype.updateTexts = function() {
     // Debugging purposes
     // this.game.debug.cameraInfo(this.game.camera, 32, 32);
-    this.fpsText.setText("FPS: " + this.game.time.fps);
-}
+    this.fpsText.setText('FPS: ' + this.game.time.fps);
+};
 
 
 PlayState.prototype.addStateEvents = function() {
-    EZGUI.components
-}
+};
 
 module.exports = PlayState;

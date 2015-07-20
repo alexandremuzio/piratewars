@@ -1,8 +1,7 @@
-'use strict'
+'use strict';
 
 var BulletComponent = require('../components/bullet.js');
 var Entity = require('../../shared/core/entity.js');
-var GameEngine = require('../../shared/game_engine.js');
 var PhysicsComponent = require('../../shared/components/physics.js');
 var SpriteComponent = require('../components/sprite.js');
 var UUID = require('node-uuid');
@@ -24,7 +23,7 @@ var ProjectileFactory = {
 	},
 
 	createBullet : function(initialPosition, initialVelocity, angle) {
-		// console.log("createBullet");
+		// console.log('createBullet');
 		var bulletId = UUID();
 		var entity = new Entity(bulletId, 'bullet'),
             entityGroup, sprites_info;
@@ -47,7 +46,7 @@ var ProjectileFactory = {
         var bulletVelocity = MathUtils.vector(bullet_settings.physics.velocity, angle);
 
 		var body = new p2.Body({
-	            name: "bullet",
+	            name: 'bullet',
 	            type: p2.Body.KINEMATIC,
 	            /*mass : bulletMass,*/
 	            position: [initialPosition.x, initialPosition.y],
@@ -70,7 +69,7 @@ var ProjectileFactory = {
 	},
 
 	createRemoteBullet : function(transform) {
-		// console.log("createBullet");
+		// console.log('createBullet');
 		var bulletId = UUID();
 		var entity = new Entity(bulletId),
 		    entityGroup, sprites_info;
@@ -92,7 +91,7 @@ var ProjectileFactory = {
 
 		
 		var body = new p2.Body({
-	            name: "bullet",
+	            name: 'bullet',
 	            type: p2.Body.KINEMATIC,
 	            /*mass : bulletMass,*/
 	            position: [transform.position.x,
@@ -139,7 +138,7 @@ var ProjectileFactory = {
 		};
 
 		var body = new p2.Body({
-	            name: "mine",
+	            name: 'mine',
 	            mass : mine_settings.physics.mass,
 	            position: [initialPosition.x, initialPosition.y],
 	            velocity: [initialVelocity.x, initialVelocity.y],
@@ -162,7 +161,7 @@ var ProjectileFactory = {
 		entity.components.add(new PhysicsComponent(body));
 		entity.components.add(new MineController());
 		entity.components.add(new SpriteComponent(sprites_info));
-		// console.log("End of entity");
+		// console.log('End of entity');
 		return entity;
 	},
 
@@ -190,7 +189,7 @@ var ProjectileFactory = {
 		};
 
 		var body = new p2.Body({
-	            name: "mine",
+	            name: 'mine',
 	            mass : mine_settings.physics.mass,
 	            position: [transform.position.x, transform.position.y],
 	            velocity: [transform.velocity.x, transform.velocity.y],
@@ -210,7 +209,7 @@ var ProjectileFactory = {
 		entity.components.add(new PhysicsComponent(body));
 		entity.components.add(new MineController());
 		entity.components.add(new SpriteComponent(sprites_info));
-		// console.log("End of entity");
+		// console.log('End of entity');
 		// console.log(entity);
 
 		return entity;

@@ -1,12 +1,12 @@
-'use strict'
+'use strict';
 
 var MathUtils = {
 	// angle in degree
 	vector : function(norm, angle) {
 		return {
-			"x" : norm * Math.cos(angle),
-			"y" : norm * Math.sin(angle)
-		}
+			'x' : norm * Math.cos(angle),
+			'y' : norm * Math.sin(angle)
+		};
 	},
 
 	// v = { x: ?, y: ? } is in world coordinates

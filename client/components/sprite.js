@@ -1,16 +1,15 @@
-'use strict'
+'use strict';
 
-var GameEngine = require('../../shared/game_engine.js');
 var GameComponent = require('../../shared/core/component.js');
-var _ = require('underscore')
+var _ = require('underscore');
 
 
 function SpriteComponent(sprites_info) {
 	//console.log("inside SpriteComponent constr");
-	this.key = "sprite";
+	this.key = 'sprite';
 	this._sprites_info = sprites_info;
 	this._sprites = {};
-};
+}
 
 ///
 SpriteComponent.prototype = Object.create(GameComponent.prototype);
@@ -59,7 +58,7 @@ SpriteComponent.prototype.init = function() {
 //	this.originalTextureRect = new Phaser.Rectangle(0, 0, this.sprite.texture.width, this.sprite.texture.height);
 //	/* Saved original texture rect because crop will modify texture properties */
 //	this.sprite.crop(new Phaser.Rectangle(0, 0, this.sprite.texture.width, this.sprite.texture.height), false);
-}
+};
 
 SpriteComponent.prototype.update = function() {
 	var transform = this.owner.transform.getTransform();
@@ -83,38 +82,38 @@ SpriteComponent.prototype.update = function() {
 	        });
 		}
 	}
-}
+};
 
 SpriteComponent.prototype.kill = function(key) {
     var sprite = this._sprites[key];
     if(sprite) {
         sprite.kill();
     }
-}
+};
 
 SpriteComponent.prototype.revive = function(key) {
 	var sprite = this._sprites[key];
 	if(sprite) {
 		sprite.revive();
 	}
-}
+};
 
 SpriteComponent.prototype.play = function(key, animation, framesPerSec, loop) {
     var sprite = this._sprites[key];
     if (sprite) {
         sprite.animations.play(animation, framesPerSec, loop);
     }
-}
+};
 
 SpriteComponent.prototype.onEntityDestroy = function() {
 	_.each(this._sprites, function(sprite) {
         sprite.destroy();
     });
-}
+};
 
 SpriteComponent.prototype.getSprite = function(key) {
 	return this._sprites[key];
-}
+};
 
 SpriteComponent.prototype.cropImage = function(key, percentage) {
 	var sprite = this._sprites[key];
@@ -122,6 +121,6 @@ SpriteComponent.prototype.cropImage = function(key, percentage) {
 
 	sprite.cropRect.width = originalTextureWidth*percentage;
 	sprite.updateCrop();
-}
+};
 
 module.exports = SpriteComponent;

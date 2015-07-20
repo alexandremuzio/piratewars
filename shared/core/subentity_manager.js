@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 var _ = require('underscore');
 
@@ -6,7 +6,7 @@ function SubentityManager(owner) {
 	this._subentitys = {};
 	this._owner = owner;
 	this._nSubentitys = 0;
-};
+}
 
 // subentity must be an reference to an entity
 SubentityManager.prototype.add = function(subentity) {

@@ -77,6 +77,6 @@ var LobbyJSON = {
             height: 50
         }
     ]
-}
+};
 
 module.exports = LobbyJSON;

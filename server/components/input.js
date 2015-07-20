@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 var InputComponent = require('../../shared/components/input.js');
 
@@ -34,6 +34,6 @@ ServerInputComponent.prototype.update = function() {
 	else if (this.followingTrajectory) {
 		this.processCommand({});
 	}
-}
+};
 
 module.exports = ServerInputComponent;

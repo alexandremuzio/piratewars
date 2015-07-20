@@ -1,3 +1,5 @@
+'use strict';
+
 var _ = require('underscore');
 
 function TeamManager () {
@@ -6,18 +8,18 @@ function TeamManager () {
 
 TeamManager.prototype.add = function(key, value) {
 	this._teams[key] = value;
-}
+};
 
 TeamManager.prototype.get = function(key) {
 	return this._teams[key];
-}
+};
 
 TeamManager.prototype.getAll = function() {
 	return this._teams;
-}
+};
 
 TeamManager.prototype.getWeakest = function() {
-	var minKey = "";
+	var minKey = '';
 	var minNumberOfMembers = 999999;
 
 	_.each(this._teams, function(team, teamKey) {
@@ -28,7 +30,7 @@ TeamManager.prototype.getWeakest = function() {
 	});
 
 	return  this._teams[minKey];
-}
+};
 
 
-module.exports = TeamManager
+module.exports = TeamManager;

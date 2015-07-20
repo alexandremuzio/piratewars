@@ -19,10 +19,10 @@ function NextPositionIndicator( game, x, y ) {
 }
 
 NextPositionIndicator.prototype.update = function() {
-	for( var i = 0; i < 4; i++ ){
+    for( var i = 0; i < 4; i++ ){
         this.arrowSprites[i].angle -= prop.rotation_velocity*this.game.time.elapsed/1000;
     }
-}
+};
 
 NextPositionIndicator.prototype.autoDestroy = function() {
     for( var i = 0; i < 4; i++ ){
@@ -36,6 +36,6 @@ NextPositionIndicator.prototype.autoDestroy = function() {
         }
     }
     delete this;
-}
+};
 
 module.exports = NextPositionIndicator;

@@ -1,16 +1,15 @@
-'use strict'
+'use strict';
 
 var BaseComponent = require('../core/component.js');
 var MathUtils = require('../../shared/utils/math.js');
-var GameEngine = require('../../shared/game_engine.js');
 
 var mine_settings = require('../../shared/settings/mine.json');
 
 function MineGenerator() {
-	this.key = "mine_generator";
+	this.key = 'mine_generator';
 	this._idCount = 0;
 	this.temporaryEntitiesIDs = [];
-};
+}
 
 ///
 MineGenerator.prototype = Object.create(BaseComponent.prototype);
@@ -30,14 +29,14 @@ MineGenerator.prototype.createMines = function(initialPosition, boatAngle, boatV
 		var mineAngle = alpha0 + i*mine_settings.angle_spacement;
 		var mineDeltaPosition = MathUtils.vector(mine_settings.initial_distance, mineAngle);
 		var minePosition = {
-			"x": initialPosition.x + mineDeltaPosition.x,
-			"y": initialPosition.y + mineDeltaPosition.y
-		}
+			'x': initialPosition.x + mineDeltaPosition.x,
+			'y': initialPosition.y + mineDeltaPosition.y
+		};
 		var mineVelocity = MathUtils.vector(mine_settings.physics.initial_velocity, mineAngle);
 		mineVelocity = {
-			"x": mineVelocity.x + boatVelocityArray[0]*mine_settings.boat_velocity_factor,
-			"y": mineVelocity.y + boatVelocityArray[1]*mine_settings.boat_velocity_factor,
-		}
+			'x': mineVelocity.x + boatVelocityArray[0]*mine_settings.boat_velocity_factor,
+			'y': mineVelocity.y + boatVelocityArray[1]*mine_settings.boat_velocity_factor,
+		};
 		// console.log(ProjectileFactory);
 		// console.log(ProjectileFactory.createMine);
 		// console.log(mineId);
@@ -48,7 +47,7 @@ MineGenerator.prototype.createMines = function(initialPosition, boatAngle, boatV
 		this.temporaryEntitiesIDs.push(mineId);
 	}
 	// GameEngine.getInstance().printEntityHierarchy();
-},
+};
 
 // MineGenerator.prototype.update = function(){ 
 // 	if( !this.owner.subentityManager.hasSubentity() )

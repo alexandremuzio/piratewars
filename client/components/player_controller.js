@@ -1,10 +1,10 @@
-'use strict'
+'use strict';
 
 var BaseComponent = require('../../shared/components/player_controller');
 
 function Player() {
-	this.key = "player";
-};
+	this.key = 'player';
+}
 
 ///
 Player.prototype = Object.create(BaseComponent.prototype);
@@ -19,13 +19,13 @@ Player.prototype.init = function() {
 
 	this.owner.on('entity.die', this.onEntityDie.bind(this));
 	this.owner.on('entity.revive', this.onEntityRevive.bind(this));
-}
+};
 
 Player.prototype.update = function() {
-}
+};
 
 // Player.prototype.update = function(){ 
-// 	console.log(this.owner.components.get("physics").body.position);
+// 	console.log(this.owner.components.get('physics').body.position);
 // }
 
 Player.prototype.onEntityDie = function() {
@@ -33,11 +33,11 @@ Player.prototype.onEntityDie = function() {
 	spriteComponent.revive('dead_boat');
 	spriteComponent.kill('boat');
 	spriteComponent.play('dead_boat', 'deadBoatAnim', 5, true);
-}
+};
 
 Player.prototype.onEntityRevive = function() {
 	var spriteComponent = this.owner.components.get('sprite');
 	spriteComponent.kill('dead_boat');
 	spriteComponent.revive('boat');
-}
+};
 module.exports = Player;

@@ -1,8 +1,8 @@
-'use strict'
+'use strict';
 
 function GameComponent() {
-	console.log("inside gameComponent constr");
-};
+	console.log('inside gameComponent constr');
+}
 
 GameComponent.prototype.init = function() {};
 

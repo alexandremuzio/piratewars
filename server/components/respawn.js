@@ -1,16 +1,16 @@
-'use strict'
+'use strict';
 
 var GameComponent = require('../../shared/core/component.js');
-var SpawnManager = require('../core/spawn_manager.js')
+var SpawnManager = require('../core/spawn_manager.js');
 var game_time_settings = require('../../shared/settings/game_time.json');
 var _ = require('underscore');
 
 function RespawnComponent(team) {
-	this.key = "respawn";
+	this.key = 'respawn';
 	this._currentRespawnTime = null;
 	this._currentTime = null;
 	this._teamName = team.name;
-};
+}
 
 ///
 RespawnComponent.prototype = Object.create(GameComponent.prototype);

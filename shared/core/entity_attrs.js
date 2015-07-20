@@ -1,9 +1,10 @@
-var _ = require('underscore');
+'use strict';
 
+var _ = require('underscore');
 
 function EntityAttrs() {
 	this._attrs = {};
-};
+}
 
 EntityAttrs.prototype.getAll = function() {
 	return this._attrs;

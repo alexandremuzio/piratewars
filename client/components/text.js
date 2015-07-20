@@ -1,13 +1,12 @@
-'use strict'
+'use strict';
 
-var GameEngine = require('../../shared/game_engine.js');
 var GameComponent = require('../../shared/core/component.js');
 
 function TextComponent(text) {
-	console.log("inside TextComponent constr");
-	this.key = "text";
+	console.log('inside TextComponent constr');
+	this.key = 'text';
 	this.text = text;
-};
+}
 
 TextComponent.prototype = Object.create(GameComponent.prototype);
 TextComponent.prototype.constructor = TextComponent;
@@ -30,7 +29,7 @@ TextComponent.prototype.update = function() {
 };
 
 TextComponent.prototype.remove = function() {
-	text.destroy();
+	this.text.destroy();
 };
 
 module.exports = TextComponent;

@@ -1,13 +1,13 @@
-'use strict'
+'use strict';
 
 var BaseComponent = require('../../shared/components/mine_generator.js');
 var ProjectileFactory = require('../core/projectile_factory.js');
 
-var mine_settings = require('../../shared/settings/mine.json');
+// var mine_settings = require('../../shared/settings/mine.json');
 
 function MineGenerator() {
 	BaseComponent.call(this);
-};
+}
 
 ///
 MineGenerator.prototype = Object.create(BaseComponent.prototype);
@@ -16,11 +16,11 @@ MineGenerator.prototype.constructor = MineGenerator;
 
 MineGenerator.prototype.getId = function() {
 	return this.owner.id + '-mine_' + this._idCount++;
-}
+};
 
 MineGenerator.prototype.createMine = function(mineId, mineKey, minePosition, mineAngle, mineVelocity) {
-	return ProjectileFactory.createMine(mineId, mineKey, minePosition, mineAngle, mineVelocity)
-}
+	return ProjectileFactory.createMine(mineId, mineKey, minePosition, mineAngle, mineVelocity);
+};
 
 MineGenerator.prototype.getTempEntities = function() {
 	if (this.temporaryEntitiesIDs.length > 0) {
@@ -35,7 +35,7 @@ MineGenerator.prototype.getTempEntities = function() {
 		// console.log("Returning empty array");
 		return [];
 	}
-}
+};
 
 // MineGenerator.prototype.update = function(){ 
 // 	if( !this.owner.subentityManager.hasSubentity() )

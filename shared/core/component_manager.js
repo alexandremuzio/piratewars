@@ -1,11 +1,11 @@
-'use strict'
+'use strict';
 
 var _ = require('underscore');
 
 function ComponentManager(owner) {
 	this._components = {};
 	this._owner = owner;
-};
+}
 
 ComponentManager.prototype.updateBeforeWorldStep = function() {
 	_.each(this._components, function(component){

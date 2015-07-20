@@ -1,9 +1,8 @@
-'use strict'
+'use strict';
 
 var p2 = require('p2');
 var BulletComponent = require('../components/bullet.js');
 var Entity = require('../../shared/core/entity.js');
-var GameEngine = require('../../shared/game_engine.js');
 var PhysicsComponent = require('../../shared/components/physics.js');
 var UUID = require('node-uuid');
 var MathUtils = require('../../shared/utils/math.js');

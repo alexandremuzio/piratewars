@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 var BaseComponent = require('../../shared/components/player_controller');
 
@@ -6,7 +6,7 @@ function Player(team) {
 	BaseComponent.apply(this);
 
 	this._team = team;
-};
+}
 
 ///
 Player.prototype = Object.create(BaseComponent.prototype);
@@ -25,7 +25,7 @@ Player.prototype.init = function() {
 	// this.owner.on("entity.collision", this.onCollision.bind(this));
 };
 
-Player.prototype.update = function() {}
+Player.prototype.update = function() {};
 
 // Player.prototype.onDamage = function(amount, attacker) {
 // 	this.playerHeath -= amount;

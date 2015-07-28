@@ -13,22 +13,22 @@ MineCollisionManager.prototype = Object.create(BaseComponent.prototype);
 MineCollisionManager.prototype.constructor = MineCollisionManager;
 ///
 
-MineCollisionManager.prototype.update = function(){ 
+MineCollisionManager.prototype.update = function () {
 };
 
-MineCollisionManager.prototype.newCollision = function(mineId, playerId){ 
-	this._collisions.push({'mineId': mineId, 'playerId': playerId});
+MineCollisionManager.prototype.newCollision = function (mineId, playerId) {
+	this._collisions.push({ 'mineId': mineId, 'playerId': playerId });
 };
 
-MineCollisionManager.prototype.getCollisions = function(){ 
+MineCollisionManager.prototype.getCollisions = function () {
 	return this._collisions;
 };
 
-MineCollisionManager.prototype.clearCollisions = function(){ 
+MineCollisionManager.prototype.clearCollisions = function () {
 	this._collisions = [];
 };
 
-MineCollisionManager.prototype.hasCollision = function(){ 
+MineCollisionManager.prototype.hasCollision = function () {
 	return this._collisions.length > 0;
 };
 

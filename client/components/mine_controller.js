@@ -13,12 +13,12 @@ MineController.prototype = Object.create(BaseComponent.prototype);
 MineController.prototype.constructor = MineController;
 ///
 
-MineController.prototype.update = function(){ 
+MineController.prototype.update = function () { 
 	// console.log(this.owner.components.get('physics').body);
 	BaseComponent.prototype.update.call(this);
 };
 
-MineController.prototype.onCollisionOcured = function(collider){
+MineController.prototype.onCollisionOcured = function (collider) {
 };
 
 module.exports = MineController;

@@ -16,16 +16,16 @@ LoginState.prototype.constructor = LoginState;
 
 //Init is the first function called when starting the State
 //Parameters comes from game.state.start()
-LoginState.prototype.init = function() {};
+LoginState.prototype.init = function () { };
 
-LoginState.prototype.preload = function() {
+LoginState.prototype.preload = function () {
     this.setPhaserPreferences();
     this.loadAssets();
     // Enable phaser to run its steps even on an unfocused window
     this.game.stage.disableVisibilityChange = true; ///////////////////////
 };
 
-LoginState.prototype.create = function() {
+LoginState.prototype.create = function () {
     this.loadTheme();
     this.setupGUI();
     this.addNextStateEvents();
@@ -35,11 +35,11 @@ LoginState.prototype.create = function() {
     this.music.play();
 };
 
-LoginState.prototype.setPhaserPreferences = function() {    
+LoginState.prototype.setPhaserPreferences = function () {
     this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
     this.game.scale.pageAlignHorizontally = true;
     this.game.scale.pageAlignVertically = true;
-    this.game.scale.setMinMax(1024/2, 672/2, 1024*2, 672*2);
+    this.game.scale.setMinMax(1024 / 2, 672 / 2, 1024 * 2, 672 * 2);
 
     // Enable phaser to run its steps even on an unfocused window
     this.game.stage.disableVisibilityChange = true;
@@ -49,31 +49,31 @@ LoginState.prototype.setPhaserPreferences = function() {
 };
 
 //Add next state functions to Enter Key or Login button
-LoginState.prototype.addNextStateEvents = function() {
+LoginState.prototype.addNextStateEvents = function () {
     var that = this.game;
-    document.getElementById('loginbtn').addEventListener('click', function() {
+    document.getElementById('loginbtn').addEventListener('click', function () {
         document.getElementById('initialScreen').style.display = 'none';
         var nickname = document.getElementById('nickname').value;
         that.state.start(this.nextState, true, false, nickname);
     }.bind(this));
 
-    document.getElementById('nickname').addEventListener('keydown', function(event) {
+    document.getElementById('nickname').addEventListener('keydown', function (event) {
         if (event.keyCode == 13) {
             console.log('Pressed enter');
             document.getElementById('initialScreen').style.display = 'none';
             var nickname = document.getElementById('nickname').value;
             that.state.start(this.nextState, true, false, nickname);
-        }   
+        }
     }.bind(this));
 };
 
 //Switch to next state
-LoginState.prototype.switchState = function(param) {
+LoginState.prototype.switchState = function (param) {
     console.log('Going to ' + this.nextState);
     this.game.state.start(this.nextState, true, false, param);
 };
 
-LoginState.prototype.loadAssets = function() {
+LoginState.prototype.loadAssets = function () {
     /* ------------- health bar assets -----------------*/
     this.game.load.image('blackbox', 'assets/blackbox.png');
     this.game.load.image('redbar', 'assets/redbar.png');
@@ -109,12 +109,12 @@ LoginState.prototype.loadAssets = function() {
     this.game.load.audio('cannon', ['assets/audio/cannonsound.mp3']);
 };
 
-LoginState.prototype.loadTheme = function() {
+LoginState.prototype.loadTheme = function () {
     // var lobbyScreen, respawnScreen;
     EZGUI.Theme.load(['assets/GUI/metalworks-theme/metalworks-theme.json'], function () {
-        var dlg1  = EZGUI.create(GameGUI.respawn, 'metalworks');
+        var dlg1 = EZGUI.create(GameGUI.respawn, 'metalworks');
         dlg1.visible = false;
-        
+
         var lobbyScreen = EZGUI.create(GameGUI.lobby, 'metalworks');
         lobbyScreen.visible = false;
 
@@ -124,8 +124,8 @@ LoginState.prototype.loadTheme = function() {
     });
 };
 
-LoginState.prototype.setupGUI = function() {
-//    EZGUI.components.
+LoginState.prototype.setupGUI = function () {
+    //    EZGUI.components.
 };
 
 module.exports = LoginState;

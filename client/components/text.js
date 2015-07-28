@@ -11,24 +11,24 @@ function TextComponent(text) {
 TextComponent.prototype = Object.create(GameComponent.prototype);
 TextComponent.prototype.constructor = TextComponent;
 
-TextComponent.prototype.setScale = function(x, y) {
+TextComponent.prototype.setScale = function (x, y) {
 	this.text.scale.setTo(x, y);
 };
 
-TextComponent.prototype.setAnchor = function(x, y) {
+TextComponent.prototype.setAnchor = function (x, y) {
 	this.text.anchor.setTo(x, y);
 };
 
 
-TextComponent.prototype.init = function() {};
+TextComponent.prototype.init = function () { };
 
-TextComponent.prototype.update = function() {
+TextComponent.prototype.update = function () {
 	var transform = this.owner.transform.getTransform();
 	this.text.position.x = transform.position.x;
 	this.text.position.y = transform.position.y - 90;
 };
 
-TextComponent.prototype.remove = function() {
+TextComponent.prototype.remove = function () {
 	this.text.destroy();
 };
 

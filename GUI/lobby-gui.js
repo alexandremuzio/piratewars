@@ -11,8 +11,8 @@ var LobbyJSON = {
     children: [
         {
             component: 'Layout',
-            skin:'List',
-            position: {x: 0, y: 30},
+            skin: 'List',
+            position: { x: 0, y: 30 },
             width: 750,
             height: 300,
             layout: [3, 1],
@@ -29,7 +29,7 @@ var LobbyJSON = {
                         { id: 'redslot3', text: 'Slot 3', position: 'center', width: 320, height: 60 },
                         { id: 'redslot4', text: 'Slot 4', position: 'center', width: 320, height: 60 },
                         { id: 'redslot5', text: 'Slot 5', position: 'center', width: 320, height: 60 }
-                      ]
+                    ]
                 },
 
                 {

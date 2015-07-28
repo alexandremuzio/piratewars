@@ -22,13 +22,13 @@ CreatorComponent.prototype.constructor = CreatorComponent;
 //     return bullet;
 // }
 
-CreatorComponent.prototype.getTempEntities = function() {
+CreatorComponent.prototype.getTempEntities = function () {
 	if (this.temporaryEntitiesIDs.length > 0) {
 		// Cloning array before emptying it
 		var tempEntities = this.temporaryEntitiesIDs.slice(0);
 		this.temporaryEntitiesIDs = [];
-    	// console.log('GetTemp: this.tempEntities', this.temporaryEntitiesIDs);
-    	// console.log('GetTemp: var tempEntities', tempEntities);
+		// console.log('GetTemp: this.tempEntities', this.temporaryEntitiesIDs);
+		// console.log('GetTemp: var tempEntities', tempEntities);
 
 		return tempEntities;
 	}

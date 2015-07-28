@@ -13,7 +13,7 @@ ServerInputComponent.prototype = Object.create(InputComponent.prototype);
 ServerInputComponent.prototype.constructor = ServerInputComponent;
 ///
 
-ServerInputComponent.prototype.update = function() {
+ServerInputComponent.prototype.update = function () {
 	// console.log("input update!!!!");
 	var message = this._snapshots.getLast();
 	// console.log(message);

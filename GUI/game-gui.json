@@ -64,7 +64,7 @@
                 "size": "40px",
                 "family": "Skranji",
                 "color": "white"
-            },
+            }
         },
         "draggable": false,
         "width": 1000,
@@ -125,7 +125,7 @@
                                 "position": "center",
                                 "width": 320,
                                 "height": 60
-                            },
+                            }
                         ]
                     },
 
@@ -189,7 +189,7 @@
                                 "position": "center",
                                 "width": 320,
                                 "height": 60
-                            },
+                            }
                         ]
                     }
                 ]
@@ -229,7 +229,7 @@
                         "anchor": { "x": 0.5, "y": 0.5 },
                         "width": 1,
                         "height": 1
-                    },
+                    }
                 ]
             }
         ]

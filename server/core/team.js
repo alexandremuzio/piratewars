@@ -11,15 +11,15 @@ function Team(data, room) {
 	this._room = room;
 }
 
-Team.prototype.addPlayer = function(player) {
+Team.prototype.addPlayer = function (player) {
 	this._players.push(player);
 };
 
-Team.prototype.getPlayers = function() {
+Team.prototype.getPlayers = function () {
 	return this._players;
 };
 
-Team.prototype.size = function() {
+Team.prototype.size = function () {
 	return this._players.length;
 };
 

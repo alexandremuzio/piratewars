@@ -26,78 +26,78 @@ function Entity(id, key) {
 /**
  * @override
  */
-Entity.prototype.updateBeforeWorldStep = function() {
+Entity.prototype.updateBeforeWorldStep = function () {
     this.components.updateBeforeWorldStep();
 };
 
-Entity.prototype.updateAfterWorldStep = function() {
+Entity.prototype.updateAfterWorldStep = function () {
     this.components.updateAfterWorldStep();
 };
 
 // base must be an reference to an entity
 // x0, y0, alpha0 are initial transform local variables
-Entity.prototype.setBaseEntity = function( baseEntity, x0, y0, alpha0 ) {
-    if( this.baseEntity ){
+Entity.prototype.setBaseEntity = function (baseEntity, x0, y0, alpha0) {
+    if (this.baseEntity) {
         console.error('Entity ' + this.id + ' already has a baseEntity');
     }
-    else{
+    else {
         this.baseEntity = baseEntity;
         this.transform.initLocalVariables(x0, y0, alpha0);
         baseEntity.subentityManager.add(this);
     }
 };
 
-Entity.prototype.setFollowBaseEntityAngle = function(value) {
+Entity.prototype.setFollowBaseEntityAngle = function (value) {
     this._followBaseEntityAngle = value;
 };
 
-Entity.prototype.getFollowBaseEntityAngle = function(value) {
+Entity.prototype.getFollowBaseEntityAngle = function (value) {
     return this._followBaseEntityAngle;
 };
 
-Entity.prototype.destroy = function() {
+Entity.prototype.destroy = function () {
     // GameEngine.getInstance().printEntityHierarchy();
     // console.log('entity.key = ' + this.key + ' detroyed ----------------------------------------');
 
     // Destroy subentitys first
-    _.each(this.subentityManager.getAll(), function(subentity){
+    _.each(this.subentityManager.getAll(), function (subentity) {
         subentity.destroy();
     });
 
-    if( this.baseEntity )
+    if (this.baseEntity)
         this.baseEntity.subentityManager.remove(this);
 
-    this.trigger('entity.destroy', this);    
+    this.trigger('entity.destroy', this);
     GameEngine.getInstance().deleteEntity(this);
 };
 
-Entity.prototype.sync = function(transform) {
+Entity.prototype.sync = function (transform) {
     this.trigger('entity.sync', transform, this);
 };
 
-Entity.prototype.syncAfter = function(transform) {
+Entity.prototype.syncAfter = function (transform) {
     this.trigger('entity.syncAfter', transform, this);
 };
 
-Entity.prototype.damage = function(amount, attacker) {
+Entity.prototype.damage = function (amount, attacker) {
     this.trigger('entity.damage', amount, attacker, this);
 };
 
-Entity.prototype.collision = function(collider) {
+Entity.prototype.collision = function (collider) {
     this.trigger('entity.collision', collider, this);
 };
 
-Entity.prototype.die = function() {
+Entity.prototype.die = function () {
     // console.log('entity(' + this.key + ').die called');
 
-    _.each(this.subentityManager.getAll(), function(subentity){
+    _.each(this.subentityManager.getAll(), function (subentity) {
         subentity.die();
     });
     this.trigger('entity.die', this);
 };
 
-Entity.prototype.revive = function() {
-    _.each(this.subentityManager.getAll(), function(subentity){
+Entity.prototype.revive = function () {
+    _.each(this.subentityManager.getAll(), function (subentity) {
         subentity.revive();
     });
 
@@ -105,12 +105,12 @@ Entity.prototype.revive = function() {
 };
 
 //internal
-Entity.prototype.on = function(event, handler) {
+Entity.prototype.on = function (event, handler) {
     this._eventHandlers[event] = this._eventHandlers[event] || [];
     this._eventHandlers[event].push(handler);
 };
 
-Entity.prototype.trigger = function(event) {
+Entity.prototype.trigger = function (event) {
     var params = Array.prototype.slice.call(arguments, 1);
     if (this._eventHandlers[event]) {
         for (var i = 0; i < this._eventHandlers[event].length; i++) {

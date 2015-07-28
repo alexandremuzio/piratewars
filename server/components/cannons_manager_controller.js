@@ -13,28 +13,28 @@ CannonsManagerController.prototype = Object.create(BaseComponent.prototype);
 CannonsManagerController.prototype.constructor = CannonsManagerController;
 ///
 
-CannonsManagerController.prototype.update = function() {
+CannonsManagerController.prototype.update = function () {
 };
 
-CannonsManagerController.prototype.shootLeft = function() {
-	_.each(this.leftCannons, function(cannon) {
+CannonsManagerController.prototype.shootLeft = function () {
+	_.each(this.leftCannons, function (cannon) {
 		var id = this.getFirstAvailableID();
 		var bullet = cannon.components.get('cannon_controller').shoot(id);
 	}.bind(this));
 };
 
-CannonsManagerController.prototype.shootRight = function() {
-	_.each(this.rightCannons, function(cannon) {
+CannonsManagerController.prototype.shootRight = function () {
+	_.each(this.rightCannons, function (cannon) {
 		var id = this.getFirstAvailableID();
 		var bullet = cannon.components.get('cannon_controller').shoot(id);
 	}.bind(this));
 };
 
-CannonsManagerController.prototype.getFirstAvailableID = function() {
+CannonsManagerController.prototype.getFirstAvailableID = function () {
 	if (this.temporaryEntitiesIDs.length === 0) {
-		console.log('ERROR: tried to get id from empty array (package loss)');		
+		console.log('ERROR: tried to get id from empty array (package loss)');
 	}
-	else {		
+	else {
 		return this.temporaryEntitiesIDs.shift();
 	}
 };

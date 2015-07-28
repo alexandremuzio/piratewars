@@ -16,7 +16,7 @@ BulletComponent.prototype = Object.create(GameComponent.prototype);
 BulletComponent.prototype.constructor = BulletComponent;
 ///
 
-BulletComponent.prototype.init = function() {
+BulletComponent.prototype.init = function () {
 	this.currentTime = new Date();
 };
 

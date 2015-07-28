@@ -12,7 +12,7 @@ NetworkComponent.prototype = Object.create(ComponentBase.prototype);
 NetworkComponent.prototype.constructor = NetworkComponent;
 ///
 
-NetworkComponent.prototype.update = function() {
+NetworkComponent.prototype.update = function () {
 	// console.log("net");
 };
 

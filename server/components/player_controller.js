@@ -13,7 +13,7 @@ Player.prototype = Object.create(BaseComponent.prototype);
 Player.prototype.constructor = BaseComponent;
 ///
 
-Player.prototype.init = function() {
+Player.prototype.init = function () {
 	this._team.addPlayer(this.owner);
 
 	this.owner.initialAttrs.set({
@@ -25,7 +25,7 @@ Player.prototype.init = function() {
 	// this.owner.on("entity.collision", this.onCollision.bind(this));
 };
 
-Player.prototype.update = function() {};
+Player.prototype.update = function () { };
 
 // Player.prototype.onDamage = function(amount, attacker) {
 // 	this.playerHeath -= amount;

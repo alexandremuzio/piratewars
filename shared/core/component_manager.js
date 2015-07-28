@@ -9,7 +9,7 @@ function ComponentManager(owner) {
 
 ComponentManager.prototype.updateBeforeWorldStep = function() {
 	_.each(this._components, function(component){
-		if( component.key != 'sprite' && component.key != 'outSync' )
+		if( component.key !== 'sprite' && component.key !== 'outSync' )
 			component.update();
 	});
 };

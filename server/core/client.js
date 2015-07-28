@@ -8,7 +8,7 @@ var SnapshotManager = require('../../shared/core/snapshot_manager.js');
 
 function Client(socket, room) {
 	// console.log('inside client constr');
-	this._id =  UUID();
+	this._id = UUID();
 	this.name = null;
 	this.chosenTeam = null;
 	this.ready = false;
@@ -20,65 +20,65 @@ function Client(socket, room) {
 	this._nameListener = this.onName.bind(this);
 	this._teamListener = this.onChangeTeam.bind(this);
 	this._readyListener = this.onReady.bind(this);
-	this._eventList = [ 'client.name',
-							'client.changeTeam',
-							'client.ready',
-							'client.sync' ];
+	this._eventList = ['client.name',
+		'client.changeTeam',
+		'client.ready',
+		'client.sync'];
 	this._snapshots = new SnapshotManager();
 	//DEBUG
 	this._packagesLost = 0;
 	this._lastStep = -1;
 }
 
-Client.prototype.init = function() {
+Client.prototype.init = function () {
 	this._socket.emit('onconnected');
 	this._socket.on('disconnect', this._disconnectListener);
 	this._socket.on('client.name', this._nameListener);
 	this._socket.on('client.changeTeam', this._teamListener);
 	this._socket.on('client.ready', this._readyListener);
 	// process.on('SIGINT', function(){
- 	//    	console.log(this._packagesLost + ' from ' + this._lastStep + ' lost (' + 100*this._packagesLost/this._lastStep + '%)');
+	//    	console.log(this._packagesLost + ' from ' + this._lastStep + ' lost (' + 100*this._packagesLost/this._lastStep + '%)');
 	// }.bind(this));
 };
 
 /*******************************************************/
 /****************** NETWORK CALLBACKS ******************/
 /*******************************************************/
-Client.prototype.onDisconnect = function() {
+Client.prototype.onDisconnect = function () {
 	this._room.removeClient(this);
 };
 
-Client.prototype.onName = function(name) {
+Client.prototype.onName = function (name) {
 	if (_.isString(name)) {
 		this.name = name;
 		this.initialize();
 	}
 	else {
-		console.error('Didnt get a string as name from the client');		
+		console.error('Didnt get a string as name from the client');
 	}
 };
 
 // Improve this
-Client.prototype.initialize = function() {	
-	this.chosenTeam =  this._room.getWeakestChosenTeam();
+Client.prototype.initialize = function () {
+	this.chosenTeam = this._room.getWeakestChosenTeam();
 	this._room.clients.push(this);
 };
 
-Client.prototype.onChangeTeam = function(team) {
+Client.prototype.onChangeTeam = function (team) {
 	if (this._room.validateTeam(team)) {
 		this.chosenTeam = team;
 	}
 	else {
-		console.error('Invalid chosen team');		
+		console.error('Invalid chosen team');
 	}
 };
 
-Client.prototype.onReady = function(ready) {
+Client.prototype.onReady = function (ready) {
 	if (_.isBoolean(ready)) {
 		this.ready = ready;
 	}
 	else {
-		console.error('Invalid ready state');		
+		console.error('Invalid ready state');
 	}
 };
 
@@ -86,10 +86,10 @@ Client.prototype.onReady = function(ready) {
 /******************************************************/
 /****************** HELPER FUNCTIONS ******************/
 /******************************************************/
-Client.prototype.createPlayer = function() {
+Client.prototype.createPlayer = function () {
 	var team = this._room.teams.get(this.chosenTeam);
 	this.player = PlayerFactory.createPlayer(this._socket, this._snapshots, team);
-	this._socket.emit('player.create', 
+	this._socket.emit('player.create',
 		{
 			id: this.player.id,
 			name: this.name,
@@ -98,22 +98,22 @@ Client.prototype.createPlayer = function() {
 		});
 };
 
-Client.prototype.queueSyncFromClient = function(message) {
+Client.prototype.queueSyncFromClient = function (message) {
 	// Debug package loss
 	if (message.step !== this._lastStep + 1) {
-		this._packagesLost += (this._lastStep + 1) - message.step; 
+		this._packagesLost += (this._lastStep + 1) - message.step;
 	}
 	this._lastStep = message.step;
 
 	this._snapshots.add(message);
 };
 
-Client.prototype.startListeningToUpdates = function() {
+Client.prototype.startListeningToUpdates = function () {
 	this._socket.on('client.sync', this._syncListener);
 };
 
-Client.prototype.clearClientListeners = function() {
-	_.each(this._eventList, function(event) {
+Client.prototype.clearClientListeners = function () {
+	_.each(this._eventList, function (event) {
 		// this._socket.removeAllListeners(event); ///////////////
 	}, this);
 };
@@ -122,23 +122,23 @@ Client.prototype.clearClientListeners = function() {
 /****************************************************/
 /****************** SYNC FUNCTIONS ******************/
 /****************************************************/
-Client.prototype.sendInitialMatchInfo = function(info) {
+Client.prototype.sendInitialMatchInfo = function (info) {
 	this._socket.emit('game.initialInfo', info);
 };
 
-Client.prototype.sendChangedState = function(newState) {
+Client.prototype.sendChangedState = function (newState) {
 	this._socket.emit('game.state', newState);
 };
 
-Client.prototype.sendGameSync = function(snapshot) {
+Client.prototype.sendGameSync = function (snapshot) {
 	this._socket.emit('game.sync', snapshot);
 };
 
-Client.prototype.sendMatchResults = function(results) {
+Client.prototype.sendMatchResults = function (results) {
 	this._socket.emit('game.results', results);
 };
 
-Client.prototype.sendLobbyInfo = function(info) {
+Client.prototype.sendLobbyInfo = function (info) {
 	info.selfTeam = this.chosenTeam;
 	this._socket.emit('lobby.info', info);
 };

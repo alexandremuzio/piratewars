@@ -16,21 +16,21 @@ SyncComponent.prototype = Object.create(GameComponent.prototype);
 SyncComponent.prototype.constructor = SyncComponent;
 ///
 
-SyncComponent.prototype.init = function() {
+SyncComponent.prototype.init = function () {
 	this.owner.on('entity.sync', this.onSyncronization.bind(this));
 	this.owner.on('entity.syncAfter', this.onSyncronizationAfter.bind(this));
     this._socket = this.owner.components.get('network').socket;
-    setInterval(this.sendSyncToServer.bind(this), 1000/30);
+    setInterval(this.sendSyncToServer.bind(this), 1000 / 30);
 };
 
-SyncComponent.prototype.sendSyncToServer = function() {//update = function() {
+SyncComponent.prototype.sendSyncToServer = function () {//update = function() {
 	// This should be out of here if we don't want to send a sync every step
 	// Change getLast to send a pack of inputs if this happens
 	var lastSnapshot = this.snapshots.getLast();
 	if (lastSnapshot) {
 		this.snapshots.clear();
 		// console.log(lastSnapshot);
-		var message = {commands: lastSnapshot};
+		var message = { commands: lastSnapshot };
 		
 		// Bullet ID's
 		// console.log(this.owner.subentityManager.get('cannons_manager').components.get('cannons_manager_controller'));
@@ -54,7 +54,7 @@ SyncComponent.prototype.sendSyncToServer = function() {//update = function() {
 	}
 };
 
-SyncComponent.prototype.onSyncronization = function(message) {
+SyncComponent.prototype.onSyncronization = function (message) {
 	// MPTest
 	// console.log('--- onSyncronization called --- #############################');
 	if (!_.isUndefined(message.transform) && !_.isNull(message.transform)) {
@@ -62,7 +62,7 @@ SyncComponent.prototype.onSyncronization = function(message) {
 	}
 };
 
-SyncComponent.prototype.onSyncronizationAfter = function(message) {
+SyncComponent.prototype.onSyncronizationAfter = function (message) {
 	if (!_.isUndefined(message.health) && !_.isNull(message.health)) {
 		this.owner.components.get('health').setHealth(message.health); //TO DO
 	}

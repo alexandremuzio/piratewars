@@ -11,7 +11,7 @@ StrongholdComponent.prototype = Object.create(BaseComponent.prototype);
 StrongholdComponent.prototype.constructor = StrongholdComponent;
 ///
 
-StrongholdComponent.prototype.init = function() {
+StrongholdComponent.prototype.init = function () {
 	this.currentTime = new Date();
 };
 

@@ -13,34 +13,34 @@ CannonsManagerController.prototype = Object.create(BaseComponent.prototype);
 CannonsManagerController.prototype.constructor = CannonsManagerController;
 ///
 
-CannonsManagerController.prototype.update = function() {
+CannonsManagerController.prototype.update = function () {
 };
 
-CannonsManagerController.prototype.shootLeft = function() {
-	_.each(this.leftCannons, function(cannon) {
+CannonsManagerController.prototype.shootLeft = function () {
+	_.each(this.leftCannons, function (cannon) {
 		var bullet = cannon.components.get('cannon_controller').shoot();
 		this.temporaryEntitiesIDs.push(bullet.id);
 	}.bind(this));
 };
 
-CannonsManagerController.prototype.shootRight = function() {
-	_.each(this.rightCannons, function(cannon) {
+CannonsManagerController.prototype.shootRight = function () {
+	_.each(this.rightCannons, function (cannon) {
 		var bullet = cannon.components.get('cannon_controller').shoot();
 		this.temporaryEntitiesIDs.push(bullet.id);
 	}.bind(this));
 };
 
-CannonsManagerController.prototype.getTempEntities = function() {
+CannonsManagerController.prototype.getTempEntities = function () {
 	if (this.temporaryEntitiesIDs.length > 0) {
 		// Cloning array before emptying it
 		var tempEntities = this.temporaryEntitiesIDs.slice(0);
 		this.temporaryEntitiesIDs = [];
-    	// console.log("GetTemp: this.tempEntities", this.temporaryEntitiesIDs);
-    	// console.log("GetTemp: var tempEntities", tempEntities);
+		// console.log('GetTemp: this.tempEntities', this.temporaryEntitiesIDs);
+		// console.log('GetTemp: var tempEntities', tempEntities);
 		return tempEntities;
 	}
 	else {
-		// console.log("Returning empty array");
+		// console.log('Returning empty array');
 		return [];
 	}
 };

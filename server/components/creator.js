@@ -13,7 +13,7 @@ CreatorComponent.prototype = Object.create(BaseComponent.prototype);
 CreatorComponent.prototype.constructor = CreatorComponent;
 ///
 
-CreatorComponent.prototype.createBullet = function(canonPosition, side) {
+CreatorComponent.prototype.createBullet = function (canonPosition, side) {
 	// console.log('CreatorComponent createBullet');
 	var id = this.getFirstAvailableID();
     var bullet = EntityCreator.createBullet(this.owner, canonPosition, side, id);
@@ -21,11 +21,11 @@ CreatorComponent.prototype.createBullet = function(canonPosition, side) {
     return bullet;
 };
 
-CreatorComponent.prototype.getFirstAvailableID = function() {
+CreatorComponent.prototype.getFirstAvailableID = function () {
 	if (this.temporaryEntitiesIDs.length === 0) {
-		console.log('ERROR: tried to get id from empty array (package loss)');		
+		console.log('ERROR: tried to get id from empty array (package loss)');
 	}
-	else {		
+	else {
 		return this.temporaryEntitiesIDs.shift();
 	}
 };

@@ -12,13 +12,13 @@ BaseComponent.prototype = Object.create(GameComponent.prototype);
 BaseComponent.prototype.constructor = BaseComponent;
 ///
 
-BaseComponent.prototype.init = function() {
+BaseComponent.prototype.init = function () {
 	this.owner.on('entity.die', this.onBaseDie.bind(this));
 };
 
-BaseComponent.prototype.update = function() {};
+BaseComponent.prototype.update = function () { };
 
-BaseComponent.prototype.onBaseDie = function() {
+BaseComponent.prototype.onBaseDie = function () {
 	// What happens when base dies
 };
 

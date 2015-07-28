@@ -6,15 +6,15 @@ function EntityAttrs() {
 	this._attrs = {};
 }
 
-EntityAttrs.prototype.getAll = function() {
+EntityAttrs.prototype.getAll = function () {
 	return this._attrs;
 };
 
-EntityAttrs.prototype.get = function(key) {
+EntityAttrs.prototype.get = function (key) {
 	return this._attrs[key];
 };
 
-EntityAttrs.prototype.set = function(update) {
+EntityAttrs.prototype.set = function (update) {
 	_.extend(this._attrs, update);
 };
 

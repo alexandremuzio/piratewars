@@ -1,16 +1,16 @@
 'use strict';
 
 var
-    io          = require('socket.io'),
-    express     = require('express'),
-    http        = require('http'),
-    path        = require('path'),
-    app         = express(),
-    GameServer  = require('./game_server.js'),
-    server      = http.createServer(app),
+    io = require('socket.io'),
+    express = require('express'),
+    http = require('http'),
+    path = require('path'),
+    app = express(),
+    GameServer = require('./game_server.js'),
+    server = http.createServer(app),
 
-    config      = require('./config.json'),
-    verbose     = false,
+    config = require('./config.json'),
+    verbose = false,
     webRoot;
 
 // resolve the path to the web root
@@ -21,15 +21,15 @@ server.listen(config.port);
 
 console.log('\t :: Express :: Listening on port ' + config.port);
 
-app.get( '/', function( req, res ){
+app.get('/', function (req, res) {
     console.log('trying to load %s', webRoot + '/index.html');
-    res.sendFile( '/index.html' , { root: webRoot});
+    res.sendFile('/index.html', { root: webRoot });
 });
 
-app.get( '/*' , function( req, res, next ) {
+app.get('/*', function (req, res, next) {
     var file = req.params[0];
-    if(verbose) console.log('\t :: Express :: file requested : ' + file);
-    res.sendFile( webRoot + '/' + file );
+    if (verbose) console.log('\t :: Express :: file requested : ' + file);
+    res.sendFile(webRoot + '/' + file);
 });
 
 var sio = io.listen(server);

@@ -17,7 +17,7 @@ CooldownComponent.prototype = Object.create(BaseComponent.prototype);
 CooldownComponent.prototype.constructor = CooldownComponent;
 ///
 
-CooldownComponent.prototype.activate = function() {
+CooldownComponent.prototype.activate = function () {
 	var currentTime = new Date();
 	if (currentTime - this.lastUsedTime < this.chargeTime) {
 		// console.log('cooldown false');
@@ -29,7 +29,7 @@ CooldownComponent.prototype.activate = function() {
 	return true;
 };
 
-CooldownComponent.prototype.mineActivate = function() {
+CooldownComponent.prototype.mineActivate = function () {
 	var currentTime = new Date();
 	if (currentTime - this.mineLastUsedTime < this.mineChargeTime) {
 		// console.log('cooldown false');

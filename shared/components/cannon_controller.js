@@ -11,7 +11,7 @@ CannonController.prototype = Object.create(ComponentBase.prototype);
 CannonController.prototype.constructor = CannonController;
 ///
 
-CannonController.prototype.update = function() {
+CannonController.prototype.update = function () {
 };
 
 module.exports = CannonController;

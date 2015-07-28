@@ -13,14 +13,14 @@ CannonsManagerController.prototype = Object.create(BaseComponent.prototype);
 CannonsManagerController.prototype.constructor = CannonsManagerController;
 ///
 
-CannonsManagerController.prototype.update = function() {
+CannonsManagerController.prototype.update = function () {
 };
 
-CannonsManagerController.prototype.addLeft = function(cannon) {
+CannonsManagerController.prototype.addLeft = function (cannon) {
 	this.leftCannons.push(cannon);
 };
 
-CannonsManagerController.prototype.addRight = function(cannon) {
+CannonsManagerController.prototype.addRight = function (cannon) {
 	this.rightCannons.push(cannon);
 };
 

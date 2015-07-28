@@ -26,11 +26,11 @@ PhaserInputComponent.prototype = Object.create(InputComponent.prototype);
 PhaserInputComponent.prototype.constructor = PhaserInputComponent;
 ///
 
-PhaserInputComponent.prototype.init = function() {
+PhaserInputComponent.prototype.init = function () {
     this._cursorKeys = this._input.keyboard.createCursorKeys();
     this._leftAttackKey = this._input.keyboard.addKey(Phaser.Keyboard.Q);
     this._rightAttackKey = this._input.keyboard.addKey(Phaser.Keyboard.E);
-    this._mineAttackKey = this._input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);  
+    this._mineAttackKey = this._input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     this._input.mouse.onMouseDown = this.onMouseDown.bind(this);
 
     this._snapshots = this.owner.components.get('outSync').snapshots;
@@ -41,8 +41,8 @@ PhaserInputComponent.prototype.init = function() {
     this.owner.on('entity.die', this.onEntityDie.bind(this));
 };
 
-PhaserInputComponent.prototype.onMouseDown = function() {
-    if( event.button === 0 ){
+PhaserInputComponent.prototype.onMouseDown = function () {
+    if (event.button === 0) {
         this._mouseLeftButtonDown = true;
         this._mouseWorldX = this._input.mousePointer.worldX;
         this._mouseWorldY = this._input.mousePointer.worldY;
@@ -52,13 +52,13 @@ PhaserInputComponent.prototype.onMouseDown = function() {
 /**
  * @override
  */
-PhaserInputComponent.prototype.update = function() {
+PhaserInputComponent.prototype.update = function () {
     //console.log("input");
     this.captureInput();
     this.updateNextPositionIndicator();
 };
 
-PhaserInputComponent.prototype.captureInput = function() {
+PhaserInputComponent.prototype.captureInput = function () {
     var command = {};
 
     // check if arrow keys are pressed
@@ -74,7 +74,7 @@ PhaserInputComponent.prototype.captureInput = function() {
     }
 
     // check if the mouse was clicked
-    if( this._mouseLeftButtonDown ){
+    if (this._mouseLeftButtonDown) {
         command.mouseLeftButtonDown = true;
         command.mouseWorldX = this._mouseWorldX;
         command.mouseWorldY = this._mouseWorldY;
@@ -88,7 +88,7 @@ PhaserInputComponent.prototype.captureInput = function() {
     if (this._rightAttackKey.isDown) {
         command.eKey = true;
     }
-    if( this._mineAttackKey.isDown ){
+    if (this._mineAttackKey.isDown) {
         command.spaceKey = true;
     }
 
@@ -96,33 +96,33 @@ PhaserInputComponent.prototype.captureInput = function() {
     command.id = this._commandId++;
 
     this.processCommand(command);
-    
+
     if (!_.isEmpty(command)) {
         this._snapshots.add(command);
     }
 };
 
-PhaserInputComponent.prototype.updateNextPositionIndicator = function() {
-    if( !this._followingTrajectory && this._lastFollowingTrajectory && this._nextPositionIndicator ){
+PhaserInputComponent.prototype.updateNextPositionIndicator = function () {
+    if (!this._followingTrajectory && this._lastFollowingTrajectory && this._nextPositionIndicator) {
         this._nextPositionIndicator.autoDestroy();
         this._nextPositionIndicator = null;
     }
     this._lastFollowingTrajectory = this._followingTrajectory;
 
-    if( !this._rotating && this._lastRotating && this._nextPositionIndicator ){
+    if (!this._rotating && this._lastRotating && this._nextPositionIndicator) {
         this._nextPositionIndicator.autoDestroy();
         this._nextPositionIndicator = null;
     }
     this._lastRotating = this._rotating;
 
-    if( this.initNewTrajectoryCalled ){
-        if( this._nextPositionIndicator )
+    if (this.initNewTrajectoryCalled) {
+        if (this._nextPositionIndicator)
             this._nextPositionIndicator.autoDestroy();
         this._nextPositionIndicator = new NextPositionIndicatorConstructor(this._input.game, this._clickedPoint.x, this._clickedPoint.y);
         this.initNewTrajectoryCalled = false;
     }
 
-    if( this._nextPositionIndicator )
+    if (this._nextPositionIndicator)
         this._nextPositionIndicator.update();
 };
 

@@ -22,18 +22,18 @@ var stronghold_settings = require('../../shared/settings/stronghold.json');
 var mine_settings = require('../../shared/settings/mine.json');
 
 //collision groups
-var PLAYER = Math.pow(2,0);
-var BULLET = Math.pow(2,1);
-var STRONGHOLD = Math.pow(2,2);
-var MINE = Math.pow(2,3);
+var PLAYER = Math.pow(2, 0);
+var BULLET = Math.pow(2, 1);
+var STRONGHOLD = Math.pow(2, 2);
+var MINE = Math.pow(2, 3);
 
 //static class
 var PlayerFactory = {
-	init : function (room) {
+	init: function (room) {
 		this.room = room;
 	},
 
-	createPlayer : function(socket, snapshots, team) {
+	createPlayer: function (socket, snapshots, team) {
 		var id = UUID();
 		var entity = new Entity(id, 'player');
 
@@ -41,28 +41,28 @@ var PlayerFactory = {
 		// var initialPosition = this.room.teams. //get from spawn manager
 		
 		var body = new p2.Body({
-	            name: 'player',
-	            mass: player_settings.physics.mass,
-	            position: [spawn_info.x, spawn_info.y],
-	            angle: spawn_info.angle,
-	            damping: player_settings.physics.linear_damping,
-	            angularDamping: player_settings.physics.angular_damping
-	        });
+			name: 'player',
+			mass: player_settings.physics.mass,
+			position: [spawn_info.x, spawn_info.y],
+			angle: spawn_info.angle,
+			damping: player_settings.physics.linear_damping,
+			angularDamping: player_settings.physics.angular_damping
+		});
 		body.entity = entity;
 
-	    var verts = [];
+		var verts = [];
 		verts.push([-player_settings.width / 2, (player_settings.height - player_settings.lateral_offset) / 2]);
-		verts.push([-player_settings.width / 2, -(player_settings.height - player_settings.lateral_offset) / 2]);		
+		verts.push([-player_settings.width / 2, -(player_settings.height - player_settings.lateral_offset) / 2]);
 		verts.push([+player_settings.width / 2 - player_settings.triangle, -(player_settings.height - player_settings.lateral_offset) / 2]);
 		verts.push([+player_settings.width / 2, 0]);
 		verts.push([+player_settings.width / 2 - player_settings.triangle, +(player_settings.height - player_settings.lateral_offset) / 2]);
 		var shape = new p2.Convex(verts);
 		// var shape = new p2.Rectangle(player_settings.width, player_settings.height - player_settings.lateral_offset);
-	    shape.collisionGroup = PLAYER;
+		shape.collisionGroup = PLAYER;
 		shape.collisionMask = PLAYER | STRONGHOLD | BULLET | MINE;
 		body.addShape(shape);
 
-	    entity.components.add(new HealthComponent(player_settings.maxHealth));
+		entity.components.add(new HealthComponent(player_settings.maxHealth));
 		entity.components.add(new CreatorComponent());
 		entity.components.add(new CooldownComponent());
 		entity.components.add(new NetworkComponent(socket));
@@ -78,80 +78,80 @@ var PlayerFactory = {
 		// healthBar.setBaseEntity(entity, 0, -30, 0);
 		// healthBar.setFollowFatherAngle(false);
 
-		var cannonsManager = this.createCannonsManager(id+'-cannons_manager');
+		var cannonsManager = this.createCannonsManager(id + '-cannons_manager');
 		cannonsManager.setBaseEntity(entity, 0, 0, 0);
 
-		var mineStart = this.createEmptyEntity(id+'-mine_start', 'mine_start');
+		var mineStart = this.createEmptyEntity(id + '-mine_start', 'mine_start');
 		mineStart.setBaseEntity(entity, mine_settings.launch_distance, 0, 0);
 
 		return entity;
 	},
 
-	createCannonsManager : function(id) {
+	createCannonsManager: function (id) {
 		var entity = new Entity(id, 'cannons_manager');
 
 		var cannonsManagerController = new CannonsManagerController();
 		entity.components.add(cannonsManagerController);
 
-		for( var i = 0; i < 3; i++ ){
-			var cannon = this.createCannon(id+'-cannon_'+(i+1), 'cannon_'+(i+1));
+		for (var i = 0; i < 3; i++) {
+			var cannon = this.createCannon(id + '-cannon_' + (i + 1), 'cannon_' + (i + 1));
 			cannon.setBaseEntity(entity,
-									player_settings.cannon.x0 +
-									player_settings.cannon.xInterval*i,
-									-player_settings.cannon.y0,
-									-Math.PI/2);
+				player_settings.cannon.x0 +
+				player_settings.cannon.xInterval * i,
+				-player_settings.cannon.y0,
+				-Math.PI / 2);
 			cannonsManagerController.addLeft(cannon);
 		}
-		for( var i = 0; i < 3; i++ ){
-			var cannon = this.createCannon(id+'-cannon_'+(i+4), 'cannon_'+(i+4));
+		for (var i = 0; i < 3; i++) {
+			var cannon = this.createCannon(id + '-cannon_' + (i + 4), 'cannon_' + (i + 4));
 			cannon.setBaseEntity(entity,
-							  		player_settings.cannon.x0 +
-							  		player_settings.cannon.xInterval*i,
-							  		player_settings.cannon.y0,
-							  		Math.PI/2);
+				player_settings.cannon.x0 +
+				player_settings.cannon.xInterval * i,
+				player_settings.cannon.y0,
+				Math.PI / 2);
 			cannonsManagerController.addRight(cannon);
 		}
 		return entity;
 	},
 
-	createCannon : function(id, key) {
+	createCannon: function (id, key) {
 		var entity = new Entity(id, key);
 
 		entity.components.add(new CannonController());
 
 		// Creating bulletStart subentity
-		var bulletStart = this.createEmptyEntity(id+'-bullet_start', 'bullet_start');
+		var bulletStart = this.createEmptyEntity(id + '-bullet_start', 'bullet_start');
 		bulletStart.setBaseEntity(entity,
-								 player_settings.cannon.distFromCannon, 0, 0);
+			player_settings.cannon.distFromCannon, 0, 0);
 
 		return entity;
 	},
 
-	createEmptyEntity : function(id, key) {
+	createEmptyEntity: function (id, key) {
 		var entity = new Entity(id, key);
 		return entity;
 	},
 
-	createStronghold : function(index) {
+	createStronghold: function (index) {
 		var data = stronghold_settings.bases[index];
 
 		var entity = new Entity(data.id, 'stronghold');
 
 		var body = new p2.Body({
-	            name: 'stronghold',
-	            mass: 99999999,
-	            // type: p2.Body.STATIC,
-	            position: [data.initialPos.x, data.initialPos.y]
-	        });
+			name: 'stronghold',
+			mass: 99999999,
+			// type: p2.Body.STATIC,
+			position: [data.initialPos.x, data.initialPos.y]
+		});
 		body.entity = entity;
 
-	    var shape = new p2.Rectangle(stronghold_settings.width, stronghold_settings.height);
-	    shape.collisionGroup = STRONGHOLD;
+		var shape = new p2.Rectangle(stronghold_settings.width, stronghold_settings.height);
+		shape.collisionGroup = STRONGHOLD;
 		shape.collisionMask = PLAYER | BULLET;
 		body.addShape(shape);
-	    body.angle = 0;
+		body.angle = 0;
 
-	    entity.components.add(new HealthComponent(stronghold_settings.maxHealth));
+		entity.components.add(new HealthComponent(stronghold_settings.maxHealth));
 		entity.components.add(new NetworkComponent(data.socket));
 		entity.components.add(new PhysicsComponent(body));
 		entity.components.add(new StrongholdComponent());

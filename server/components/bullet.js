@@ -16,12 +16,12 @@ BulletComponent.prototype = Object.create(BaseComponent.prototype);
 BulletComponent.prototype.constructor = BulletComponent;
 ///
 
-BulletComponent.prototype.init = function() {
+BulletComponent.prototype.init = function () {
 	this.currentTime = new Date();
 	this.owner.on('entity.collision', this.onCollision.bind(this));
 };
 
-BulletComponent.prototype.update = function() {
+BulletComponent.prototype.update = function () {
 	var newCurrentTime = new Date();
 	this.currentAliveTime += (newCurrentTime - this.currentTime);
 	this.currentTime = newCurrentTime;
@@ -34,7 +34,7 @@ BulletComponent.prototype.update = function() {
 	// console.log(this.owner.components.get('physics').body.position);
 };
 
-BulletComponent.prototype.onCollision = function(collider) {
+BulletComponent.prototype.onCollision = function (collider) {
 	if (collider.key == 'player') {
 		collider.damage(this.damage, collider);
 		console.log('damaging player!');

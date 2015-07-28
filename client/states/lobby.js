@@ -24,16 +24,16 @@ LobbyState.prototype = Object.create(Phaser.State.prototype);
 LobbyState.prototype.constructor = LobbyState;
 
 
-LobbyState.prototype.init = function(clientName) {
+LobbyState.prototype.init = function (clientName) {
     this._clientName = clientName;
 };
 
-LobbyState.prototype.preload = function() {
+LobbyState.prototype.preload = function () {
     console.log('in preload!');
     this.socket.emit('client.name', this._clientName);
 };
 
-LobbyState.prototype.create = function() {
+LobbyState.prototype.create = function () {
     if (this._firstTime) {
         console.log('Test');
         this.assignNetworkCallbacks();
@@ -46,16 +46,16 @@ LobbyState.prototype.create = function() {
 };
 
 
-LobbyState.prototype.update = function() {
+LobbyState.prototype.update = function () {
     this.showLobbyGUI();
     // console.log(EZGUI.components);
     if (this._currentState === 'preGame') {
         this.clearGUI();
-        EZGUI.components.lobby.visible= false;
+        EZGUI.components.lobby.visible = false;
         this.game.state.start(this.nextState, false, false);
     }
 
-    _.each(this._lobbyInfo.teams, function(team, teamKey) {
+    _.each(this._lobbyInfo.teams, function (team, teamKey) {
 
         for (var i = 1; i <= team.length; i++) {
             var player = team[i - 1];
@@ -76,23 +76,23 @@ LobbyState.prototype.update = function() {
     });
 };
 
-LobbyState.prototype.clearGUI = function() {
+LobbyState.prototype.clearGUI = function () {
     for (var i = 1; i <= 5; i++) {
         EZGUI.components['redslot' + i].text = '';
         EZGUI.components['blueslot' + i].text = '';
     }
 };
 
-LobbyState.prototype.assignNetworkCallbacks = function() {
+LobbyState.prototype.assignNetworkCallbacks = function () {
     this.socket.on('lobby.info', this.onLobbyInfo.bind(this));
     this.socket.on('game.state', this.onGameState.bind(this));
 };
 
-LobbyState.prototype.onReceiveClientName = function(clientName) {
+LobbyState.prototype.onReceiveClientName = function (clientName) {
     this._clientName = clientName;
 };
 
-LobbyState.prototype.onLobbyInfo = function(lobbyInfo) {
+LobbyState.prototype.onLobbyInfo = function (lobbyInfo) {
     console.log(lobbyInfo);
     this.clearGUI();
     this._lobbyInfo = lobbyInfo;
@@ -102,7 +102,7 @@ LobbyState.prototype.onGameState = function (gameState) {
     this._currentState = gameState;
 };
 
-LobbyState.prototype.addStateEvents = function() {
+LobbyState.prototype.addStateEvents = function () {
     //change team button TO DO
     EZGUI.components.switchTeamButton.on('click', function () {
         console.log('clicked switch!');
@@ -111,7 +111,7 @@ LobbyState.prototype.addStateEvents = function() {
                 this.socket.emit('client.changeTeam', 'blue');
             }
 
-             if (this._lobbyInfo.selfTeam === 'blue') {
+            if (this._lobbyInfo.selfTeam === 'blue') {
                 this.socket.emit('client.changeTeam', 'red');
             }
         }
@@ -128,8 +128,8 @@ LobbyState.prototype.addStateEvents = function() {
     }.bind(this));
 };
 
-LobbyState.prototype.showLobbyGUI = function() {
-    EZGUI.components.lobby.visible= true;
+LobbyState.prototype.showLobbyGUI = function () {
+    EZGUI.components.lobby.visible = true;
 };
 
 

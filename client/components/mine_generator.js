@@ -14,25 +14,25 @@ MineGenerator.prototype = Object.create(BaseComponent.prototype);
 MineGenerator.prototype.constructor = MineGenerator;
 ///
 
-MineGenerator.prototype.getId = function() {
+MineGenerator.prototype.getId = function () {
 	return this.owner.id + '-mine_' + this._idCount++;
 };
 
-MineGenerator.prototype.createMine = function(mineId, mineKey, minePosition, mineAngle, mineVelocity) {
+MineGenerator.prototype.createMine = function (mineId, mineKey, minePosition, mineAngle, mineVelocity) {
 	return ProjectileFactory.createMine(mineId, mineKey, minePosition, mineAngle, mineVelocity);
 };
 
-MineGenerator.prototype.getTempEntities = function() {
+MineGenerator.prototype.getTempEntities = function () {
 	if (this.temporaryEntitiesIDs.length > 0) {
 		// Cloning array before emptying it
 		var tempEntities = this.temporaryEntitiesIDs.slice(0);
 		this.temporaryEntitiesIDs = [];
-    	// console.log("GetTemp: this.tempEntities", this.temporaryEntitiesIDs);
-    	// console.log("GetTemp: var tempEntities", tempEntities);
+		// console.log('GetTemp: this.tempEntities', this.temporaryEntitiesIDs);
+		// console.log('GetTemp: var tempEntities', tempEntities);
 		return tempEntities;
 	}
 	else {
-		// console.log("Returning empty array");
+		// console.log('Returning empty array');
 		return [];
 	}
 };

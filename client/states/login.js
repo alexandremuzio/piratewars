@@ -1,6 +1,6 @@
 'use strict';
 
-var GameGUI = require('../../GUI/game-gui.json');
+var GameGUI = require('../../gui/game-gui.json');
 
 function LoginState(game, state) {
     this.game = game;

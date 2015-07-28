@@ -1,8 +1,8 @@
 'use strict';
 
 var _ = require('underscore');
-// var RespawnJSON = require('../../GUI/game-gui.json');
-// var LobbyJSON = require('../../GUI/lobby-gui.js');
+// var RespawnJSON = require('../../gui/game-gui.json');
+// var LobbyJSON = require('../../gui/lobby-gui.js');
 
 
 function LobbyState(game, socket, state) {
@@ -106,12 +106,12 @@ LobbyState.prototype.addStateEvents = function() {
     //change team button TO DO
     EZGUI.components.switchTeamButton.on('click', function () {
         console.log('clicked switch!');
-        if (this._currentState == 'lobby') {
-            if (this._lobbyInfo.selfTeam == 'red') {
+        if (this._currentState = 'lobby') {
+            if (this._lobbyInfo.selfTeam === 'red') {
                 this.socket.emit('client.changeTeam', 'blue');
             }
 
-             if (this._lobbyInfo.selfTeam == 'blue') {
+             if (this._lobbyInfo.selfTeam === 'blue') {
                 this.socket.emit('client.changeTeam', 'red');
             }
         }
@@ -121,7 +121,7 @@ LobbyState.prototype.addStateEvents = function() {
     //ready button
     EZGUI.components.readyButton.on('click', function () {
         console.log('clicked ready!');
-        if (this._currentState == 'lobby') {
+        if (this._currentState === 'lobby') {
             this._ready = Boolean(this._ready ^ 1);
             this.socket.emit('client.ready', this._ready);
         }

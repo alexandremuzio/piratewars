@@ -1,10 +1,11 @@
 'use strict';
 
-var GameGUI = require('../../gui/game-gui.json');
+var GUIManager = require('../../gui/gui_manager');
 
 function LoginState(game, state) {
     this.game = game;
     this.nextState = state;
+    this.guiManager = new GUIManager();
 }
 
 ///
@@ -26,8 +27,7 @@ LoginState.prototype.preload = function () {
 };
 
 LoginState.prototype.create = function () {
-    this.loadTheme();
-    this.setupGUI();
+    this.guiManager.startGUI();
     this.addNextStateEvents();
 
     this.music = this.game.add.audio('themesong');
@@ -58,7 +58,7 @@ LoginState.prototype.addNextStateEvents = function () {
     }.bind(this));
 
     document.getElementById('nickname').addEventListener('keydown', function (event) {
-        if (event.keyCode == 13) {
+        if (event.keyCode === 13) {
             console.log('Pressed enter');
             document.getElementById('initialScreen').style.display = 'none';
             var nickname = document.getElementById('nickname').value;
@@ -107,25 +107,6 @@ LoginState.prototype.loadAssets = function () {
     /* ----------------- Audio assets --------------------*/
     this.game.load.audio('themesong', ['assets/audio/gametheme.mp3']);
     this.game.load.audio('cannon', ['assets/audio/cannonsound.mp3']);
-};
-
-LoginState.prototype.loadTheme = function () {
-    // var lobbyScreen, respawnScreen;
-    EZGUI.Theme.load(['assets/GUI/metalworks-theme/metalworks-theme.json'], function () {
-        var dlg1 = EZGUI.create(GameGUI.respawn, 'metalworks');
-        dlg1.visible = false;
-
-        var lobbyScreen = EZGUI.create(GameGUI.lobby, 'metalworks');
-        lobbyScreen.visible = false;
-
-        var egt = EZGUI.create(GameGUI.endGame, 'metalworks');
-        egt.visible = false;
-        //EZGUI.components.respawnTime.text = '9';
-    });
-};
-
-LoginState.prototype.setupGUI = function () {
-    //    EZGUI.components.
 };
 
 module.exports = LoginState;

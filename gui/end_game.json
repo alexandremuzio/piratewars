@@ -1,0 +1,21 @@
+{
+	"endGame": {
+		"id": "endGameText",
+		"text": "Game Over",
+		"font": {
+			"size": "60px",
+			"family": "Skranji",
+			"color": "white"
+		},
+		"position": {
+			"x": 500,
+			"y": 200
+		},
+		"anchor": {
+			"x": 0.5,
+			"y": 0.5
+		},
+		"width": 1,
+		"height": 1
+	}
+}

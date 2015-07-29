@@ -1,0 +1,57 @@
+{
+	"respawn": {
+		"id": "respawnDialogBox",
+		"component": "Window",
+		"image": "respawnDialogBox",
+		"padding": 4,
+		"position": {
+			"x": 0,
+			"y": 100
+		},
+		"anchor": {
+			"x": 0.5,
+			"y": 0.5
+		},
+		"width": 1000,
+		"height": 250,
+		"layout": [
+			1,
+			4
+		],
+		"children": [
+			null,
+			{
+				"position": "center",
+				"text": "Respawns in",
+				"font": {
+					"size": "30px",
+					"family": "Skranji",
+					"color": "white"
+				},
+				"anchor": {
+					"x": 0.5,
+					"y": 0.5
+				},
+				"width": 1,
+				"height": 1
+			},
+			{
+				"id": "respawnTime",
+				"position": "center",
+				"text": "10",
+				"font": {
+					"size": "50px",
+					"family": "Skranji",
+					"color": "white"
+				},
+				"anchor": {
+					"x": 0.5,
+					"y": 0.5
+				},
+				"width": 1,
+				"height": 1
+			},
+			null
+		]
+	}
+}

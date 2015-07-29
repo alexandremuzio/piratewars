@@ -1,23 +1,24 @@
 'use strict';
 
 var _ = require('underscore');
+var CannonController = require('../components/cannon_controller.js');
+var CannonsManagerController = require('../components/cannons_manager_controller.js');
 var CooldownComponent = require('../../shared/components/cooldown.js');
 var CreatorComponent = require('../components/creator.js');
 var Entity = require('../../shared/core/entity.js');
+var HealthBarComponent = require('../components/health_bar.js');
+var HealthComponent = require('../components/health.js');
+var MineGeneratorComponent = require('../components/mine_generator.js');
 var NetworkComponent = require('../../shared/components/network.js');
 var PhaserInputComponent = require('../components/input.js');
 var PhysicsComponent = require('../../shared/components/physics.js');
 var PlayerControllerComponent = require('../components/player_controller.js');
-var SpriteComponent = require('../components/sprite.js');
-var SyncComponent = require('../components/sync.js');
-var HealthBarComponent = require('../components/health_bar.js');
-var TextComponent = require('../components/text.js');
-var CannonsManagerController = require('../components/cannons_manager_controller.js');
-var CannonController = require('../components/cannon_controller.js');
-var HealthComponent = require('../components/health.js');
-var MineGeneratorComponent = require('../components/mine_generator.js');
-var StrongholdComponent = require('../components/stronghold');
 var SelfPlayerStatesManagerComponent = require('../components/self_player_states_manager.js');
+var SoundComponent = require('../components/sound.js');
+var SpriteComponent = require('../components/sprite.js');
+var StrongholdComponent = require('../components/stronghold');
+var SyncComponent = require('../components/sync.js');
+var TextComponent = require('../components/text.js');
 
 var stronghold_settings = require('../../shared/settings/stronghold.json');
 var player_settings = require('../../shared/settings/player.json');
@@ -31,16 +32,16 @@ var STRONGHOLD = Math.pow(2, 2);
 var MINE = Math.pow(2, 3);
 
 var PlayerFactory = {
-    init: function (data) {
-        this.game = data.game;
-        this.socket = data.socket;
+    init: function (game, socket) {
+        this.game = game;
+        this.socket = socket;
     },
 
     //TODO pass the start position to the player
     createLocalPlayer: function (data) {
         console.log('inside entity factory createLocalPlayer');
         var entity = new Entity(data.id, 'player'),
-            entityGroup, sprites_info;
+            entityGroup, sprites_info, sounds;
 
         entityGroup = this.game.add.group();
 
@@ -70,6 +71,10 @@ var PlayerFactory = {
                 rotation: data.transform.angle
                 //tint: 
             }
+        };
+
+        sounds = {
+            'canon': this.game.add.audio('canon', 0.5, false)
         };
 
         /* Player name, must be set by the user (MUST FIX) */
@@ -110,6 +115,7 @@ var PlayerFactory = {
         entity.components.add(new PhaserInputComponent(this.game.input));
         entity.components.add(new PhysicsComponent(body));
         entity.components.add(new SpriteComponent(sprites_info));
+        entity.components.add(new SoundComponent(sounds));
         entity.components.add(new PlayerControllerComponent());
         entity.components.add(new TextComponent(text));
         entity.components.add(new MineGeneratorComponent());
@@ -184,7 +190,7 @@ var PlayerFactory = {
 
         // Creating cannons subentitys
         for (var i = 0; i < 3; i++) {
-            var cannon = this.createCannon(id + '-cannon_' + (i + 1), 'cannon_' + (i + 1));
+            var cannon = this.createCannon(id + '-cannon_' + (i + 1), 'cannon_' + (i + 1),entity);
             cannon.setBaseEntity(entity,
                 player_settings.cannon.x0 +
                 player_settings.cannon.xInterval * i,
@@ -246,7 +252,7 @@ var PlayerFactory = {
         // console.log('inside entity factory createRemotePlayer');
         
         var entity = new Entity(data.id, 'player'),
-            entityGroup, sprites_info;
+            entityGroup, sprites_info, sounds;
 
         entityGroup = this.game.add.group();
 
@@ -276,6 +282,10 @@ var PlayerFactory = {
                 rotation: data.transform.angle
                 //tint: 0xff6600
             }
+        };
+        
+        sounds = {
+            'canon': this.game.add.audio('canon', 0.5, false)
         };
 
         var text = this.game.add.text(0, 0, data.name, {
@@ -313,11 +323,12 @@ var PlayerFactory = {
         entity.components.add(new NetworkComponent(this.socket));
         entity.components.add(new PhysicsComponent(body));
         entity.components.add(new SpriteComponent(sprites_info));
+        entity.components.add(new SoundComponent(sounds));
         entity.components.add(new SyncComponent());
         entity.components.add(new TextComponent(text));
         entity.components.add(new PlayerControllerComponent());
 
-        // Subentitys// Subentitys
+        // Subentitys
         // Creating HealthBar subentity
         var healthBar = this.createHealthBar(data.id + '-health_bar',
             player_settings.health_bar.scale);

@@ -2,17 +2,16 @@
 
 var GUIManager = require('../../gui/gui_manager');
 
-function LoginState(game, state) {
-    this.game = game;
-    this.nextState = state;
+function LoginState() {
     this.guiManager = new GUIManager();
+    console.log(this);
 }
 
 ///
 LoginState.prototype = Object.create(Phaser.State.prototype);
 LoginState.prototype.constructor = LoginState;
-
 ///
+
 //Phaser Methods
 
 //Init is the first function called when starting the State
@@ -23,38 +22,38 @@ LoginState.prototype.preload = function () {
     this.setPhaserPreferences();
     this.loadAssets();
     // Enable phaser to run its steps even on an unfocused window
-    this.game.stage.disableVisibilityChange = true; ///////////////////////
+    this.stage.disableVisibilityChange = true;
 };
 
 LoginState.prototype.create = function () {
     this.guiManager.startGUI();
     this.addNextStateEvents();
 
-    this.music = this.game.add.audio('themesong');
+    this.music = this.add.audio('themesong');
     this.music.loop = true;
     this.music.play();
 };
 
 LoginState.prototype.setPhaserPreferences = function () {
-    this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-    this.game.scale.pageAlignHorizontally = true;
-    this.game.scale.pageAlignVertically = true;
-    this.game.scale.setMinMax(1024 / 2, 672 / 2, 1024 * 2, 672 * 2);
+    this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+    this.scale.pageAlignHorizontally = true;
+    this.scale.pageAlignVertically = true;
+    this.scale.setMinMax(1024 / 2, 672 / 2, 1024 * 2, 672 * 2);
 
     // Enable phaser to run its steps even on an unfocused window
-    this.game.stage.disableVisibilityChange = true;
+    this.stage.disableVisibilityChange = true;
 
     // Enable FPS of game shown on the screen
-    this.game.time.advancedTiming = true;
+    this.time.advancedTiming = true;
 };
 
 //Add next state functions to Enter Key or Login button
 LoginState.prototype.addNextStateEvents = function () {
-    var that = this.game;
+    var that = this;
     document.getElementById('loginbtn').addEventListener('click', function () {
         document.getElementById('initialScreen').style.display = 'none';
         var nickname = document.getElementById('nickname').value;
-        that.state.start(this.nextState, true, false, nickname);
+        that.state.start('lobby', true, false, nickname);
     }.bind(this));
 
     document.getElementById('nickname').addEventListener('keydown', function (event) {
@@ -62,7 +61,7 @@ LoginState.prototype.addNextStateEvents = function () {
             console.log('Pressed enter');
             document.getElementById('initialScreen').style.display = 'none';
             var nickname = document.getElementById('nickname').value;
-            that.state.start(this.nextState, true, false, nickname);
+            that.state.start('lobby', true, false, nickname);
         }
     }.bind(this));
 };
@@ -70,43 +69,43 @@ LoginState.prototype.addNextStateEvents = function () {
 //Switch to next state
 LoginState.prototype.switchState = function (param) {
     console.log('Going to ' + this.nextState);
-    this.game.state.start(this.nextState, true, false, param);
+    this.state.start(this.nextState, true, false, param);
 };
 
 LoginState.prototype.loadAssets = function () {
     /* ------------- health bar assets -----------------*/
-    this.game.load.image('blackbox', 'assets/blackbox.png');
-    this.game.load.image('redbar', 'assets/redbar.png');
+    this.load.image('blackbox', 'assets/blackbox.png');
+    this.load.image('redbar', 'assets/redbar.png');
     /* ------------------------------------------------ */
 
     //Spritesheet (name, directory, width of each sprite, height of each, how many sprites)
-    this.game.load.spritesheet('dead_boat', 'assets/dead_boat.png', 306, 107, 2);
+    this.load.spritesheet('dead_boat', 'assets/dead_boat.png', 306, 107, 2);
 
-    this.game.load.tilemap('backgroundmap', 'assets/map.json', null, Phaser.Tilemap.TILED_JSON);
-    this.game.load.image('gameTiles', 'assets/watertile.png');
-    this.game.load.image('boat_3', 'assets/boat_3.png');
-    this.game.load.image('boat_4', 'assets/boat_4.png');
-    this.game.load.image('boat_3-dead', 'assets/boat_3.png');
-    this.game.load.image('boat_4-dead', 'assets/boat_4.png');
-    this.game.load.image('bullet', 'assets/bullet.png');
-    this.game.load.image('red_arrow', 'assets/red_arrow.png');
-    this.game.load.image('base-pirate', 'assets/base-pirate.png');
-    this.game.load.image('base-navy', 'assets/base-navy.png');
-    this.game.load.image('cannon_0', 'assets/cannon_0.png');
-    this.game.load.image('mask', 'assets/mask.png');
-    this.game.load.image('mine', 'assets/mine.png');
+    this.load.tilemap('backgroundmap', 'assets/map.json', null, Phaser.Tilemap.TILED_JSON);
+    this.load.image('gameTiles', 'assets/watertile.png');
+    this.load.image('boat_3', 'assets/boat_3.png');
+    this.load.image('boat_4', 'assets/boat_4.png');
+    this.load.image('boat_3-dead', 'assets/boat_3.png');
+    this.load.image('boat_4-dead', 'assets/boat_4.png');
+    this.load.image('bullet', 'assets/bullet.png');
+    this.load.image('red_arrow', 'assets/red_arrow.png');
+    this.load.image('base-pirate', 'assets/base-pirate.png');
+    this.load.image('base-navy', 'assets/base-navy.png');
+    this.load.image('cannon_0', 'assets/cannon_0.png');
+    this.load.image('mask', 'assets/mask.png');
+    this.load.image('mine', 'assets/mine.png');
 
     /* ----------------- GUI assets --------------------*/
-    this.game.load.image('lvlcomplete', 'assets/GUI/img/lvlcomplete.png');
-    this.game.load.image('respawnDialogBox', 'assets/GUI/img/respawnDialogBox.png');
-    this.game.load.image('star2', 'assets/GUI/img/star2.png');
-    this.game.load.image('orange-btn', 'assets/GUI/img/orange-btn.png');
-    this.game.load.image('wood_tile', 'assets/GUI/img/wood_tile.png');
+    this.load.image('lvlcomplete', 'assets/GUI/img/lvlcomplete.png');
+    this.load.image('respawnDialogBox', 'assets/GUI/img/respawnDialogBox.png');
+    this.load.image('star2', 'assets/GUI/img/star2.png');
+    this.load.image('orange-btn', 'assets/GUI/img/orange-btn.png');
+    this.load.image('wood_tile', 'assets/GUI/img/wood_tile.png');
     /* ------------------------------------------------ */
 
     /* ----------------- Audio assets --------------------*/
-    this.game.load.audio('themesong', ['assets/audio/gametheme.mp3']);
-    this.game.load.audio('cannon', ['assets/audio/cannonsound.mp3']);
+    this.load.audio('themesong', ['assets/audio/gametheme.mp3']);
+    this.load.audio('canon', ['assets/audio/cannonsound.mp3']);
 };
 
 module.exports = LoginState;

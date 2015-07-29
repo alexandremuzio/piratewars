@@ -5,10 +5,8 @@ var _ = require('underscore');
 // var LobbyJSON = require('../../gui/lobby-gui.js');
 
 
-function LobbyState(game, socket, state) {
-    this.game = game;
+function LobbyState(socket) {
     this.socket = socket;
-    this.nextState = state;
 
     this._firstTime = true;
     this.clientName = {};
@@ -35,7 +33,6 @@ LobbyState.prototype.preload = function () {
 
 LobbyState.prototype.create = function () {
     if (this._firstTime) {
-        console.log('Test');
         this.assignNetworkCallbacks();
         this.addStateEvents();
         this.showLobbyGUI();
@@ -52,7 +49,7 @@ LobbyState.prototype.update = function () {
     if (this._currentState === 'preGame') {
         this.clearGUI();
         EZGUI.components.lobby.visible = false;
-        this.game.state.start(this.nextState, false, false);
+        this.state.start('play', false, false);
     }
 
     _.each(this._lobbyInfo.teams, function (team, teamKey) {
@@ -93,7 +90,6 @@ LobbyState.prototype.onReceiveClientName = function (clientName) {
 };
 
 LobbyState.prototype.onLobbyInfo = function (lobbyInfo) {
-    console.log(lobbyInfo);
     this.clearGUI();
     this._lobbyInfo = lobbyInfo;
 };

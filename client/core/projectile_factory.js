@@ -19,8 +19,8 @@ var STRONGHOLD = Math.pow(2, 2);
 var MINE = Math.pow(2, 3);
 
 var ProjectileFactory = {
-	init: function (data) {
-		this.game = data.game;
+	init: function (game) {
+		this.game = game;
 	},
 
 	createBullet: function (initialPosition, initialVelocity, angle) {

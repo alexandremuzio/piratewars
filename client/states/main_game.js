@@ -10,11 +10,8 @@ var SnapshotManager = require('../../shared/core/snapshot_manager.js');
 /*var spawn_settings = require('../../shared/settings/spawn_positions.json');
 var player_settings = require('../../shared/settings/player.json');*/
 
-function PlayState(game, socket, nextState) {
-    this.game = game;
-
+function PlayState(socket) {
     // console.log('In PlayState constructor');
-    if(this.game) console.log('this.game setted');
     
     this.outSnapshotManager = new SnapshotManager();
     this.snapshot = null;
@@ -23,15 +20,10 @@ function PlayState(game, socket, nextState) {
     this.numberOfConnectedPlayers = 1;
     
     this._currentState = 'preState';
-    this._nextState = nextState;
 
-    var data = { game:      this.game,
-                 socket:    this.socket };
-
-    PlayerFactory.init(data);
-    ProjectileFactory.init(data);
+    PlayerFactory.init(this, socket);
+    ProjectileFactory.init(this);
 }
-
 
 ///
 PlayState.prototype = Object.create(Phaser.State.prototype);
@@ -51,9 +43,9 @@ PlayState.prototype.preload = function() {
 
 PlayState.prototype.create = function() {
     
-    this.game.world.setBounds(0, 0, 2000, 2000);
+    this.world.setBounds(0, 0, 2000, 2000);
     this.assignAssets();
-    //this.game.map.setCollisionBetween(1, 100000, true, 'islandsLayer');
+    //this.map.setCollisionBetween(1, 100000, true, 'islandsLayer');
     this.createTexts();
     this.createInitialEntities(); 
     this.assignNetworkCallbacks();
@@ -68,7 +60,7 @@ PlayState.prototype.update = function() {
 
     //Go back to lobby
     if (this._currentState == 'lobby'){
-        // this.game.state.start(this._nextState, true, false); ////////////////////////
+        // this.state.start('lobby', true, false); ////////////////////////
     }
     GameEngine.getInstance().gameStep();
     this.applySyncFromServerAfter(lastSnapshot);
@@ -150,18 +142,18 @@ PlayState.prototype.applySyncFromServerAfter = function(lastSnapshot) {
 };
 
 PlayState.prototype.assignAssets = function() {  
-    this.game.map = this.game.add.tilemap('backgroundmap');
-    this.game.map.addTilesetImage('watertile', 'gameTiles');
-    this.game.backgroundlayer = this.game.map.createLayer('backgroundLayer');
-    this.game.blockedLayer = this.game.map.createLayer('islandLayer');
+    this.map = this.add.tilemap('backgroundmap');
+    this.map.addTilesetImage('watertile', 'gameTiles');
+    this.backgroundlayer = this.map.createLayer('backgroundLayer');
+    this.blockedLayer = this.map.createLayer('islandLayer');
     
-    this.game.mask = this.game.add.sprite(0, 0, 'mask');
-    this.game.mask.kill();
-    this.game.mask.fixedToCamera = true;
+    this.mask = this.add.sprite(0, 0, 'mask');
+    this.mask.kill();
+    this.mask.fixedToCamera = true;
 
     //To debug
     /*for(var i = 0; i < 5; i++) {
-        var sprite = this.game.add.sprite(spawn_settings.teams[1].positions[i].x,
+        var sprite = this.add.sprite(spawn_settings.teams[1].positions[i].x,
             spawn_settings.teams[1].positions[i].y,
             'boat_0')
         sprite.angle = spawn_settings.teams[1].positions[i].angle*180/3.1415;
@@ -188,7 +180,7 @@ PlayState.prototype.createInitialEntities = function() {
 
 PlayState.prototype.createTexts = function() {
     // Creating debug text
-    // this.text = this.game.add.text(0, 0, '0 Players Connected', {
+    // this.text = this.add.text(0, 0, '0 Players Connected', {
     //     font: '20px Arial',
     //     fill: '#ff0044',
     //     align: 'center'
@@ -196,7 +188,7 @@ PlayState.prototype.createTexts = function() {
     // this.text.fixedToCamera = true;
     // this.text.cameraOffset.setTo(310,100);
 
-    this.fpsText = this.game.add.text(0, 0, 'FPS: 0', {
+    this.fpsText = this.add.text(0, 0, 'FPS: 0', {
         font: '12px Arial',
         fill: '#000000',
         align: 'center'
@@ -254,20 +246,20 @@ PlayState.prototype.onGameState = function(state) {
 };
 
 PlayState.prototype.preGame = function() {
-    if(!this.game.mask.alive) {
-        this.game.mask.revive();
-        this.game.mask.alpha = 0.5;
+    if(!this.mask.alive) {
+        this.mask.revive();
+        this.mask.alpha = 0.5;
     }
 };
 
 PlayState.prototype.startPlaying = function() {
-    if(this.game.mask.alive) this.game.mask.kill();
+    if(this.mask.alive) this.mask.kill();
 };
 
 PlayState.prototype.endGame = function() {
-    if(!this.game.mask.alive) {
-        this.game.mask.revive();
-        this.game.mask.alpha = 0.5;
+    if(!this.mask.alive) {
+        this.mask.revive();
+        this.mask.alpha = 0.5;
     }
     var egt = EZGUI.components.endGameText;
     egt.visible = true;
@@ -290,7 +282,7 @@ PlayState.prototype.onGameStart = function(initialGameInfo) {
 PlayState.prototype.onPlayerCreate = function(data) {    
     console.log('Creating a new player!');
     this.selfPlayer = PlayerFactory.createLocalPlayer(data);
-    this.game.camera.follow(this.selfPlayer.components.get('sprite').getSprite('boat'));
+    this.camera.follow(this.selfPlayer.components.get('sprite').getSprite('boat'));
 
     // MPTest
     GameEngine.getInstance().printEntityHierarchy();
@@ -298,8 +290,8 @@ PlayState.prototype.onPlayerCreate = function(data) {
 
 PlayState.prototype.updateTexts = function() {
     // Debugging purposes
-    // this.game.debug.cameraInfo(this.game.camera, 32, 32);
-    this.fpsText.setText('FPS: ' + this.game.time.fps);
+    // this.debug.cameraInfo(this.camera, 32, 32);
+    this.fpsText.setText('FPS: ' + this.time.fps);
 };
 
 

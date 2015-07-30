@@ -3,9 +3,10 @@
 var _enum = require('../../shared/utils/enum.js');
 
 var GameStatesEnum = _enum({
-	PREGAME: 0,
+	PRE_GAME: 0,
 	PLAYING: 1,
-	POSTGAME: 2
+	END_GAME: 2,
+	DONE: 3
 });
 
 

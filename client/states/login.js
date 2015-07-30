@@ -31,7 +31,7 @@ LoginState.prototype.create = function () {
 
     this.music = this.add.audio('themesong');
     this.music.loop = true;
-    this.music.play();
+    //this.music.play(); ///////
 };
 
 LoginState.prototype.setPhaserPreferences = function () {

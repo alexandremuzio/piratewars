@@ -87,7 +87,7 @@ Client.prototype.onReady = function (ready) {
 /****************** HELPER FUNCTIONS ******************/
 /******************************************************/
 Client.prototype.createPlayer = function () {
-	var team = this._room.teams.get(this.chosenTeam);
+	var team = this._room.gameManager.teams.get(this.chosenTeam);
 	this.player = PlayerFactory.createPlayer(this._socket, this._snapshots, team);
 	this._socket.emit('player.create',
 		{

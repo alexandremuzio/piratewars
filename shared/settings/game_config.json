@@ -1,5 +1,10 @@
 {
 	"key" : "game_config",
+	"lobby_tick_rate" : 500,
  	"network_tick_rate" : 50,
- 	"game_tick_rate" : 15
+ 	"game_tick_rate" : 15,
+	"all_ready_duration" : 1000,
+	"transition_duration" : 1000,
+	"pre_game_duration" : 1000,
+	"end_game_duration" : 500 
 }

@@ -1,13 +1,12 @@
 'use strict';
 
-
-//TEMP
-var GameStatesEnum = require('../utils/game_states_enum');
-
 var _ = require('underscore');
 var Client = require('./client.js');
 var GameEngine = require('../../shared/game_engine.js');
 var GameManager = require('./game_manager.js');
+var GameStatesEnum = require('../utils/game_states_enum');
+var LobbyManager = require('./lobby_manager.js');
+var LobbyStatesEnum = require('../utils/lobby_states_enum');
 var PlayerFactory = require('./player_factory.js');
 var RoomStatesEnum = require('../utils/room_states_enum.js');
 var SnapshotManager = require('../../shared/core/snapshot_manager');
@@ -18,121 +17,65 @@ var game_config = require('../../shared/settings/game_config.json');
 var team_settings = require('../../shared/settings/teams.json');
 
 function Room(socket) {
-
-	this.teams = new TeamManager();
-	this.playerCount = 0;
 	this.clients = [];
 	this.snapshots = new SnapshotManager();
-	
+	this.lobbyManager = new LobbyManager(this.clients);
 	this.gameManager = new GameManager();
+	
 	this._socket = socket;
-	this._gameState = null;
-	this._startTime = null;
-	// Send these to conf files
-	this._sendGameSyncTickRate = 1000/20;
-	this._lobbyInfoRate = 1000/2;
-	this._allReadyDuration = 1000;
-	this._transitionDuration = 1000;
-	this._preGameDuration = 1000;
-	this._endGameDuration = 500;
+	this._sendGameSyncTickRate = game_config.network_tick_rate;
+	this._lobbyInfoRate = game_config.lobby_tick_rate;
+	this._allReadyDuration = game_config.all_ready_duration;
+	this._transitionDuration = game_config.transition_duration;
 }
 
 Room.prototype.init = function() {
-
-	//TEST
-	// this.createTeams();
-
-	// var testClient = new Client(this._socket, this);
-	// testClient.onName('nome do cliente1');
-	// testClient.onChangeTeam('red');
-	// testClient.onReady(true);
-
-	// testClient = new Client(this._socket, this);
-	// testClient.onName('nome do cliente2');
-	// testClient.onChangeTeam('blue');
-	// testClient.onReady(false);
-	// testClient.onReady(true);
-
-	// testClient = new Client(this._socket, this);
-	// testClient.onName('nome do cliente3');
-	// testClient.onChangeTeam('blue');
-	// testClient.onReady(true);
-
-	// testClient = new Client(this._socket, this);
-	// testClient.onName('nome do cliente4');
-	// testClient.onChangeTeam('blue');
-	// testClient.onReady(true);
-
-	// testClient = new Client(this._socket, this);
-	// testClient.onName('on weakest team');
-	// testClient.onReady(true);
-
-	// this.initializeGame();
-	 // this.sendInitialMatchInfoToClients();
-	// console.log(this.allClientsAreReady());
-	// this.sendLobbyInfoToClients();
-	
-	this.gameManager.on('state.pregame', this.preGameStateInit.bind(this));
-	this.gameManager.on('state.playing',this.playingStateInit.bind(this));
-	this.gameManager.on('state.endtransition', this.transitionState2Init.bind(this));
-	this.gameManager.on('state.endgame', this.endGameStateInit.bind(this));
+	this.createManagerListeners ();
 	
 	PlayerFactory.init(this);
 	this.gameManager.init();
+	this.lobbyManager.init();
 
 	this._roomState =  RoomStatesEnum.LOBBY;
 	
-	this.lobbyStateInit();
+	this.lobbyStateEnter();
 	this._socket.sockets.on('connect', this.onConnection.bind(this));
-	this._gameLoopInterval = setInterval(this.gameLoop.bind(this), game_config.game_tick_rate);
+	this._gameLoopInterval = setInterval(this.update.bind(this), game_config.game_tick_rate);
 };
 
-Room.prototype.gameLoop = function() {
-	this.update();
+Room.prototype.createManagerListeners = function () {
+	//lobby
+	this.lobbyManager.on('state.allready', this.allReadyStateEnter.bind(this));
+	this.lobbyManager.on('state.done', this.transitionStateEnter.bind(this));
+
+	//game
+	this.gameManager.on('state.playing',this.playingStateEnter.bind(this));
+	this.gameManager.on('state.endtransition', this.transitionState2Enter.bind(this));
+	this.gameManager.on('state.endgame', this.endGameStateEnter.bind(this));
 };
 
 Room.prototype.update = function() {
-	var currentTime = new Date();
 	switch (this._roomState) {
 		case RoomStatesEnum.LOBBY:
-			console.log('ROOM: in lobby!');
-			if (this.allClientsAreReady()) {
-				clearInterval(this._sendLobbyInfoInterval);
-				this.allReadyStateInit();
-				this._roomState = RoomStatesEnum.LOBBY_ALL_READY;
-			}
-			break;
-		//TODO - remove
-		case RoomStatesEnum.LOBBY_ALL_READY:
-			console.log('ROOM: in lobby all ready!');
-			if (currentTime - this._startTime > this._allReadyDuration) {
-				this.transitionStateInit();
-				this._roomState = RoomStatesEnum.LOBBY_TRANSITION;
-			}
-			break;
-		//TODO - remove
-		case RoomStatesEnum.LOBBY_TRANSITION:
-		console.log('ROOM: in transition!');
-			if (currentTime - this._startTime > this._transitionDuration) {
-				this.preGameStateInit();
+			// console.log('ROOM: in lobby!');
+			this.lobbyManager.updateState();
+			if (this.lobbyManager.state === LobbyStatesEnum.DONE) {
+				this.preGameStateEnter();
 				this._roomState = RoomStatesEnum.GAME;
 				this.gameManager.startGame();
 			}
 			break;
 		case RoomStatesEnum.GAME:
-			console.log('ROOM: in game!');
+			// console.log('ROOM: in game!');
 			this.gameManager.updateState();
-			if (this.gameManager.getState() === GameStatesEnum.DONE) {
-				this._roomState = RoomStatesEnum.END_GAME;
+			if (this.gameManager.state === GameStatesEnum.DONE) {
+				console.log('ROOM: finished game - return to lobby!')
+				this.clients = [];
+				this.clearPlayers();///////////////////////////////////////////////
+				this.initializeClients();		
+				this._roomState = RoomStatesEnum.LOBBY;
+				this.lobbyStateEnter();
 			}
-			break;
-		case RoomStatesEnum.END_GAME:
-			console.log('ROOM: finished game - return to lobby!')
-			this.clients = [];
-			this.clearPlayers();///////////////////////////////////////////////
-			this.initializeClients();		
-			this._roomState = RoomStatesEnum.LOBBY;
-			this.lobbyStateInit();
 			break;
 	}
 };
@@ -141,34 +84,35 @@ Room.prototype.update = function() {
 /********************************************/
 /****************** STATES ******************/
 /********************************************/
-Room.prototype.lobbyStateInit = function() {   
+Room.prototype.lobbyStateEnter = function() {   
 	console.log('Changed state to lobby!');	
 	this.sendChangedStateToClients('lobby');
 	this._sendLobbyInfoInterval = setInterval(this.sendLobbyInfoToClients.bind(this),
 												this._lobbyInfoRate);
 };
 
-Room.prototype.allReadyStateInit = function() {   
-	console.log('Changed state to allReady!');	
+Room.prototype.allReadyStateEnter = function() {   
+	console.log('Changed state to allReady!');
+	clearInterval(this._sendLobbyInfoInterval);
 	this.sendChangedStateToClients('countdown');
 	this.clearClientListeners();
 	this._startTime = new Date();
 };
 
-Room.prototype.transitionStateInit = function() {   
+Room.prototype.transitionStateEnter = function() {   
 	console.log('Changed state to transition!');
 	this.sendChangedStateToClients('preGame');
 	this._startTime = new Date();
 };
 
-Room.prototype.preGameStateInit = function() {   
+Room.prototype.preGameStateEnter = function() {   
 	console.log('Changed state to preGame!');
 	this.initializeGame();
 	this.sendInitialMatchInfoToClients();
 	this._startTime = new Date();
 };
 
-Room.prototype.playingStateInit = function() {
+Room.prototype.playingStateEnter = function() {
 	console.log('Changed state to playing!');
 	this.sendChangedStateToClients('playing');
 	this.startListeningToUpdates();
@@ -177,13 +121,13 @@ Room.prototype.playingStateInit = function() {
 	this._startTime = new Date();
 };
 
-Room.prototype.transitionState2Init = function() {   
+Room.prototype.transitionState2Enter = function() {   
 	console.log('Changed state to transition2!');
 	this.sendChangedStateToClients('endGame');
 	this._startTime = new Date();
 };
 
-Room.prototype.endGameStateInit = function() {
+Room.prototype.endGameStateEnter = function() {
 	this.gameManager.updateState();
 	console.log('Changed state to endGame!');
 	clearInterval(this._sendSyncInterval);
@@ -195,31 +139,12 @@ Room.prototype.endGameStateInit = function() {
 /******************************************************/
 /****************** HELPER FUNCTIONS ******************/
 /******************************************************/
-Room.prototype.allClientsAreReady = function() {
-	var allReady = true;
-	if (this.clients.length === 0 || 
-		this.getWeakestChosenTeamSize() === 0) return false; /////////////////////////
-
-	_.each(this.clients, function(client) {
-		if (!client.ready) {
-			allReady = false;
-			return;
-		}
-	});
-	return allReady;
-};
-
 Room.prototype.clearPlayers = function() {
 	_.each(this.clients, function(client) {
 		client.player = null;
 		client.team = null;
 		client.ready = false;
 	});
-};
-
-Room.prototype.createInitialEntities = function() {
-	this._stronghold0 = PlayerFactory.createStronghold(0);
-	this._stronghold1 = PlayerFactory.createStronghold(1);
 };
 
 Room.prototype.initializeClients = function() {
@@ -229,46 +154,10 @@ Room.prototype.initializeClients = function() {
 };
 
 Room.prototype.initializeGame = function() {
-	this.createInitialEntities();
+	// this.createInitialEntities();
 	_.each(this.clients, function(client) {
 		client.createPlayer();
 	});	
-};
-
-Room.prototype.getWeakestChosenTeam = function() {
-	var teamSize = {};	
-	_.each(team_settings.teams, function(team) {
-		teamSize[team.name] = 0;
-	}, this);
-	_.each(this.clients, function(client) {
-		var team = client.chosenTeam;
-		if (this.validateTeam(team)) {
-			teamSize[team]++;
-		}
-	}.bind(this));
-	return _.min(_.keys(teamSize), function(team) {
-		return teamSize[team];
-	});
-};
-
-Room.prototype.getWeakestChosenTeamSize = function() { ////////////////
-	var teamSize = {};	
-	_.each(team_settings.teams, function(team) {
-		teamSize[team.name] = 0;
-	}, this);
-	_.each(this.clients, function(client) {
-		var team = client.chosenTeam;
-		if (this.validateTeam(team)) {
-			teamSize[team]++;
-		}
-	}.bind(this));
-	var minimum = 9999999;
-	_.each(teamSize, function(team) {
-		if (team < minimum)
-			minimum = team;
-	});
-	// console.log(minimum);
-	return minimum;
 };
 
 Room.prototype.removeClient = function(client) {

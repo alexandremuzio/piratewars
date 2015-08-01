@@ -4,7 +4,6 @@ var _ = require('underscore');
 var UUID = require('node-uuid');
 var PlayerFactory = require('./player_factory.js');
 var SnapshotManager = require('../../shared/core/snapshot_manager.js');
-// var GameEngine = require('../../shared/game_engine.js');
 
 function Client(socket, room) {
 	// console.log('inside client constr');
@@ -60,7 +59,7 @@ Client.prototype.onName = function (name) {
 
 // Improve this
 Client.prototype.initialize = function () {
-	this.chosenTeam = this._room.getWeakestChosenTeam();
+	this.chosenTeam = this._room.lobbyManager.getWeakestChosenTeam();
 	this._room.clients.push(this);
 };
 

@@ -1,6 +1,6 @@
-Viking Wars
+Pirate Wars
 ========
-Browser Realtime multiplayer game. Viking Wars is a MOBA style boat game with up to 5 players in each team.
+Browser Realtime multiplayer game. Pirate Wars is a MOBA style boat game with up to 5 players in each team.
 
 ![piratewars](/game_screenshot.png?raw=true)
 
